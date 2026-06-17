@@ -113,10 +113,6 @@
 
   function signOut() { auth.signOut(); }
 
-  // Processa o retorno do signInWithRedirect (necessário para o SDK
-  // sincronizar a sessão corretamente após o redirect voltar do Google).
-  // Sem isso, em alguns navegadores/condições o onAuthStateChanged pode
-  // disparar antes da sessão persistir, causando um loop de login.
   let redirectResultPromise = auth.getRedirectResult()
     .catch(e => {
       console.error("Erro ao processar retorno do login (getRedirectResult):", e);
@@ -303,12 +299,10 @@ const PAIRS = [
 
   // ── 10 NOVOS EXERCÍCIOS ──────────────────────────────────────────────────
 
-  // 16 — Trava-língua: /ʌ/ rítmico (bug / rug / mug)
   { id:16, type:"twister_only", symbol:"/ʌ/ rhythm", accent:"#fb923c",
     twister:{ word:"The bug on the rug drank from a mug", ipa:"/ðə bʌg ɒn ðə rʌg dræŋk frəm ə mʌg/", emoji:"🪲🪵☕", hint:"Mantenha velocidade constante — boca levemente aberta em cada /ʌ/." },
     tip:"Foque no som curto e rítmico de /ʌ/ em BUG, RUG e MUG. Não arredonde os lábios — é diferente do 'U' português. Pense num soco rápido na barriga: 'Uh!'." },
 
-  // 17 — Par mínimo: /iː/ vs /ɪ/ (cheap/ship + trip)
   { id:17, symbol:"/iː/ vs /ɪ/", accent:"#67e8f9",
     words:[
       { word:"The cheap", ipa:"/ðə tʃiːp/", meaning:"O barato", symbol:"/iː/", emoji:"💰", hint:"Sorria e sustente 😁" },
@@ -317,12 +311,10 @@ const PAIRS = [
     twister:{ word:"The cheap ship takes a quick trip", ipa:"/ðə tʃiːp ʃɪp teɪks ə kwɪk trɪp/", emoji:"💰🚢✈️", hint:"Estique o 'cheap', depois encurte tudo: ship, quick, trip." },
     tip:"Após o longo /iː/ de 'cheap', você precisa encurtar rapidamente para ship, quick e trip. É uma ginástica de tensão e relaxamento dos lábios." },
 
-  // 18 — Trava-língua: /æ/ puro (fat / cat / sat / flat / mat)
   { id:18, type:"twister_only", symbol:"/æ/ drill", accent:"#fde68a",
     twister:{ word:"A fat cat sat on a flat mat", ipa:"/ə fæt kæt sæt ɒn ə flæt mæt/", emoji:"🐱🧘", hint:"Queixo caindo em cada palavra — sem nasalizar!" },
     tip:"O /æ/ (como em 'fat', 'cat', 'mat') exige abertura lateral da mandíbula. Brasileiros tendem a nasalizar — mantenha o som na boca, não no nariz." },
 
-  // 19 — Par mínimo: /e/ vs /æ/ (pen/pan + van)
   { id:19, symbol:"/e/ vs /æ/", accent:"#f9a8d4",
     words:[
       { word:"The pen", ipa:"/ðə pɛn/", meaning:"A caneta", symbol:"/e/", emoji:"🖊️", hint:"Som de 'é' fechado 😕" },
@@ -331,17 +323,14 @@ const PAIRS = [
     twister:{ word:"The pen and the pan are in the van", ipa:"/ðə pɛn ænd ðə pæn ər ɪn ðə væn/", emoji:"🖊️🍳🚐", hint:"Alterne rápido entre boca fechada (pen) e aberta (pan, van)." },
     tip:"De 'pen' para 'pan' a mandíbula desce bastante. Se soar igual, treine na frente do espelho: no 'pan' você deve ver os dentes de baixo." },
 
-  // 20 — Trava-língua: /uː/ vs /ʊ/ (pool / cool / full / fools)
   { id:20, type:"twister_only", symbol:"/uː/ vs /ʊ/ drill", accent:"#5eead4",
     twister:{ word:"A pool full of cool fools", ipa:"/ə puːl fʊl əv kuːl fuːlz/", emoji:"🏊🔋😎🤡", hint:"'Full' é curto e relaxado — todos os outros têm biquinho longo." },
     tip:"Em 'pool', 'cool' e 'fools' faça o biquinho e sustente. Em 'full' solte tudo imediatamente — lábios relaxados, som que some. É a diferença que separa o falante fluente." },
 
-  // 21 — Trava-língua: /θ/ vs /s/ (think / sink / thing)
   { id:21, type:"twister_only", symbol:"/θ/ vs /s/ drill", accent:"#93c5fd",
     twister:{ word:"Think before you sink the thing", ipa:"/θɪŋk bɪˈfɔːr ju sɪŋk ðə θɪŋ/", emoji:"🤔⚓🫧", hint:"Língua para fora no THINK e THING, guardada no SINK." },
     tip:"A língua vai e volta três vezes nessa frase. Em 'think' e 'thing' ela encosta levemente nos dentes superiores. Em 'sink' ela fica completamente dentro da boca." },
 
-  // 22 — Par mínimo: /e/ vs /iː/ (left/leaf + reef)
   { id:22, symbol:"/e/ vs /iː/", accent:"#86efac",
     words:[
       { word:"The left", ipa:"/ðə lɛft/", meaning:"A esquerda", symbol:"/e/", emoji:"⬅️", hint:"Relaxado, boca levemente aberta 😐" },
@@ -350,7 +339,6 @@ const PAIRS = [
     twister:{ word:"He left the leaf on the reef", ipa:"/hiː lɛft ðə liːf ɒn ðə riːf/", emoji:"⬅️🍃🪸", hint:"Boca relaxada no 'left', depois sorria largo em 'leaf' e 'reef'." },
     tip:"Comece com 'left' sem tensão muscular, depois ative o sorriso tenso para 'leaf' e mantenha em 'reef'. É como ligar e desligar um interruptor." },
 
-  // 23 — Par mínimo: /ɒ/ vs /ʌ/ (hot/hut + nut)
   { id:23, symbol:"/ɒ/ vs /ʌ/", accent:"#fca5a5",
     words:[
       { word:"The hot", ipa:"/ðə hɒt/", meaning:"O quente", symbol:"/ɒ/", emoji:"🔥", hint:"Garganta aberta, boca redonda 😮" },
@@ -359,18 +347,14 @@ const PAIRS = [
     twister:{ word:"A hot hut has a cracked nut", ipa:"/ə hɒt hʌt hæz ə krækt nʌt/", emoji:"🔥🛖🥜", hint:"Abra a garganta no 'hot', feche no 'hut' e 'nut'." },
     tip:"Em 'hot' a parte de trás da língua cai, criando espaço na garganta — som profundo. Em 'hut' e 'nut' é um 'A' curto e seco, sem profundidade." },
 
-  // 24 — Trava-língua: /æ/ + /ɪ/ + /e/ (bat/bit/bad/bed)
   { id:24, type:"twister_only", symbol:"/æ/ /ɪ/ /e/ drill", accent:"#d8b4fe",
     twister:{ word:"The bat bit the bad bed", ipa:"/ðə bæt bɪt ðə bæd bɛd/", emoji:"🦇👄😈🛏️", hint:"Três sons diferentes — comece bem devagar!" },
     tip:"Ginástica vocal completa: 'bat/bad' = boca super aberta (/æ/), 'bit' = curto e relaxado (/ɪ/), 'bed' = como nosso 'é' (/e/). Pratique lento antes de acelerar." },
 
-  // 25 — Trava-língua: fricativas /f/ /r/ /ʃ/ (fresh/fried/fish)
   { id:25, type:"twister_only", symbol:"/f/ /r/ /ʃ/ drill", accent:"#fcd34d",
     twister:{ word:"Fresh fried fish, fish fresh fried", ipa:"/frɛʃ fraɪd fɪʃ fɪʃ frɛʃ fraɪd/", emoji:"🐟🍳🌿", hint:"Controle o fluxo de ar — lábios e dentes trabalham juntos!" },
     tip:"Foco na musculatura dos lábios e dentes: /f/ (lábio inferior nos dentes), /r/ (língua enrolada), /ʃ/ (como nosso 'x'). Articule cada consoante sem deixar o ritmo cair." },
 ];
-
-// ── Exercícios "twister_only" não têm par mínimo — lógica adaptada ──────────
 
 function shuffleArray(arr) {
   const a = [...arr];
@@ -931,11 +915,9 @@ function ScoreRecognizer({ targetWord, accent, onResult, solved }) {
   );
 }
 
-// ── ExerciseView com suporte a twister_only ──────────────────────────────────
 function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressText }) {
   const isTwisterOnly = pair.type === "twister_only";
 
-  // Para twister_only: apenas 1 item (o trava-língua), targetIndex fixo em 0
   const [targetIndex, setTargetIndex] = useState(isTwisterOnly ? 0 : null);
   const [feedback,    setFeedback]    = useState(null);
   const [feedbackMsg, setFeedbackMsg] = useState("");
@@ -943,7 +925,6 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
   const [solvedSet,   setSolvedSet]   = useState(new Set());
 
   const { accent, words, twister, tip } = pair;
-  // twister_only: só precisa resolver o trava-língua
   const totalToSolve = isTwisterOnly ? 1 : 3;
   const allSolved = solvedSet.size >= totalToSolve;
 
@@ -954,7 +935,7 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
   }, [pair]);
 
   function selectTarget(i) {
-    if (isTwisterOnly) return; // sem seleção manual
+    if (isTwisterOnly) return;
     setTargetIndex(i); setFeedback(null); setFeedbackMsg(""); setAttempts(0);
   }
 
@@ -967,7 +948,6 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
       setFeedback("other"); setFeedbackMsg("Couldn't hear anything — try speaking louder or closer to the mic."); return;
     }
 
-    // Para twister_only: targetIndex é sempre 0 (mapeado para o trava-língua)
     const isTwisterTarget = isTwisterOnly ? true : (targetIndex === 2);
     const targetWord      = isTwisterTarget ? twister.word : (words && words[targetIndex] ? words[targetIndex].word : "");
     const otherIndex      = isTwisterTarget ? -1 : (1 - targetIndex);
@@ -980,7 +960,6 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
     const hitsOther  = otherStr && allSpoken.some(s => s.includes(otherStr) || otherStr.includes(s));
     const alreadySolved = solvedSet.has(targetIndex);
 
-    // Log sempre — mesmo para twister_only
     logActivity({
       studentName:   user.displayName,
       studentEmail:  user.email,
@@ -1027,7 +1006,6 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
         <span style={{background:"#1e293b",color:"#94a3b8",fontSize:".78rem",fontWeight:700,padding:"4px 14px",borderRadius:"999px",border:"1px solid #334155"}}>{progressText}</span>
       </div>
 
-      {/* Badge twister_only */}
       {isTwisterOnly && (
         <div style={{background:`${accent}18`,borderLeft:`4px solid ${accent}`,borderRadius:".5rem 1rem 1rem .5rem",padding:".65rem 1rem",fontSize:".78rem",fontWeight:700,color:accent}}>
           👅 Tongue Twister Exercise — Foque no ritmo e na precisão fonética
@@ -1039,7 +1017,6 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
         {tip}
       </div>
 
-      {/* Cards de palavras — só para pares mínimos */}
       {!isTwisterOnly && words && (
         <div style={{display:"flex",gap:".75rem"}}>
           {words.map((w,i) => (
@@ -1048,7 +1025,6 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
         </div>
       )}
 
-      {/* Trava-língua — sempre visível */}
       <WordCard
         wordData={twister}
         accent={accent}
@@ -1106,9 +1082,7 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// HUB DE FONEMAS — busca docs na coleção `phoneme_hub` do Firestore,
-// agrupa por `categoria` e exibe cards. Clique abre um modal com
-// explicação, exemplos (com TTS) e botão para ir direto ao exercício.
+// HUB DE FONEMAS — dados embutidos diretamente (sem chamada ao Firestore)
 // ═══════════════════════════════════════════════════════════════════════
 
 function SpeakerButton({ word, accent }) {
@@ -1199,30 +1173,96 @@ function PhonemeModal({ phoneme, accent, onClose, onPractice }) {
 
 function PhonemeHubScreen({ onPractice, onBack }) {
   const [phonemes, setPhonemes] = useState([]);
-  const [loadState, setLoadState] = useState("loading"); // loading | error | empty | ready
-  const [errorMsg, setErrorMsg] = useState("");
+  const [loadState, setLoadState] = useState("loading");
   const [selected, setSelected] = useState(null);
 
-  async function loadPhonemes() {
-    setLoadState("loading");
-    try {
-      console.log("[DEBUG] auth.currentUser:", auth.currentUser ? auth.currentUser.email : null);
-      console.log("[DEBUG] db._databaseId / projectId:", db._databaseId ? db._databaseId.projectId : "n/a", db._databaseId ? db._databaseId.database : "n/a");
-      const snap = await db.collection("phoneme_hub").get({ source: "server" });
-      console.log("[DEBUG] snap.size:", snap.size, "snap.empty:", snap.empty, "fromCache:", snap.metadata && snap.metadata.fromCache);
-      snap.forEach(d => console.log("[DEBUG] doc encontrado ->", d.id, d.data()));
-      if (snap.empty) { setLoadState("empty"); return; }
-      const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      setPhonemes(docs);
-      setLoadState("ready");
-    } catch (e) {
-      console.error("Erro ao carregar phoneme_hub:", e);
-      const isPermission = e.code === "permission-denied";
-      setErrorMsg(isPermission
-        ? "Erro de permissão no Firestore. Verifique as Regras de Segurança."
-        : "Não foi possível carregar os fonemas. Verifique sua conexão.");
-      setLoadState("error");
-    }
+  // ── Dados embutidos — sem chamada ao Firestore ──────────────────────
+  const PHONEMES_DATA = [
+    {
+      id: "consoante_h_aspirado",
+      categoria: "Consoantes Desafiadoras",
+      simbolo: "/h/",
+      explicacao: "Este é o som de \"R\" no início de palavras como 'hello'. É um suspiro seco vindo da garganta, não um som de garganta raspada como o nosso 'R', a garganta quase não vibra. É suave",
+      id_exercicio_link: "exercicio_h_aspirado",
+      exemplos: ["hello", "head", "home"],
+    },
+    {
+      id: "consoante_th_soprado",
+      categoria: "Consoantes Desafiadoras",
+      simbolo: "/θ/",
+      explicacao: "O erro comum é trocar por F, T ou S. Para o som perfeito, coloque a ponta da língua levemente entre os dentes incisivos e apenas assopre o ar, sem vibrar a garganta.",
+      id_exercicio_link: "exercicio_th_soprado",
+      exemplos: ["think", "three", "math"],
+    },
+    {
+      id: "consoante_dark_l",
+      categoria: "Finalizações e Consoantes Mudas",
+      simbolo: "/ɫ/",
+      explicacao: "O L final nunca vira som de U. Levante a ponta da língua e toque-a atrás dos dentes superiores, segurando o som no céu da boca.",
+      id_exercicio_link: "exercicio_dark_l",
+      exemplos: ["will", "tall", "animal"],
+    },
+    {
+      id: "consoante_ed_mudo",
+      categoria: "Finalizações e Consoantes Mudas",
+      simbolo: "/t/ ou /d/",
+      explicacao: "O E é quase sempre mudo. Pule direto para o som seco de T ou D no final. Evite adicionar o som de \"id\" ou \"idji\" ao final das palavras.",
+      id_exercicio_link: "exercicio_ed_mudo",
+      exemplos: ["worked", "played", "helped"],
+    },
+    {
+      id: "consoante_ing",
+      categoria: "Finalizações e Consoantes Mudas",
+      simbolo: "/ŋ/",
+      explicacao: "O G final é decorativo. O som nasce na parte de trás da garganta. Não bata a língua no dente nem solte um G de gato.",
+      id_exercicio_link: "exercicio_ing",
+      exemplos: ["running", "speaking", "thing"],
+    },
+    {
+      id: "consoante_m_n_final",
+      categoria: "Finalizações e Consoantes Mudas",
+      simbolo: "/m/ & /n/",
+      explicacao: "Não anasalize a vogal e esqueça a consoante! Para o M, feche os lábios. Para o N, a língua toca o céu da boca. Pronuncie a consoante até o fim.",
+      id_exercicio_link: "exercicio_m_n_final",
+      exemplos: ["from", "ten", "time"],
+    },
+    {
+      id: "consoante_v_final",
+      categoria: "Finalizações e Consoantes Mudas",
+      simbolo: "/v/",
+      explicacao: "Encoste os dentes superiores no lábio inferior e faça o som vibrar. Se não vibrar, parece F. Se adicionar vogal no final, soa errado.",
+      id_exercicio_link: "exercicio_v_final",
+      exemplos: ["have", "live", "love"],
+    },
+    {
+      id: "vogal_ae_aberta",
+      categoria: "Vogais Perigosas",
+      simbolo: "/æ/",
+      explicacao: "Não é um 'A' puro e nem um 'É' puro. Para fazer esse som, você deve abrir a boca como se fosse falar 'A', mas forçar o som de 'E'. A mandíbula desce bastante. Aí sai o Æ",
+      id_exercicio_link: "exercicio_ae_aberta",
+      exemplos: ["man", "bad", "cat"],
+    },
+    {
+      id: "vogal_i_longo_curto",
+      categoria: "Vogais Perigosas",
+      simbolo: "/i:/ & /ɪ/",
+      explicacao: "O brasileiro tende a ler tudo como o 'í' do português. Mas /i:/ (como em 'sheep') exige um sorriso tenso, enquanto /ɪ/ (como em 'ship') é um som curto e relaxado, quase puxando para o 'ê'.",
+      id_exercicio_link: "exercicio_i_curto_longo",
+      exemplos: ["sheep", "ship", "cheap"],
+    },
+    {
+      id: "vogal_u_curto",
+      categoria: "Vogais Perigosas",
+      simbolo: "/ʌ/",
+      explicacao: "Som curto que nasce na garganta, parecido com o 'ã' de 'pãe', mas seco. O erro comum é tentar pronunciar a letra 'U' com biquinho (como 'cupa'), mas o correto é emitir o som sem arredondar os lábios.",
+      id_exercicio_link: "exercicio_u_curto",
+      exemplos: ["hut", "nut"],
+    },
+  ];
+
+  function loadPhonemes() {
+    setPhonemes(PHONEMES_DATA);
+    setLoadState("ready");
   }
 
   useEffect(() => { loadPhonemes(); }, []);
@@ -1259,24 +1299,6 @@ function PhonemeHubScreen({ onPractice, onBack }) {
           <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem",padding:"4rem 1rem",color:"#64748b"}}>
             <div className="spin" style={{width:38,height:38,border:"3px solid #334155",borderTopColor:"#818cf8",borderRadius:"50%"}}/>
             <p>Carregando fonemas…</p>
-          </div>
-        )}
-
-        {loadState === "error" && (
-          <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem",padding:"4rem 1rem",color:"#64748b",textAlign:"center"}}>
-            <span style={{fontSize:"2rem"}}>⚠️</span>
-            <p>{errorMsg}</p>
-            <button onClick={loadPhonemes}
-              style={{background:"#1e293b",border:"1px solid #475569",color:"#f8fafc",padding:".6rem 1.2rem",borderRadius:".8rem",fontWeight:700,fontSize:".85rem"}}>
-              Tentar novamente
-            </button>
-          </div>
-        )}
-
-        {loadState === "empty" && (
-          <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem",padding:"4rem 1rem",color:"#64748b",textAlign:"center"}}>
-            <span style={{fontSize:"2rem"}}>📭</span>
-            <p>Nenhum fonema encontrado na coleção <strong>phoneme_hub</strong>.</p>
           </div>
         )}
 
@@ -1356,12 +1378,10 @@ function App() {
   const [animScore, setAnimScore] = useState(false);
   const [pairs,     setPairs]     = useState([]);
   const [idx,       setIdx]       = useState(0);
-  const [view,      setView]      = useState("exercises"); // "exercises" | "hub"
+  const [view,      setView]      = useState("exercises");
 
   useEffect(() => {
     let unsub = () => {};
-    // Garante que o resultado do signInWithRedirect seja processado
-    // antes de qualquer outra lógica de auth seguir adiante.
     redirectResultPromise.finally(() => {
       unsub = auth.onAuthStateChanged(u => {
         setUser(u || null);
@@ -1402,9 +1422,6 @@ function App() {
     saveSession(0,0,shuffled.map(p=>p.id));
   }
 
-  // Chamado pelo botão "Praticar agora" do Hub de Fonemas.
-  // Tenta localizar o exercício correspondente em PAIRS via id_exercicio_link;
-  // se encontrar, navega direto pra ele dentro da sessão atual. Senão, só loga.
   function handlePracticeFromHub(phoneme) {
     console.log("Praticar exercício:", phoneme.id_exercicio_link);
 
