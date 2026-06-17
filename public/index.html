@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Minimal Pairs Hub 🗣️</title>
+  <meta name="description" content="Master English pronunciation with minimal pairs exercises." />
+  <meta name="theme-color" content="#0f172a" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+    body { margin: 0; background: #0f172a; color: #f8fafc; -webkit-font-smoothing: antialiased; }
+
+    @keyframes micPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,.5); }
+      50%      { box-shadow: 0 0 0 20px rgba(239,68,68,0); }
+    }
+    .mic-pulse { animation: micPulse 1s ease-in-out infinite; }
+
+    @keyframes recPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(99,102,241,.5); }
+      50%      { box-shadow: 0 0 0 20px rgba(99,102,241,0); }
+    }
+    .rec-pulse { animation: recPulse 1s ease-in-out infinite; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .fade-in { animation: fadeUp .25s ease forwards; }
+
+    @keyframes pop {
+      0%   { transform:scale(1); }
+      50%  { transform:scale(1.2); }
+      100% { transform:scale(1); }
+    }
+    .score-pop { animation: pop .3s ease-in-out; }
+
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .spin { animation: spin .9s linear infinite; }
+
+    @keyframes waveBar {
+      0%,100% { transform: scaleY(0.4); }
+      50%      { transform: scaleY(1); }
+    }
+
+    .wave-bar { animation: waveBar 0.6s ease-in-out infinite; transform-origin: bottom; }
+    .wave-bar:nth-child(1) { animation-delay: 0s; }
+    .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.1s; }
+    .wave-bar:nth-child(5) { animation-delay: 0s; }
+
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-track { background:#0f172a; }
+    ::-webkit-scrollbar-thumb { background:#334155; border-radius:999px; }
+
+    button { cursor:pointer; }
+    .word-card-hover:hover { background:#1e293b !important; border-color: #475569 !important; }
+  </style>
+</head>
+<body>
+<div id="root">
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:#0f172a;">
+    <div class="spin" style="width:40px;height:40px;border:3px solid #334155;border-top-color:#818cf8;border-radius:50%;"></div>
+    <p style="color:#64748b;font-size:.85rem;">Loading…</p>
+  </div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD9c6LvsMW5ydeNrI3X7BdJQU1jicq_8CA",
+    authDomain: "pronunciation-builder.firebaseapp.com",
+    projectId: "pronunciation-builder",
+    storageBucket: "pronunciation-builder.firebasestorage.app",
+    messagingSenderId: "342600695252",
+    appId: "1:342600695252:web:ea374d457ef324a029aa41"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db   = firebase.firestore();
+  const auth = firebase.auth();
+
+  async function signInWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    try {
+      await auth.signInWithPopup(provider);
+    } catch(e) {
+      if (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment' || e.code === 'auth/cancelled-popup-request') {
+        try { await auth.signInWithRedirect(provider); }
+        catch(e2) { alert("Não foi possível abrir o login do Google."); }
+      } else if (e.code !== 'auth/popup-closed-by-user') {
+        alert("Erro ao fazer login: " + e.message);
+      }
+    }
+  }
+
+  function signOut() { auth.signOut(); }
+
+  // Processa o retorno do signInWithRedirect (necessário para o SDK
+  // sincronizar a sessão corretamente após o redirect voltar do Google).
+  // Sem isso, em alguns navegadores/condições o onAuthStateChanged pode
+  // disparar antes da sessão persistir, causando um loop de login.
+  let redirectResultPromise = auth.getRedirectResult()
+    .catch(e => {
+      console.error("Erro ao processar retorno do login (getRedirectResult):", e);
+      return null;
+    });
+
+  async function logActivity(data) {
+    try {
+      await db.collection("activity_logs").add({
+        ...data,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        clientTime: new Date().toISOString(),
+      });
+    } catch(e) {
+      const isPermission = e.code === "permission-denied" || (e.message && e.message.includes("Missing or insufficient permissions"));
+      const isIndex      = e.code === "failed-precondition" || (e.message && e.message.includes("index"));
+
+      if (isPermission) {
+        console.error("🔴 FIRESTORE PERMISSION ERROR — atividade NÃO foi salva.", e);
+        if (!window.__permissionAlertShown) {
+          window.__permissionAlertShown = true;
+          alert("⚠️ Erro de Permissão do Firestore\n\nAs atividades dos alunos NÃO estão sendo salvas.\n\nAtualize as Firestore Rules no console do Firebase e recarregue a página.\n\nDetalhes: " + e.message);
+        }
+      } else if (isIndex) {
+        console.error("🟡 FIRESTORE INDEX ERROR — atividade NÃO foi salva.", e);
+        if (!window.__indexAlertShown) {
+          window.__indexAlertShown = true;
+          alert("⚠️ Índice ausente no Firestore\n\nAs atividades NÃO estão sendo salvas.\n\nAbra o console do Firebase > Firestore > Indexes e crie os índices necessários.\n\nDetalhes: " + e.message);
+        }
+      } else {
+        console.error("🔴 Erro inesperado ao salvar atividade:", e.code, e.message);
+      }
+    }
+  }
+
+  async function fetchLogs() {
+    try {
+      const snap = await db.collection("activity_logs")
+        .orderBy("timestamp", "desc")
+        .limit(500)
+        .get();
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    } catch(e) {
+      const isPermission = e.code === "permission-denied" || (e.message && e.message.includes("Missing or insufficient permissions"));
+      const isIndex      = e.code === "failed-precondition" || (e.message && e.message.includes("index"));
+
+      if (isPermission) {
+        throw new Error("PERMISSION_DENIED: " + e.message);
+      } else if (isIndex) {
+        throw new Error("MISSING_INDEX: Crie um índice composto em activity_logs para o campo 'timestamp' (descending). Link no console: " + e.message);
+      } else {
+        throw new Error("UNKNOWN: " + e.message);
+      }
+    }
+  }
+</script>
+
+<script type="text/babel">
+const { useState, useRef, useEffect, useCallback } = React;
+const ADMIN_EMAIL = "francwrlanh19@gmail.com";
+
+// ── TIPO: par mínimo (2 palavras + trava-língua)
+// ── TIPO: twister_only (apenas trava-língua — sem par mínimo, sem seleção de carta)
+const PAIRS = [
+  { id:1, symbol:"/iː/ vs /ɪ/", accent:"#818cf8",
+    words:[
+      { word:"The sheep", ipa:"/ðə ʃiːp/", meaning:"A ovelha",  symbol:"/iː/", emoji:"🐑", hint:"Longo · Sorriso tenso 😁" },
+      { word:"The ship",  ipa:"/ðə ʃɪp/",  meaning:"O navio",   symbol:"/ɪ/",  emoji:"🚢", hint:"Curto · Boca relaxada 😌" },
+    ],
+    twister:{ word:"The sheep on the ship", ipa:"/ʃiːp ɒn ðə ʃɪp/", emoji:"🐑🚢", hint:"Longo seguido de curto — cuidado!" },
+    tip:"Para /iː/ (Sheep) sorria largo, como numa foto forçada, e sustente o som. Para /ɪ/ (Ship) relaxe completamente o rosto — é um som rápido que morre na garganta." },
+
+  { id:2, symbol:"/æ/ vs /ʌ/", accent:"#fbbf24",
+    words:[
+      { word:"A bat", ipa:"/ə bæt/", meaning:"Um morcego", symbol:"/æ/", emoji:"🦇", hint:"Boca bem aberta 😲" },
+      { word:"A but", ipa:"/ə bʌt/", meaning:"Um 'mas'",   symbol:"/ʌ/", emoji:"💬", hint:"Curto · Garganta 😶" },
+    ],
+    twister:{ word:"A bat, but why?", ipa:"/ə bæt bʌt waɪ/", emoji:"🦇💬", hint:"Abra muito no bat, feche no but." },
+    tip:"Brasileiros leem os dois com 'A'. Errado! Para /æ/ (Bat) abra a boca ao máximo, baixando o queixo. Para /ʌ/ (But) é um som seco, como um soco na barriga ('Uh!')." },
+
+  { id:3, symbol:"/uː/ vs /ʊ/", accent:"#2dd4bf",
+    words:[
+      { word:"The pool", ipa:"/ðə puːl/", meaning:"A piscina", symbol:"/uː/", emoji:"🏊", hint:"Biquinho longo 😗" },
+      { word:"The pull", ipa:"/ðə pʊl/",  meaning:"O puxão",   symbol:"/ʊ/",  emoji:"💪", hint:"Lábios relaxados 😐" },
+    ],
+    twister:{ word:"A pull to the pool", ipa:"/ə pʊl tə ðə puːl/", emoji:"💪🏊", hint:"Som curto primeiro, biquinho no final." },
+    tip:"O /uː/ (Pool) exige biquinho bem pronunciado e som longo. O /ʊ/ (Pull) não tem biquinho — boca relaxada e som bem rápido." },
+
+  { id:4, symbol:"/ɛ/ vs /æ/", accent:"#fb7185",
+    words:[
+      { word:"The men", ipa:"/ðə mɛn/", meaning:"Os homens", symbol:"/ɛ/", emoji:"👨‍👨‍👦", hint:"Como o 'é' 😕" },
+      { word:"The man", ipa:"/ðə mæn/", meaning:"O homem",   symbol:"/æ/", emoji:"🧍",    hint:"Boca super aberta 😮" },
+    ],
+    twister:{ word:"The man and the men", ipa:"/ðə mæn ænd ðə mɛn/", emoji:"🧍👨‍👨‍👦", hint:"Abra no Man, feche um pouco no Men." },
+    tip:"/ɛ/ (Men) é quase igual ao nosso 'É'. Para /æ/ (Man) exagere: abra a boca duas vezes mais e empurre a língua para baixo." },
+
+  { id:5, symbol:"/iː/ vs /ɪ/", accent:"#c084fc",
+    words:[
+      { word:"To leave", ipa:"/tə liːv/", meaning:"Sair / Deixar", symbol:"/iː/", emoji:"🚪", hint:"Sorriso tenso 😁" },
+      { word:"To live",  ipa:"/tə lɪv/",  meaning:"Viver / Morar", symbol:"/ɪ/",  emoji:"🏠", hint:"Curto e relaxado 😌" },
+    ],
+    twister:{ word:"Leave to live", ipa:"/liːv tə lɪv/", emoji:"🚪🏠", hint:"Estique no Leave, relaxe no Live." },
+    tip:"Erro fatal que muda todo o sentido! 'Leave' — sorria e sustente. 'Live' — rápido e descompromissado." },
+
+  { id:6, symbol:"/e/ vs /æ/", accent:"#f87171",
+    words:[
+      { word:"The bed", ipa:"/ðə bɛd/", meaning:"A cama",   symbol:"/e/", emoji:"🛏️", hint:"Boca relaxada 😐" },
+      { word:"The bad", ipa:"/ðə bæd/", meaning:"O ruim",   symbol:"/æ/", emoji:"😈", hint:"Queixo caído 😲" },
+    ],
+    twister:{ word:"The bad bed", ipa:"/ðə bæd bɛd/", emoji:"😈🛏️", hint:"Abra no bad, volte ao normal no bed." },
+    tip:"Em 'Bad' fale 'A' com formato de boca para 'É'. É esse som aberto que precisamos!" },
+
+  { id:7, symbol:"/ɑː/ vs /ʌ/", accent:"#f472b6",
+    words:[
+      { word:"A cop", ipa:"/ə kɑːp/", meaning:"Um policial", symbol:"/ɑː/", emoji:"👮", hint:"Som longo 'Aaa' 😮" },
+      { word:"A cup", ipa:"/ə kʌp/",  meaning:"Um copo",     symbol:"/ʌ/",  emoji:"☕", hint:"Curto e grosso 😶" },
+    ],
+    twister:{ word:"A cop with a cup", ipa:"/ə kɑːp wɪð ə kʌp/", emoji:"👮☕", hint:"Abra a garganta no cop, trave no cup." },
+    tip:"Em 'Cop' baixe bem a parte de trás da língua — longo e aberto. 'Cup' tem aquele 'A' cortado e brusco." },
+
+  { id:8, symbol:"/ʌ/ vs /æ/", accent:"#4ade80",
+    words:[
+      { word:"A bug", ipa:"/ə bʌg/", meaning:"Um inseto", symbol:"/ʌ/", emoji:"🪲", hint:"Curto da garganta 😶" },
+      { word:"A bag", ipa:"/ə bæg/", meaning:"Uma bolsa", symbol:"/æ/", emoji:"👜", hint:"Boca muito aberta 😲" },
+    ],
+    twister:{ word:"A bug in a bag", ipa:"/ə bʌg ɪn ə bæg/", emoji:"🪲👜", hint:"Curto no bug, super aberto no bag." },
+    tip:"'Bug' é garganta fechada, 'Bag' é boca exageradamente aberta. São sons completamente diferentes!" },
+
+  { id:9, symbol:"/iː/ vs /ɪ/", accent:"#60a5fa",
+    words:[
+      { word:"A seat", ipa:"/ə siːt/", meaning:"Um assento", symbol:"/iː/", emoji:"💺", hint:"Sorriso tenso 😁" },
+      { word:"To sit", ipa:"/tə sɪt/", meaning:"Sentar",     symbol:"/ɪ/",  emoji:"🪑", hint:"Relaxado e curto 😌" },
+    ],
+    twister:{ word:"Sit on a seat", ipa:"/sɪt ɒn ə siːt/", emoji:"🪑💺", hint:"Relaxe no sit, sorria largo no seat." },
+    tip:"Cuidado: se falar 'Sit' esticando os lábios, vai dizer uma palavra imprópria! Lembre: 'Sit' é rápido e com boca relaxada." },
+
+  { id:10, symbol:"/uː/ vs /ʊ/", accent:"#a78bfa",
+    words:[
+      { word:"A fool",  ipa:"/ə fuːl/",  meaning:"Um tolo", symbol:"/uː/", emoji:"🤡", hint:"Biquinho longo 😗" },
+      { word:"The full",ipa:"/ðə fʊl/",  meaning:"O cheio", symbol:"/ʊ/",  emoji:"🔋", hint:"Relaxado e rápido 😐" },
+    ],
+    twister:{ word:"A full fool", ipa:"/ə fʊl fuːl/", emoji:"🔋🤡", hint:"Full acaba rápido, fool tem eco." },
+    tip:"Não tenha vergonha de fazer o biquinho prolongado em 'Fool'! Em 'Full' a boca fica meio aberta e o som some rápido." },
+
+  { id:11, symbol:"/θ/ vs /s/", accent:"#38bdf8",
+    words:[
+      { word:"To think", ipa:"/tə θɪŋk/", meaning:"Pensar",   symbol:"/θ/", emoji:"🤔", hint:"Língua nos dentes 👅" },
+      { word:"To sink",  ipa:"/tə sɪŋk/", meaning:"Afundar",  symbol:"/s/", emoji:"⚓", hint:"Língua atrás dos dentes 🦷" },
+    ],
+    twister:{ word:"Think before you sink", ipa:"/θɪŋk bɪˈfɔːr ju sɪŋk/", emoji:"🤔⚓", hint:"Língua de fora primeiro, depois guarde ela!" },
+    tip:"Para o TH (Think) coloque a ponta da língua ENTRE os dentes da frente e sopre. Se a língua não sair, você vai dizer 'Sink' (Afundar)." },
+
+  { id:12, symbol:"/θ/ vs /t/", accent:"#fb923c",
+    words:[
+      { word:"The three", ipa:"/ðə θriː/", meaning:"O três",    symbol:"/θ/", emoji:"3️⃣", hint:"Língua nos dentes e sopra 🌬️" },
+      { word:"The tree",  ipa:"/ðə triː/", meaning:"A árvore",  symbol:"/t/", emoji:"🌳", hint:"Som seco de T 🥁" },
+    ],
+    twister:{ word:"Three green trees", ipa:"/θriː ɡriːn triːz/", emoji:"3️⃣🌳", hint:"Ar escapando no Three, batida seca no Tree." },
+    tip:"Em 'Three' morda levemente a língua e solte o ar. Em 'Tree' a língua bate no céu da boca atrás dos dentes — sem vazar ar." },
+
+  { id:13, symbol:"/tʃ/ vs /ʃ/", accent:"#a3e635",
+    words:[
+      { word:"A chair",  ipa:"/ə tʃeər/",  meaning:"Uma cadeira",      symbol:"/tʃ/", emoji:"🪑", hint:"Som de 'Tchau' 👋" },
+      { word:"To share", ipa:"/tə ʃeər/",  meaning:"Compartilhar",     symbol:"/ʃ/",  emoji:"🤝", hint:"Som de 'Xícara' ☕" },
+    ],
+    twister:{ word:"Share a chair", ipa:"/ʃeər ə tʃeər/", emoji:"🤝🪑", hint:"Chiado contínuo no Share, explosivo no Chair." },
+    tip:"O CH em inglês (Chair) tem um 'T' invisível na frente — igual quando dizemos 'Tchau'. O SH (Share) é o nosso 'X' normal." },
+
+  { id:14, symbol:"/r/ vs /h/", accent:"#f87171",
+    words:[
+      { word:"The rat", ipa:"/ðə ræt/", meaning:"O rato",    symbol:"/r/", emoji:"🐀", hint:"Língua enrolada pra trás 👅" },
+      { word:"The hat", ipa:"/ðə hæt/", meaning:"O chapéu",  symbol:"/h/", emoji:"🎩", hint:"Bafo saindo da garganta 🌬️" },
+    ],
+    twister:{ word:"A rat in a hat", ipa:"/ə ræt ɪn ə hæt/", emoji:"🐀🎩", hint:"Enrole a língua no rat, solte bafo no hat." },
+    tip:"O 'R' inicial em inglês nunca soa como 'RR'. Enrole a língua como no 'R' do interior paulista (PoRta). O 'RR' brasileiro pertence à letra H (Hat)." },
+
+  { id:15, symbol:"/m/ vs /n/", accent:"#818cf8",
+    words:[
+      { word:"Some",    ipa:"/sʌm/",     meaning:"Alguns", symbol:"/m/", emoji:"🍪", hint:"Lábios fechados no final 🤐" },
+      { word:"The sun", ipa:"/ðə sʌn/",  meaning:"O sol",  symbol:"/n/", emoji:"☀️", hint:"Lábios abertos no final 😮" },
+    ],
+    twister:{ word:"Some of the sun", ipa:"/sʌm əv ðə sʌn/", emoji:"🍪☀️", hint:"Feche os lábios no some, deixe aberto no sun." },
+    tip:"Em inglês é OBRIGATÓRIO fechar os dois lábios no M final de 'Some'. No Brasil dizemos com boca aberta — corrija isso!" },
+
+  // ── 10 NOVOS EXERCÍCIOS ──────────────────────────────────────────────────
+
+  // 16 — Trava-língua: /ʌ/ rítmico (bug / rug / mug)
+  { id:16, type:"twister_only", symbol:"/ʌ/ rhythm", accent:"#fb923c",
+    twister:{ word:"The bug on the rug drank from a mug", ipa:"/ðə bʌg ɒn ðə rʌg dræŋk frəm ə mʌg/", emoji:"🪲🪵☕", hint:"Mantenha velocidade constante — boca levemente aberta em cada /ʌ/." },
+    tip:"Foque no som curto e rítmico de /ʌ/ em BUG, RUG e MUG. Não arredonde os lábios — é diferente do 'U' português. Pense num soco rápido na barriga: 'Uh!'." },
+
+  // 17 — Par mínimo: /iː/ vs /ɪ/ (cheap/ship + trip)
+  { id:17, symbol:"/iː/ vs /ɪ/", accent:"#67e8f9",
+    words:[
+      { word:"The cheap", ipa:"/ðə tʃiːp/", meaning:"O barato", symbol:"/iː/", emoji:"💰", hint:"Sorria e sustente 😁" },
+      { word:"The chip",  ipa:"/ðə tʃɪp/",  meaning:"O chip",   symbol:"/ɪ/",  emoji:"💾", hint:"Curto e relaxado 😌" },
+    ],
+    twister:{ word:"The cheap ship takes a quick trip", ipa:"/ðə tʃiːp ʃɪp teɪks ə kwɪk trɪp/", emoji:"💰🚢✈️", hint:"Estique o 'cheap', depois encurte tudo: ship, quick, trip." },
+    tip:"Após o longo /iː/ de 'cheap', você precisa encurtar rapidamente para ship, quick e trip. É uma ginástica de tensão e relaxamento dos lábios." },
+
+  // 18 — Trava-língua: /æ/ puro (fat / cat / sat / flat / mat)
+  { id:18, type:"twister_only", symbol:"/æ/ drill", accent:"#fde68a",
+    twister:{ word:"A fat cat sat on a flat mat", ipa:"/ə fæt kæt sæt ɒn ə flæt mæt/", emoji:"🐱🧘", hint:"Queixo caindo em cada palavra — sem nasalizar!" },
+    tip:"O /æ/ (como em 'fat', 'cat', 'mat') exige abertura lateral da mandíbula. Brasileiros tendem a nasalizar — mantenha o som na boca, não no nariz." },
+
+  // 19 — Par mínimo: /e/ vs /æ/ (pen/pan + van)
+  { id:19, symbol:"/e/ vs /æ/", accent:"#f9a8d4",
+    words:[
+      { word:"The pen", ipa:"/ðə pɛn/", meaning:"A caneta", symbol:"/e/", emoji:"🖊️", hint:"Som de 'é' fechado 😕" },
+      { word:"The pan", ipa:"/ðə pæn/", meaning:"A panela", symbol:"/æ/", emoji:"🍳", hint:"Queixo bem abaixo 😮" },
+    ],
+    twister:{ word:"The pen and the pan are in the van", ipa:"/ðə pɛn ænd ðə pæn ər ɪn ðə væn/", emoji:"🖊️🍳🚐", hint:"Alterne rápido entre boca fechada (pen) e aberta (pan, van)." },
+    tip:"De 'pen' para 'pan' a mandíbula desce bastante. Se soar igual, treine na frente do espelho: no 'pan' você deve ver os dentes de baixo." },
+
+  // 20 — Trava-língua: /uː/ vs /ʊ/ (pool / cool / full / fools)
+  { id:20, type:"twister_only", symbol:"/uː/ vs /ʊ/ drill", accent:"#5eead4",
+    twister:{ word:"A pool full of cool fools", ipa:"/ə puːl fʊl əv kuːl fuːlz/", emoji:"🏊🔋😎🤡", hint:"'Full' é curto e relaxado — todos os outros têm biquinho longo." },
+    tip:"Em 'pool', 'cool' e 'fools' faça o biquinho e sustente. Em 'full' solte tudo imediatamente — lábios relaxados, som que some. É a diferença que separa o falante fluente." },
+
+  // 21 — Trava-língua: /θ/ vs /s/ (think / sink / thing)
+  { id:21, type:"twister_only", symbol:"/θ/ vs /s/ drill", accent:"#93c5fd",
+    twister:{ word:"Think before you sink the thing", ipa:"/θɪŋk bɪˈfɔːr ju sɪŋk ðə θɪŋ/", emoji:"🤔⚓🫧", hint:"Língua para fora no THINK e THING, guardada no SINK." },
+    tip:"A língua vai e volta três vezes nessa frase. Em 'think' e 'thing' ela encosta levemente nos dentes superiores. Em 'sink' ela fica completamente dentro da boca." },
+
+  // 22 — Par mínimo: /e/ vs /iː/ (left/leaf + reef)
+  { id:22, symbol:"/e/ vs /iː/", accent:"#86efac",
+    words:[
+      { word:"The left", ipa:"/ðə lɛft/", meaning:"A esquerda", symbol:"/e/", emoji:"⬅️", hint:"Relaxado, boca levemente aberta 😐" },
+      { word:"The leaf",  ipa:"/ðə liːf/",  meaning:"A folha",   symbol:"/iː/", emoji:"🍃", hint:"Sorriso tenso e longo 😁" },
+    ],
+    twister:{ word:"He left the leaf on the reef", ipa:"/hiː lɛft ðə liːf ɒn ðə riːf/", emoji:"⬅️🍃🪸", hint:"Boca relaxada no 'left', depois sorria largo em 'leaf' e 'reef'." },
+    tip:"Comece com 'left' sem tensão muscular, depois ative o sorriso tenso para 'leaf' e mantenha em 'reef'. É como ligar e desligar um interruptor." },
+
+  // 23 — Par mínimo: /ɒ/ vs /ʌ/ (hot/hut + nut)
+  { id:23, symbol:"/ɒ/ vs /ʌ/", accent:"#fca5a5",
+    words:[
+      { word:"The hot", ipa:"/ðə hɒt/", meaning:"O quente", symbol:"/ɒ/", emoji:"🔥", hint:"Garganta aberta, boca redonda 😮" },
+      { word:"The hut",  ipa:"/ðə hʌt/",  meaning:"A cabana", symbol:"/ʌ/",  emoji:"🛖", hint:"Som seco e central 😶" },
+    ],
+    twister:{ word:"A hot hut has a cracked nut", ipa:"/ə hɒt hʌt hæz ə krækt nʌt/", emoji:"🔥🛖🥜", hint:"Abra a garganta no 'hot', feche no 'hut' e 'nut'." },
+    tip:"Em 'hot' a parte de trás da língua cai, criando espaço na garganta — som profundo. Em 'hut' e 'nut' é um 'A' curto e seco, sem profundidade." },
+
+  // 24 — Trava-língua: /æ/ + /ɪ/ + /e/ (bat/bit/bad/bed)
+  { id:24, type:"twister_only", symbol:"/æ/ /ɪ/ /e/ drill", accent:"#d8b4fe",
+    twister:{ word:"The bat bit the bad bed", ipa:"/ðə bæt bɪt ðə bæd bɛd/", emoji:"🦇👄😈🛏️", hint:"Três sons diferentes — comece bem devagar!" },
+    tip:"Ginástica vocal completa: 'bat/bad' = boca super aberta (/æ/), 'bit' = curto e relaxado (/ɪ/), 'bed' = como nosso 'é' (/e/). Pratique lento antes de acelerar." },
+
+  // 25 — Trava-língua: fricativas /f/ /r/ /ʃ/ (fresh/fried/fish)
+  { id:25, type:"twister_only", symbol:"/f/ /r/ /ʃ/ drill", accent:"#fcd34d",
+    twister:{ word:"Fresh fried fish, fish fresh fried", ipa:"/frɛʃ fraɪd fɪʃ fɪʃ frɛʃ fraɪd/", emoji:"🐟🍳🌿", hint:"Controle o fluxo de ar — lábios e dentes trabalham juntos!" },
+    tip:"Foco na musculatura dos lábios e dentes: /f/ (lábio inferior nos dentes), /r/ (língua enrolada), /ʃ/ (como nosso 'x'). Articule cada consoante sem deixar o ritmo cair." },
+];
+
+// ── Exercícios "twister_only" não têm par mínimo — lógica adaptada ──────────
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function Spinner() {
+  return (
+    <div style={{display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100vh",background:"#0f172a"}}>
+      <div className="spin" style={{width:40,height:40,border:"3px solid #334155",borderTopColor:"#818cf8",borderRadius:"50%"}}/>
+    </div>
+  );
+}
+
+function WaveBars({ color }) {
+  return (
+    <div style={{display:"flex",alignItems:"flex-end",gap:3,height:28}}>
+      {[1,2,3,4,5].map(i => (
+        <div key={i} className="wave-bar" style={{width:5,height:"100%",background:color,borderRadius:3,opacity:.85}}/>
+      ))}
+    </div>
+  );
+}
+
+function LoginScreen() {
+  const [loading, setLoading] = useState(false);
+
+  async function handleLogin() {
+    setLoading(true);
+    try { await signInWithGoogle(); }
+    finally { setLoading(false); }
+  }
+
+  return (
+    <div className="fade-in" style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#0f172a,#1e293b)",padding:"1.5rem"}}>
+      <div style={{background:"#1e293b",borderRadius:"2rem",padding:"3rem 2rem",width:"100%",maxWidth:420,textAlign:"center",border:"1px solid #334155",boxShadow:"0 25px 50px -12px rgba(0,0,0,.6)"}}>
+        <span style={{fontSize:"4.5rem",display:"block",marginBottom:".5rem"}}>🎧</span>
+        <h1 style={{fontSize:"1.8rem",fontWeight:900,color:"#f8fafc",margin:"0 0 .4rem"}}>Minimal Pairs Hub</h1>
+        <p style={{color:"#94a3b8",fontSize:".95rem",marginBottom:"2.5rem"}}>Master English Pronunciation</p>
+
+        <button onClick={handleLogin} disabled={loading}
+          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"1rem 1.5rem",borderRadius:"1rem",border:"1px solid #334155",background:loading?"#1e3a8a":"#0f172a",color:"#f8fafc",fontSize:"1rem",fontWeight:700,transition:"all .2s"}}>
+          {loading ? (
+            <><div className="spin" style={{width:20,height:20,border:"2px solid #60a5fa",borderTopColor:"transparent",borderRadius:"50%"}}/>Signing in…</>
+          ) : (
+            <><svg width="22" height="22" viewBox="0 0 48 48">
+              <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.5 29.3 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.3 1 7.2 2.7l5.7-5.7C33.5 7 29 5 24 5 12.95 5 4 13.95 4 25s8.95 20 20 20c11 0 20-9 20-20 0-1.2-.1-2.3-.4-3.5z"/>
+              <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 19 13 24 13c2.8 0 5.3 1 7.2 2.7l5.7-5.7C33.5 7 29 5 24 5 16.3 5 9.7 9.1 6.3 14.7z"/>
+              <path fill="#4CAF50" d="M24 45c5 0 9.5-1.9 12.9-5l-6-5.1C29.3 36.5 26.8 37.5 24 37.5c-5.3 0-9.7-3.5-11.3-8.3l-6.5 5C9.5 40.9 16.3 45 24 45z"/>
+              <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.3 4.1-4.2 5.4l6 5.1C36.6 36.5 44 30 44 25c0-1.2-.1-2.3-.4-3.5z"/>
+            </svg>Sign in with Google</>
+          )}
+        </button>
+        <p style={{marginTop:"2rem",fontSize:".75rem",color:"#475569"}}>Your progress is saved to your account 🔒</p>
+      </div>
+    </div>
+  );
+}
+
+function AdminDashboard({ user }) {
+  const [logs,    setLogs]    = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState(null);
+  const [tab,     setTab]     = useState("overview");
+
+  useEffect(() => {
+    fetchLogs()
+      .then(d => { setLogs(d); setLoading(false); })
+      .catch(e => { setError(e.message); setLoading(false); });
+  }, []);
+
+  const today = new Date().toDateString();
+
+  const soundStats = {};
+  logs.forEach(l => {
+    const sound = l.pairSymbol || "Desconhecido";
+    const word  = l.targetWord || "?";
+    const key   = `${sound}|${word}`;
+    if (!soundStats[key]) soundStats[key] = { sound, word, correct:0, errors:0, students: new Set() };
+    l.isCorrect ? soundStats[key].correct++ : soundStats[key].errors++;
+    if (l.studentEmail) soundStats[key].students.add(l.studentEmail);
+  });
+
+  const soundList = Object.values(soundStats).map(s => ({
+    ...s,
+    total:      s.correct + s.errors,
+    errorRate:  s.correct + s.errors > 0 ? Math.round((s.errors / (s.correct + s.errors)) * 100) : 0,
+    studentCount: s.students.size,
+  })).sort((a,b) => b.errors - a.errors);
+
+  const hardestSounds = soundList.slice(0, 5);
+
+  const studentMap = {};
+  logs.forEach(l => {
+    const key = l.studentEmail || "unknown";
+    if (!studentMap[key]) studentMap[key] = {
+      name: l.studentName || "Anônimo",
+      email: key,
+      total: 0, correct: 0, todayTotal: 0,
+      words: {},
+    };
+    studentMap[key].total++;
+    if (l.isCorrect) studentMap[key].correct++;
+    const logDate = l.clientTime ? new Date(l.clientTime).toDateString() : null;
+    if (logDate === today) studentMap[key].todayTotal++;
+    const w = l.targetWord || "?";
+    if (!studentMap[key].words[w]) studentMap[key].words[w] = { correct:0, errors:0 };
+    l.isCorrect ? studentMap[key].words[w].correct++ : studentMap[key].words[w].errors++;
+  });
+
+  const students = Object.values(studentMap).sort((a,b) => b.todayTotal - a.todayTotal);
+  const totalAttempts = logs.length;
+  const globalAccuracy = totalAttempts > 0
+    ? Math.round((logs.filter(l=>l.isCorrect).length / totalAttempts) * 100)
+    : 0;
+
+  const TAB_STYLE = (active) => ({
+    padding:".45rem 1rem", borderRadius:".65rem", border:"none",
+    background: active ? "#334155" : "transparent",
+    color: active ? "#f8fafc" : "#64748b",
+    fontWeight: 700, fontSize:".8rem", cursor:"pointer", transition:"all .15s",
+  });
+
+  return (
+    <div className="fade-in" style={{minHeight:"100vh",padding:"1.5rem",maxWidth:740,margin:"0 auto"}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"1.5rem",flexWrap:"wrap",gap:"1rem"}}>
+        <div>
+          <h1 style={{margin:0,fontSize:"1.4rem",fontWeight:900,color:"#f8fafc"}}>🛡️ Painel do Professor</h1>
+          <p style={{margin:"4px 0 0",fontSize:".75rem",color:"#64748b"}}>{user.email}</p>
+        </div>
+        <button onClick={signOut} style={{background:"#1e293b",color:"#fb7185",border:"1px solid #3f0a0a",padding:".5rem 1rem",borderRadius:".75rem",fontWeight:700,fontSize:".8rem"}}>Sair</button>
+      </div>
+
+      {error && (
+        <div style={{background:"#450a0a",border:"1px solid #dc2626",borderRadius:"1rem",padding:"1rem 1.25rem",marginBottom:"1.5rem",color:"#fca5a5",fontSize:".85rem",lineHeight:1.6}}>
+          <strong>🔴 Erro ao carregar dados do Firestore:</strong><br/>
+          {error.startsWith("PERMISSION_DENIED") && (
+            <span>As Firestore Rules estão bloqueando a leitura. Aplique as regras abaixo e recarregue.<br/>
+            <code style={{fontSize:".7rem",background:"#0f172a",padding:"4px 8px",borderRadius:4,display:"block",marginTop:6,lineHeight:1.8}}>
+              {`rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /activity_logs/{docId} {\n      allow create: if request.auth != null;\n      allow read, list: if request.auth != null\n        && request.auth.token.email == "francwrlanh19@gmail.com";\n    }\n  }\n}`}
+            </code>
+            </span>
+          )}
+          {error.startsWith("MISSING_INDEX") && (
+            <span>Índice composto ausente. Vá em Firestore {">"} Indexes e crie um índice para <code>activity_logs</code> com campo <code>timestamp</code> (descending).<br/></span>
+          )}
+          <code style={{fontSize:".72rem",opacity:.8}}>{error}</code>
+        </div>
+      )}
+
+      {loading ? <Spinner/> : (
+        <>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))",gap:"1rem",marginBottom:"1.5rem"}}>
+            {[
+              {label:"Tentativas hoje", value: logs.filter(l => l.clientTime && new Date(l.clientTime).toDateString()===today).length, color:"#818cf8"},
+              {label:"Total histórico", value: totalAttempts, color:"#2dd4bf"},
+              {label:"Alunos ativos",   value: students.length, color:"#60a5fa"},
+              {label:"Acertos globais", value:`${globalAccuracy}%`, color: globalAccuracy>=70?"#4ade80":"#fb7185"},
+            ].map(k=>(
+              <div key={k.label} style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.1rem",textAlign:"center"}}>
+                <div style={{fontSize:"1.8rem",fontWeight:900,color:k.color}}>{k.value}</div>
+                <div style={{fontSize:".68rem",color:"#64748b",marginTop:4}}>{k.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{display:"flex",gap:6,marginBottom:"1.25rem",background:"#0f172a",padding:6,borderRadius:".85rem",width:"fit-content"}}>
+            <button style={TAB_STYLE(tab==="overview")}  onClick={()=>setTab("overview")}>📊 Sons Difíceis</button>
+            <button style={TAB_STYLE(tab==="students")}  onClick={()=>setTab("students")}>👩‍🎓 Alunos</button>
+            <button style={TAB_STYLE(tab==="activity")}  onClick={()=>setTab("activity")}>📋 Atividade</button>
+          </div>
+
+          {tab === "overview" && (
+            <div className="fade-in" style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
+              <div style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.25rem"}}>
+                <h3 style={{margin:"0 0 .25rem",fontSize:".95rem",fontWeight:800,color:"#f8fafc"}}>🔊 Sons que a turma mais erra</h3>
+                <p style={{margin:"0 0 1rem",fontSize:".72rem",color:"#64748b"}}>Ordenado por número de erros — foque o próximo exercício nestes</p>
+                {hardestSounds.length === 0 ? (
+                  <p style={{color:"#475569",fontSize:".85rem",textAlign:"center",padding:"1rem"}}>Nenhum dado ainda. Os alunos precisam praticar primeiro.</p>
+                ) : hardestSounds.map((s, i) => (
+                  <div key={s.word+i} style={{display:"flex",alignItems:"center",gap:"1rem",padding:".75rem 0",borderBottom:"1px solid #0f172a"}}>
+                    <span style={{fontWeight:900,color:"#475569",fontSize:"1.1rem",width:24,textAlign:"center"}}>{i+1}</span>
+                    <div style={{flex:1}}>
+                      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                        <span style={{fontSize:".9rem",fontWeight:800,color:"#f8fafc"}}>{s.word}</span>
+                        <span style={{fontFamily:"monospace",fontSize:".7rem",color:"#94a3b8",background:"#0f172a",padding:"2px 8px",borderRadius:"999px"}}>{s.sound}</span>
+                      </div>
+                      <div style={{height:6,background:"#0f172a",borderRadius:999,overflow:"hidden"}}>
+                        <div style={{height:"100%",width:`${s.errorRate}%`,background: s.errorRate>60?"#fb7185": s.errorRate>30?"#fbbf24":"#4ade80",borderRadius:999,transition:"width .4s"}}/>
+                      </div>
+                      <div style={{display:"flex",justifyContent:"space-between",marginTop:4}}>
+                        <span style={{fontSize:".65rem",color:"#64748b"}}>{s.studentCount} aluno(s) tentaram</span>
+                        <span style={{fontSize:".65rem",color:"#64748b"}}>{s.errors} erros · {s.correct} acertos · {s.errorRate}% falha</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {soundList.length > 5 && (
+                <div style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.25rem"}}>
+                  <h3 style={{margin:"0 0 1rem",fontSize:".9rem",fontWeight:800,color:"#94a3b8"}}>Todos os sons praticados</h3>
+                  <div style={{overflowX:"auto"}}>
+                    <table style={{width:"100%",borderCollapse:"collapse",fontSize:".75rem",color:"#cbd5e1"}}>
+                      <thead><tr style={{color:"#64748b"}}>
+                        {["Palavra","Som","Erros","Acertos","Taxa de erro"].map(h=><th key={h} style={{textAlign:"left",padding:"4px 8px"}}>{h}</th>)}
+                      </tr></thead>
+                      <tbody>
+                        {soundList.map((s,i)=>(
+                          <tr key={i} style={{borderTop:"1px solid #0f172a"}}>
+                            <td style={{padding:"6px 8px",fontWeight:700}}>{s.word}</td>
+                            <td style={{padding:"6px 8px",fontFamily:"monospace",fontSize:".7rem",color:"#94a3b8"}}>{s.sound}</td>
+                            <td style={{padding:"6px 8px",color:"#fb7185",fontWeight:700}}>{s.errors}</td>
+                            <td style={{padding:"6px 8px",color:"#4ade80",fontWeight:700}}>{s.correct}</td>
+                            <td style={{padding:"6px 8px"}}>
+                              <span style={{color: s.errorRate>60?"#fb7185": s.errorRate>30?"#fbbf24":"#4ade80",fontWeight:800}}>{s.errorRate}%</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {tab === "students" && (
+            <div className="fade-in" style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
+              {students.length === 0 ? (
+                <p style={{color:"#475569",textAlign:"center",padding:"2rem"}}>Nenhum aluno ainda.</p>
+              ) : students.map(s => {
+                const acc = s.total > 0 ? Math.round((s.correct/s.total)*100) : 0;
+                const worstWord = Object.entries(s.words)
+                  .sort(([,a],[,b]) => b.errors - a.errors)[0];
+
+                return (
+                  <div key={s.email} style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.25rem"}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:"0.5rem",marginBottom:"0.75rem"}}>
+                      <div>
+                        <p style={{margin:0,fontWeight:800,color:"#f8fafc",fontSize:".95rem"}}>{s.name}</p>
+                        <p style={{margin:"2px 0 0",fontSize:".68rem",color:"#475569"}}>{s.email}</p>
+                      </div>
+                      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                        <span style={{background:"#0f172a",color:"#818cf8",padding:"4px 10px",borderRadius:"999px",fontSize:".72rem",fontWeight:700}}>{s.todayTotal} hoje</span>
+                        <span style={{background:"#0f172a",color:"#60a5fa",padding:"4px 10px",borderRadius:"999px",fontSize:".72rem",fontWeight:700}}>{s.total} total</span>
+                        <span style={{background:"#0f172a",color:acc>=70?"#4ade80":"#fb7185",padding:"4px 10px",borderRadius:"999px",fontSize:".72rem",fontWeight:700}}>{acc}% acerto</span>
+                      </div>
+                    </div>
+                    {worstWord && worstWord[1].errors > 0 && (
+                      <div style={{background:"#0f172a",borderRadius:".75rem",padding:".6rem .85rem",fontSize:".75rem",color:"#fde68a",display:"flex",alignItems:"center",gap:6}}>
+                        <span>⚠️</span>
+                        <span>Maior dificuldade: <strong>"{worstWord[0]}"</strong> — {worstWord[1].errors} erro(s), {worstWord[1].correct} acerto(s)</span>
+                      </div>
+                    )}
+                    {(!worstWord || worstWord[1].errors === 0) && s.total > 0 && (
+                      <div style={{background:"#0f172a",borderRadius:".75rem",padding:".6rem .85rem",fontSize:".75rem",color:"#86efac",display:"flex",alignItems:"center",gap:6}}>
+                        <span>✅</span><span>Sem erros registrados ainda — ótimo!</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {tab === "activity" && (
+            <div className="fade-in" style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.25rem"}}>
+              <h3 style={{margin:"0 0 1rem",fontSize:".9rem",fontWeight:800,color:"#94a3b8"}}>📋 Últimas 30 tentativas</h3>
+              <div style={{overflowX:"auto"}}>
+                <table style={{width:"100%",borderCollapse:"collapse",fontSize:".75rem",color:"#cbd5e1"}}>
+                  <thead><tr style={{color:"#64748b"}}>
+                    {["Aluno","Palavra","Som","Resultado","Hora"].map(h=><th key={h} style={{textAlign:"left",padding:"4px 8px"}}>{h}</th>)}
+                  </tr></thead>
+                  <tbody>
+                    {logs.slice(0,30).map((l,i)=>(
+                      <tr key={i} style={{borderTop:"1px solid #0f172a"}}>
+                        <td style={{padding:"6px 8px"}}>{l.studentName}</td>
+                        <td style={{padding:"6px 8px",fontWeight:700}}>{l.targetWord}</td>
+                        <td style={{padding:"6px 8px",fontFamily:"monospace",fontSize:".68rem",color:"#94a3b8"}}>{l.pairSymbol||"—"}</td>
+                        <td style={{padding:"6px 8px",color:l.isCorrect?"#4ade80":"#fb7185",fontWeight:700}}>{l.isCorrect?"✓":"✗"}</td>
+                        <td style={{padding:"6px 8px",color:"#475569",whiteSpace:"nowrap"}}>
+                          {l.clientTime ? new Date(l.clientTime).toLocaleString("pt-BR") : "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+function SummaryScreen({ score, total, onRestart }) {
+  useEffect(() => { confetti({ particleCount:200, spread:100, origin:{y:.5} }); }, []);
+  const rank = score >= total*15 ? "🏆 Champion!" : score >= total*10 ? "⭐ Great job!" : "💪 Keep going!";
+  return (
+    <div className="fade-in" style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",minHeight:"80vh",padding:"2rem",textAlign:"center"}}>
+      <span style={{fontSize:"5rem",marginBottom:"1rem"}}>🏆</span>
+      <h2 style={{fontSize:"2rem",fontWeight:900,color:"#f8fafc",margin:"0 0 .5rem"}}>{rank}</h2>
+      <p style={{color:"#94a3b8",marginBottom:"2rem"}}>You completed all {total} exercises!</p>
+      <div style={{background:"linear-gradient(135deg,#F59E0B,#D97706)",padding:"1.25rem 3rem",borderRadius:"1.5rem",fontSize:"2.5rem",fontWeight:900,color:"#fff",marginBottom:"1rem"}}>
+        ⭐ {score} pts
+      </div>
+      <p style={{color:"#64748b",fontSize:".85rem",marginBottom:"3rem"}}>Max possible: {total*20} pts</p>
+      <button onClick={onRestart} style={{background:"#1e293b",color:"#f8fafc",border:"1px solid #334155",padding:"1rem 2rem",borderRadius:"1rem",fontSize:"1rem",fontWeight:700}}>
+        🔄 Shuffle & Play Again
+      </button>
+    </div>
+  );
+}
+
+function WordCard({ wordData, accent, isTarget, isSolved, onSelect, isTwister }) {
+  const [speaking, setSpeaking] = useState(false);
+
+  function handleSpeak(e) {
+    e.stopPropagation();
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(wordData.word);
+    utt.lang = "en-US"; utt.rate = isTwister ? .72 : .85;
+    setSpeaking(true);
+    utt.onend = () => setSpeaking(false);
+    utt.onerror = () => setSpeaking(false);
+    window.speechSynthesis.speak(utt);
+  }
+
+  return (
+    <div onClick={onSelect} className="word-card-hover"
+      style={{
+        background: isTarget ? "#1e293b" : "#0f172a",
+        border: isTarget ? `2.5px solid ${accent}` : isSolved ? "2.5px solid #059669" : (isTwister ? "2px dashed #334155" : "2px solid #1e293b"),
+        boxShadow: isTarget ? `0 0 0 4px ${accent}33` : isSolved ? "0 0 0 4px #05966933" : "none",
+        transition:"all .2s ease", flex:1, width:"100%",
+        borderRadius:"1rem", padding:"1.1rem .9rem",
+        display:"flex", flexDirection:"column", alignItems:"center", gap:6,
+        userSelect:"none", cursor:"pointer",
+      }}>
+      {isTwister && <span style={{fontSize:".65rem",fontWeight:900,color:accent,textTransform:"uppercase",letterSpacing:1,marginBottom:2}}>👅 Tongue Twister</span>}
+      <span style={{fontSize:isTwister?"1.8rem":"2.4rem",lineHeight:1}}>{wordData.emoji}</span>
+      <span style={{fontSize:"1.2rem",fontWeight:800,color:"#f8fafc",textAlign:"center",lineHeight:1.2}}>{wordData.word}</span>
+      <span style={{fontFamily:"monospace",fontSize:".78rem",color:"#94a3b8"}}>{wordData.ipa}</span>
+      {!isTwister && <span style={{background:`${accent}22`,color:accent,fontSize:".7rem",fontWeight:700,padding:"2px 10px",borderRadius:"999px"}}>{wordData.symbol}</span>}
+      <span style={{fontSize:".72rem",color:"#64748b",fontStyle:"italic",textAlign:"center"}}>{wordData.meaning}</span>
+      <p style={{fontSize:".7rem",color:"#cbd5e1",textAlign:"center",lineHeight:1.5,margin:"2px 0 0"}}>{wordData.hint}</p>
+      <button onClick={handleSpeak} style={{
+        background:speaking?`${accent}99`:accent, color:"#fff", border:"none",
+        borderRadius:".65rem", padding:"7px 14px", fontSize:".72rem", fontWeight:700,
+        display:"flex", alignItems:"center", gap:5, marginTop:8, transition:"all .15s"
+      }}>
+        <svg style={{width:14,height:14}} fill="currentColor" viewBox="0 0 24 24">
+          {speaking
+            ? <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+            : <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>}
+        </svg>
+        {speaking ? "Playing…" : "Listen"}
+      </button>
+      {isTarget && <span style={{color:accent,fontSize:".7rem",fontWeight:800,marginTop:2}}>✓ Selected</span>}
+      {!isTarget && isSolved && <span style={{color:"#059669",fontSize:".7rem",fontWeight:800,marginTop:2}}>✅ Scored</span>}
+    </div>
+  );
+}
+
+function PracticeRecorder({ accent }) {
+  const [state, setState]       = useState("idle");
+  const [audioUrl, setAudioUrl] = useState(null);
+  const mediaRecRef = useRef(null);
+  const chunksRef   = useRef([]);
+  const streamRef   = useRef(null);
+
+  async function startRec() {
+    let stream;
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio:true }); }
+    catch { return; }
+    streamRef.current = stream;
+    chunksRef.current = [];
+    if (audioUrl) { URL.revokeObjectURL(audioUrl); setAudioUrl(null); }
+
+    const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus") ? "audio/webm;codecs=opus"
+                   : MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "";
+    const mr = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+    mediaRecRef.current = mr;
+
+    mr.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunksRef.current.push(e.data); };
+    mr.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      const blob = new Blob(chunksRef.current, { type: mimeType || "audio/webm" });
+      setAudioUrl(URL.createObjectURL(blob));
+      setState("done");
+    };
+    mr.start(100);
+    setState("recording");
+  }
+
+  function stopRec() {
+    if (mediaRecRef.current && mediaRecRef.current.state === "recording") mediaRecRef.current.stop();
+  }
+
+  function reset() {
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    setAudioUrl(null); setState("idle");
+  }
+
+  return (
+    <div style={{background:"#0f172a",border:`1px dashed ${accent}55`,borderRadius:"1rem",padding:"1rem",display:"flex",flexDirection:"column",gap:"0.75rem"}}>
+      <div style={{display:"flex",alignItems:"center",gap:8}}>
+        <span style={{fontSize:".72rem",fontWeight:800,color:accent,textTransform:"uppercase",letterSpacing:1}}>🎙 Practice — Record & Compare</span>
+        <span style={{fontSize:".65rem",color:"#475569"}}>(no scoring)</span>
+      </div>
+      <div style={{display:"flex",alignItems:"center",gap:"0.75rem",flexWrap:"wrap"}}>
+        {state !== "recording" ? (
+          <button onClick={startRec} style={{display:"flex",alignItems:"center",gap:6,background:`${accent}22`,color:accent,border:`1px solid ${accent}55`,padding:".5rem 1rem",borderRadius:".75rem",fontSize:".8rem",fontWeight:700,transition:"all .2s"}}>
+            <svg style={{width:14,height:14}} fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+            </svg>
+            {state === "done" ? "Record Again" : "Start Recording"}
+          </button>
+        ) : (
+          <button onClick={stopRec} className="rec-pulse" style={{display:"flex",alignItems:"center",gap:6,background:"#312e81",color:"#a5b4fc",border:"1px solid #4f46e5",padding:".5rem 1rem",borderRadius:".75rem",fontSize:".8rem",fontWeight:700}}>
+            <WaveBars color="#a5b4fc"/>
+            Stop
+          </button>
+        )}
+        {state === "done" && (
+          <button onClick={reset} style={{background:"transparent",color:"#475569",border:"1px solid #334155",padding:".5rem .75rem",borderRadius:".75rem",fontSize:".75rem"}}>
+            ✕ Clear
+          </button>
+        )}
+      </div>
+      {audioUrl && (
+        <div className="fade-in">
+          <p style={{margin:"0 0 6px",fontSize:".68rem",color:"#64748b",fontWeight:600}}>🎧 Your recording — compare with the Listen button above:</p>
+          <audio controls src={audioUrl} style={{width:"100%",borderRadius:6}}/>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ScoreRecognizer({ targetWord, accent, onResult, solved }) {
+  const [phase,   setPhase]   = useState("idle");
+  const [interim, setInterim] = useState("");
+  const [final,   setFinal]   = useState("");
+  const recRef = useRef(null);
+
+  useEffect(() => {
+    return () => { try { recRef.current && recRef.current.stop(); } catch {} };
+  }, []);
+
+  useEffect(() => {
+    try { recRef.current && recRef.current.abort(); } catch {}
+    recRef.current = null;
+    setPhase("idle"); setInterim(""); setFinal("");
+  }, [targetWord]);
+
+  function startListening() {
+    if (solved) return;
+    if (phase === "listening") {
+      try { recRef.current && recRef.current.stop(); } catch {}
+      return;
+    }
+
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { onResult("__no_sr__"); return; }
+
+    const rec = new SR();
+    rec.lang = "en-US";
+    rec.continuous = false;
+    rec.interimResults = true;
+    rec.maxAlternatives = 5;
+    recRef.current = rec;
+
+    rec.onstart = () => { setPhase("listening"); setInterim(""); setFinal(""); };
+
+    rec.onresult = (e) => {
+      const result = e.results[e.results.length - 1];
+      const best   = result[0].transcript;
+      if (result.isFinal) {
+        const alts = Array.from(result).map(r => r.transcript);
+        setFinal(best); setInterim(""); setPhase("done");
+        onResult(best, alts);
+      } else {
+        setInterim(best);
+      }
+    };
+
+    rec.onerror = (e) => {
+      if (e.error !== "aborted") {
+        setPhase("idle");
+        if (e.error === "not-allowed") onResult("__mic_denied__");
+        else onResult("");
+      }
+    };
+
+    rec.onend = () => {
+      setPhase(p => p === "listening" ? "idle" : p);
+    };
+
+    try { rec.start(); }
+    catch { setPhase("idle"); }
+  }
+
+  const isListening = phase === "listening";
+  const showText    = interim || final;
+
+  return (
+    <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"0.9rem"}}>
+      <button
+        onClick={startListening}
+        disabled={solved}
+        className={isListening ? "mic-pulse" : ""}
+        style={{
+          width:80, height:80, borderRadius:"50%", border:"none",
+          background: solved
+            ? "linear-gradient(135deg,#059669,#047857)"
+            : isListening
+              ? "linear-gradient(135deg,#ef4444,#dc2626)"
+              : `linear-gradient(135deg,${accent},${accent}bb)`,
+          display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+          gap:3, transition:"all .2s",
+          boxShadow: isListening ? "none" : solved ? "0 8px 20px rgba(5,150,105,.35)" : `0 8px 24px ${accent}44`,
+          opacity: solved ? .7 : 1
+        }}>
+        <svg style={{width:34,height:34,fill:"#fff"}} viewBox="0 0 24 24">
+          {solved
+            ? <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            : isListening
+              ? <rect x="6" y="6" width="12" height="12" rx="2"/>
+              : <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>}
+        </svg>
+      </button>
+
+      <p style={{margin:0,fontSize:".78rem",color:"#94a3b8",fontWeight:600,textAlign:"center"}}>
+        {solved        ? "✅ Scored! Pick another card to continue"
+         : isListening ? "🔴 Listening… speak now"
+         : "Tap to speak — result is instant"}
+      </p>
+
+      {showText && (
+        <div className="fade-in" style={{width:"100%",background:"#0f172a",border:`1px solid ${interim ? accent+"66" : "#334155"}`,borderRadius:".85rem",padding:".65rem 1rem",textAlign:"center",transition:"border-color .2s"}}>
+          <p style={{margin:"0 0 2px",fontSize:".62rem",color:"#64748b"}}>{interim ? "Hearing…" : "Heard:"}</p>
+          <p style={{margin:0,fontSize:"1.05rem",fontWeight:700,color: interim ? accent : "#f8fafc",transition:"color .15s"}}>
+            "{showText}"
+          </p>
+        </div>
+      )}
+
+      {isListening && <WaveBars color={accent}/>}
+    </div>
+  );
+}
+
+// ── ExerciseView com suporte a twister_only ──────────────────────────────────
+function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressText }) {
+  const isTwisterOnly = pair.type === "twister_only";
+
+  // Para twister_only: apenas 1 item (o trava-língua), targetIndex fixo em 0
+  const [targetIndex, setTargetIndex] = useState(isTwisterOnly ? 0 : null);
+  const [feedback,    setFeedback]    = useState(null);
+  const [feedbackMsg, setFeedbackMsg] = useState("");
+  const [attempts,    setAttempts]    = useState(0);
+  const [solvedSet,   setSolvedSet]   = useState(new Set());
+
+  const { accent, words, twister, tip } = pair;
+  // twister_only: só precisa resolver o trava-língua
+  const totalToSolve = isTwisterOnly ? 1 : 3;
+  const allSolved = solvedSet.size >= totalToSolve;
+
+  useEffect(() => {
+    setTargetIndex(isTwisterOnly ? 0 : null);
+    setFeedback(null); setFeedbackMsg("");
+    setAttempts(0); setSolvedSet(new Set());
+  }, [pair]);
+
+  function selectTarget(i) {
+    if (isTwisterOnly) return; // sem seleção manual
+    setTargetIndex(i); setFeedback(null); setFeedbackMsg(""); setAttempts(0);
+  }
+
+  function clean(s) { return s.toLowerCase().replace(/[.,!?'"]/g,"").trim(); }
+
+  function handleResult(text, alts) {
+    if (!text || text === "" || text === "__no_sr__" || text === "__mic_denied__") {
+      if (text === "__mic_denied__") { setFeedback("info"); setFeedbackMsg("❌ Microphone permission denied. Allow mic access and try again."); return; }
+      if (text === "__no_sr__")      { setFeedback("info"); setFeedbackMsg("⚠️ Speech recognition not supported in this browser. Try Chrome."); return; }
+      setFeedback("other"); setFeedbackMsg("Couldn't hear anything — try speaking louder or closer to the mic."); return;
+    }
+
+    // Para twister_only: targetIndex é sempre 0 (mapeado para o trava-língua)
+    const isTwisterTarget = isTwisterOnly ? true : (targetIndex === 2);
+    const targetWord      = isTwisterTarget ? twister.word : (words && words[targetIndex] ? words[targetIndex].word : "");
+    const otherIndex      = isTwisterTarget ? -1 : (1 - targetIndex);
+
+    const targetStr = clean(targetWord);
+    const otherStr  = (!isTwisterTarget && otherIndex >= 0 && words) ? clean(words[otherIndex].word) : "";
+    const allSpoken = [text, ...(alts||[])].map(clean);
+
+    const hitsTarget = allSpoken.some(s => s.includes(targetStr) || targetStr.includes(s));
+    const hitsOther  = otherStr && allSpoken.some(s => s.includes(otherStr) || otherStr.includes(s));
+    const alreadySolved = solvedSet.has(targetIndex);
+
+    // Log sempre — mesmo para twister_only
+    logActivity({
+      studentName:   user.displayName,
+      studentEmail:  user.email,
+      targetWord,
+      pairSymbol:    pair.symbol,
+      isCorrect:     hitsTarget,
+      attemptNumber: attempts + 1,
+      isTwister:     isTwisterTarget,
+    });
+
+    if (hitsTarget) {
+      const pts = alreadySolved ? 0 : (attempts === 0) ? (isTwisterTarget ? 20 : 10) : 5;
+      setFeedback("success");
+      setSolvedSet(prev => new Set([...prev, targetIndex]));
+      setFeedbackMsg(alreadySolved ? "✅ Correct again! (already scored)" : `🎉 Perfect! +${pts} points!`);
+      confetti({ particleCount:90, spread:65, origin:{y:.6} });
+      if (!alreadySolved) onCorrectAnswer(pts);
+    } else if (!isTwisterTarget && hitsOther) {
+      setAttempts(p=>p+1); setFeedback("close");
+      setFeedbackMsg(`Oops! Sounded like "${words[otherIndex].word}". Adjust your mouth shape and try again!`);
+    } else {
+      setAttempts(p=>p+1); setFeedback("other");
+      setFeedbackMsg(`Heard something else. Read the card text exactly and try again.`);
+    }
+  }
+
+  const fStyle = {
+    success: { bg:"#064e3b", border:"#059669", text:"#a7f3d0" },
+    close:   { bg:"#78350f", border:"#d97706", text:"#fde68a" },
+    other:   { bg:"#1e293b", border:"#475569", text:"#f8fafc" },
+    info:    { bg:"#1e3a8a", border:"#2563eb", text:"#bfdbfe" },
+  };
+
+  const needsTarget      = !isTwisterOnly && targetIndex === null;
+  const targetWord       = isTwisterOnly
+    ? twister.word
+    : (targetIndex === 2 ? twister.word : (targetIndex !== null && words ? words[targetIndex]?.word : null));
+  const currentCardSolved = targetIndex !== null && solvedSet.has(targetIndex);
+
+  return (
+    <div className="fade-in" style={{display:"flex",flexDirection:"column",gap:"1.25rem"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8}}>
+        <span style={{fontFamily:"monospace",fontSize:"1.15rem",fontWeight:900,color:accent}}>{pair.symbol}</span>
+        <span style={{background:"#1e293b",color:"#94a3b8",fontSize:".78rem",fontWeight:700,padding:"4px 14px",borderRadius:"999px",border:"1px solid #334155"}}>{progressText}</span>
+      </div>
+
+      {/* Badge twister_only */}
+      {isTwisterOnly && (
+        <div style={{background:`${accent}18`,borderLeft:`4px solid ${accent}`,borderRadius:".5rem 1rem 1rem .5rem",padding:".65rem 1rem",fontSize:".78rem",fontWeight:700,color:accent}}>
+          👅 Tongue Twister Exercise — Foque no ritmo e na precisão fonética
+        </div>
+      )}
+
+      <div style={{background:`${accent}18`,borderLeft:`4px solid ${accent}`,borderRadius:".5rem 1rem 1rem .5rem",padding:"1rem 1.25rem",color:"#cbd5e1",lineHeight:1.6,fontSize:".85rem"}}>
+        <span style={{color:accent,fontWeight:800,display:"block",marginBottom:6,fontSize:".9rem"}}>💡 Pronunciation Tip:</span>
+        {tip}
+      </div>
+
+      {/* Cards de palavras — só para pares mínimos */}
+      {!isTwisterOnly && words && (
+        <div style={{display:"flex",gap:".75rem"}}>
+          {words.map((w,i) => (
+            <WordCard key={w.word} wordData={w} accent={accent} isTarget={targetIndex===i} isSolved={solvedSet.has(i)} onSelect={()=>selectTarget(i)} />
+          ))}
+        </div>
+      )}
+
+      {/* Trava-língua — sempre visível */}
+      <WordCard
+        wordData={twister}
+        accent={accent}
+        isTarget={isTwisterOnly ? true : targetIndex===2}
+        isSolved={solvedSet.has(isTwisterOnly ? 0 : 2)}
+        onSelect={isTwisterOnly ? ()=>{} : ()=>selectTarget(2)}
+        isTwister={true}
+      />
+
+      <div style={{background:"#1e293b",borderRadius:"1.5rem",padding:"1.5rem",border:"1px solid #334155",display:"flex",flexDirection:"column",gap:"1rem"}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+          <span style={{fontSize:".78rem",fontWeight:800,color:"#f8fafc",textTransform:"uppercase",letterSpacing:.8}}>🎯 Speak to Score</span>
+          {targetWord && !currentCardSolved && (
+            <span style={{fontSize:".72rem",color:accent,fontWeight:600}}>
+              — say: <strong>"{targetWord}"</strong>
+            </span>
+          )}
+          {allSolved && (
+            <span style={{fontSize:".72rem",color:"#4ade80",fontWeight:700}}>
+              {isTwisterOnly ? "🏅 Twister done!" : "🏅 All 3 done!"}
+            </span>
+          )}
+        </div>
+
+        {needsTarget ? (
+          <div style={{textAlign:"center",padding:"1rem 0",color:"#64748b",fontSize:".85rem"}}>
+            👆 Select a word card above, then speak to score points
+          </div>
+        ) : (
+          <ScoreRecognizer
+            targetWord={targetWord}
+            accent={accent}
+            onResult={handleResult}
+            solved={currentCardSolved}
+          />
+        )}
+
+        {feedback && fStyle[feedback] && (
+          <div className="fade-in" style={{background:fStyle[feedback].bg,border:`1px solid ${fStyle[feedback].border}`,color:fStyle[feedback].text,borderRadius:"1rem",padding:".8rem 1rem",fontSize:".85rem",fontWeight:600,textAlign:"center"}}>
+            {feedbackMsg}
+          </div>
+        )}
+      </div>
+
+      <PracticeRecorder accent={accent} />
+
+      <button onClick={onNext}
+        style={{background:"transparent",color:"#94a3b8",border:"1px solid #475569",padding:"1.1rem",borderRadius:"1rem",fontSize:"1rem",fontWeight:800,transition:"all .2s"}}
+        onMouseOver={e=>{e.currentTarget.style.background="#1e293b";e.currentTarget.style.color="#f8fafc";}}
+        onMouseOut={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="#94a3b8";}}>
+        {isLast ? "Finish Training 🏁" : "Next Exercise ➔"}
+      </button>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// HUB DE FONEMAS — busca docs na coleção `phoneme_hub` do Firestore,
+// agrupa por `categoria` e exibe cards. Clique abre um modal com
+// explicação, exemplos (com TTS) e botão para ir direto ao exercício.
+// ═══════════════════════════════════════════════════════════════════════
+
+function SpeakerButton({ word, accent }) {
+  const [speaking, setSpeaking] = useState(false);
+
+  function handleSpeak(e) {
+    e.stopPropagation();
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(word);
+    utt.lang = "en-US";
+    utt.rate = 0.9;
+    setSpeaking(true);
+    utt.onend = () => setSpeaking(false);
+    utt.onerror = () => setSpeaking(false);
+    window.speechSynthesis.speak(utt);
+  }
+
+  return (
+    <button onClick={handleSpeak} aria-label={`Ouvir ${word}`}
+      style={{
+        background:"transparent", border:"none", fontSize:"1.15rem",
+        padding:".2rem .35rem", borderRadius:".5rem", lineHeight:1,
+        opacity: speaking ? .45 : 1, transition:"opacity .15s, transform .12s",
+      }}
+      onMouseOver={e=>e.currentTarget.style.transform="scale(1.15)"}
+      onMouseOut={e=>e.currentTarget.style.transform="scale(1)"}>
+      🔊
+    </button>
+  );
+}
+
+function PhonemeModal({ phoneme, accent, onClose, onPractice }) {
+  const exemplos = Array.isArray(phoneme.exemplos) ? phoneme.exemplos : [];
+
+  useEffect(() => {
+    function handleKey(e) { if (e.key === "Escape") onClose(); }
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fade-in" onClick={onClose}
+      style={{position:"fixed",inset:0,background:"rgba(2,6,23,.72)",backdropFilter:"blur(4px)",display:"flex",alignItems:"center",justifyContent:"center",padding:"1.25rem",zIndex:200}}>
+      <div onClick={e=>e.stopPropagation()}
+        style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.5rem",width:"100%",maxWidth:420,maxHeight:"86vh",overflowY:"auto",padding:"1.75rem 1.5rem",position:"relative",boxShadow:"0 24px 60px rgba(0,0,0,.5)"}}>
+
+        <button onClick={onClose} aria-label="Fechar"
+          style={{position:"absolute",top:".9rem",right:".9rem",width:32,height:32,borderRadius:"50%",background:"#0f172a",border:"1px solid #334155",color:"#94a3b8",fontSize:"1rem",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>
+          ✕
+        </button>
+
+        <div style={{textAlign:"center",fontSize:"2.6rem",fontWeight:900,color:accent,margin:".25rem 0 .35rem"}}>
+          {phoneme.simbolo}
+        </div>
+        <div style={{textAlign:"center",fontSize:".7rem",fontWeight:700,letterSpacing:.6,textTransform:"uppercase",color:"#64748b",marginBottom:"1.1rem"}}>
+          {phoneme.categoria}
+        </div>
+        <p style={{fontSize:".92rem",lineHeight:1.55,color:"#cbd5e1",textAlign:"center",marginBottom:"1.4rem"}}>
+          {phoneme.explicacao}
+        </p>
+
+        <div style={{fontSize:".72rem",fontWeight:800,textTransform:"uppercase",letterSpacing:.6,color:"#64748b",marginBottom:".6rem"}}>
+          Exemplos
+        </div>
+        <div style={{display:"flex",flexDirection:"column",gap:".55rem",marginBottom:"1.5rem"}}>
+          {exemplos.map((word, i) => (
+            <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:"#0f172a",border:"1px solid #334155",borderRadius:".9rem",padding:".7rem .9rem"}}>
+              <span style={{fontSize:".92rem",fontWeight:600,color:"#f8fafc"}}>{word}</span>
+              <SpeakerButton word={word} accent={accent} />
+            </div>
+          ))}
+        </div>
+
+        <button onClick={() => onPractice(phoneme)}
+          style={{width:"100%",background:`linear-gradient(135deg,${accent},${accent}cc)`,color:"#fff",border:"none",padding:"1rem",borderRadius:"1rem",fontSize:".95rem",fontWeight:800,transition:"filter .15s"}}
+          onMouseOver={e=>e.currentTarget.style.filter="brightness(1.08)"}
+          onMouseOut={e=>e.currentTarget.style.filter="brightness(1)"}>
+          Praticar agora ➔
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function PhonemeHubScreen({ onPractice, onBack }) {
+  const [phonemes, setPhonemes] = useState([]);
+  const [loadState, setLoadState] = useState("loading"); // loading | error | empty | ready
+  const [errorMsg, setErrorMsg] = useState("");
+  const [selected, setSelected] = useState(null);
+
+  async function loadPhonemes() {
+    setLoadState("loading");
+    try {
+      console.log("[DEBUG] auth.currentUser:", auth.currentUser ? auth.currentUser.email : null);
+      console.log("[DEBUG] db._databaseId / projectId:", db._databaseId ? db._databaseId.projectId : "n/a", db._databaseId ? db._databaseId.database : "n/a");
+      const snap = await db.collection("phoneme_hub").get();
+      console.log("[DEBUG] snap.size:", snap.size, "snap.empty:", snap.empty, "fromCache:", snap.metadata && snap.metadata.fromCache);
+      snap.forEach(d => console.log("[DEBUG] doc encontrado ->", d.id, d.data()));
+      if (snap.empty) { setLoadState("empty"); return; }
+      const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setPhonemes(docs);
+      setLoadState("ready");
+    } catch (e) {
+      console.error("Erro ao carregar phoneme_hub:", e);
+      const isPermission = e.code === "permission-denied";
+      setErrorMsg(isPermission
+        ? "Erro de permissão no Firestore. Verifique as Regras de Segurança."
+        : "Não foi possível carregar os fonemas. Verifique sua conexão.");
+      setLoadState("error");
+    }
+  }
+
+  useEffect(() => { loadPhonemes(); }, []);
+
+  // Agrupa por categoria preservando a ordem de primeira ocorrência
+  const groups = [];
+  const groupIndex = {};
+  phonemes.forEach(p => {
+    const cat = p.categoria || "Outros";
+    if (!(cat in groupIndex)) {
+      groupIndex[cat] = groups.length;
+      groups.push({ categoria: cat, items: [] });
+    }
+    groups[groupIndex[cat]].items.push(p);
+  });
+
+  const ACCENTS = ["#818cf8","#fbbf24","#2dd4bf","#fb7185","#4ade80","#60a5fa"];
+
+  return (
+    <div className="fade-in" style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
+      <header style={{position:"sticky",top:0,zIndex:50,background:"rgba(15,23,42,.9)",backdropFilter:"blur(14px)",borderBottom:"1px solid #1e293b",padding:".9rem 1.25rem",display:"flex",alignItems:"center",gap:"1rem"}}>
+        <button onClick={onBack} aria-label="Voltar"
+          style={{background:"#1e293b",border:"1px solid #334155",color:"#f8fafc",width:36,height:36,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.1rem"}}>
+          ←
+        </button>
+        <div>
+          <h1 style={{margin:0,fontSize:"1rem",fontWeight:900,color:"#f8fafc"}}>📖 Hub de Fonemas</h1>
+          <p style={{margin:".15rem 0 0",fontSize:".75rem",color:"#64748b"}}>Toque em um símbolo para explorar</p>
+        </div>
+      </header>
+
+      <main style={{maxWidth:880,width:"100%",margin:"0 auto",padding:"2rem 1.25rem 3.5rem",flex:1}}>
+        {loadState === "loading" && (
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem",padding:"4rem 1rem",color:"#64748b"}}>
+            <div className="spin" style={{width:38,height:38,border:"3px solid #334155",borderTopColor:"#818cf8",borderRadius:"50%"}}/>
+            <p>Carregando fonemas…</p>
+          </div>
+        )}
+
+        {loadState === "error" && (
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem",padding:"4rem 1rem",color:"#64748b",textAlign:"center"}}>
+            <span style={{fontSize:"2rem"}}>⚠️</span>
+            <p>{errorMsg}</p>
+            <button onClick={loadPhonemes}
+              style={{background:"#1e293b",border:"1px solid #475569",color:"#f8fafc",padding:".6rem 1.2rem",borderRadius:".8rem",fontWeight:700,fontSize:".85rem"}}>
+              Tentar novamente
+            </button>
+          </div>
+        )}
+
+        {loadState === "empty" && (
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"1rem",padding:"4rem 1rem",color:"#64748b",textAlign:"center"}}>
+            <span style={{fontSize:"2rem"}}>📭</span>
+            <p>Nenhum fonema encontrado na coleção <strong>phoneme_hub</strong>.</p>
+          </div>
+        )}
+
+        {loadState === "ready" && groups.map((group, gi) => (
+          <section key={group.categoria} style={{marginBottom:"2.5rem"}}>
+            <h2 style={{display:"flex",alignItems:"center",gap:".6rem",margin:"0 0 1rem",fontSize:".95rem",fontWeight:800,color:"#cbd5e1",textTransform:"uppercase",letterSpacing:.6}}>
+              <span style={{width:8,height:8,borderRadius:"50%",background:ACCENTS[gi % ACCENTS.length],flexShrink:0}}/>
+              {group.categoria}
+            </h2>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill, minmax(130px, 1fr))",gap:".9rem"}}>
+              {group.items.map(p => (
+                <button key={p.id} onClick={() => setSelected(p)}
+                  aria-label={`Abrir detalhes de ${p.simbolo}`}
+                  className="word-card-hover"
+                  style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.5rem .75rem",display:"flex",alignItems:"center",justifyContent:"center",minHeight:110,transition:"all .18s ease"}}>
+                  <span style={{fontSize:"1.7rem",fontWeight:900,color:"#f8fafc",letterSpacing:.5}}>{p.simbolo}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+        ))}
+      </main>
+
+      {selected && (
+        <PhonemeModal
+          phoneme={selected}
+          accent={ACCENTS[groupIndex[selected.categoria || "Outros"] % ACCENTS.length]}
+          onClose={() => setSelected(null)}
+          onPractice={(p) => { setSelected(null); onPractice(p); }}
+        />
+      )}
+    </div>
+  );
+}
+
+function Header({ user, score, animScore, onOpenHub }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  return (
+    <header style={{position:"sticky",top:0,zIndex:50,background:"rgba(15,23,42,.9)",backdropFilter:"blur(14px)",borderBottom:"1px solid #1e293b",padding:".9rem 1.25rem",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"1rem"}}>
+      <h1 style={{margin:0,fontSize:"1rem",fontWeight:900,color:"#f8fafc",whiteSpace:"nowrap"}}>🗣️ Pronunciation Builder</h1>
+      <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
+        {onOpenHub && (
+          <button onClick={onOpenHub} aria-label="Hub de Fonemas"
+            style={{background:"#1e293b",border:"1px solid #334155",color:"#f8fafc",width:36,height:36,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.05rem",flexShrink:0}}
+            onMouseOver={e=>e.currentTarget.style.background="#334155"}
+            onMouseOut={e=>e.currentTarget.style.background="#1e293b"}>
+            📖
+          </button>
+        )}
+        <div className={animScore?"score-pop":""} style={{background:"linear-gradient(135deg,#F59E0B,#D97706)",color:"#fff",padding:".35rem .9rem",borderRadius:"999px",fontWeight:900,fontSize:".85rem",whiteSpace:"nowrap"}}>
+          ⭐ {score} pts
+        </div>
+        <div style={{position:"relative"}}>
+          <img src={user.photoURL||`https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName||"U")}&background=334155&color=f8fafc`}
+            alt="avatar" onClick={()=>setMenuOpen(o=>!o)}
+            style={{width:36,height:36,borderRadius:"50%",cursor:"pointer",border:"2px solid #334155",objectFit:"cover"}}/>
+          {menuOpen && (
+            <div className="fade-in" style={{position:"absolute",right:0,top:"calc(100% + 8px)",background:"#1e293b",border:"1px solid #334155",borderRadius:"1rem",padding:".75rem",minWidth:180,boxShadow:"0 12px 30px rgba(0,0,0,.5)",zIndex:100}}>
+              <p style={{margin:"0 0 4px",fontSize:".8rem",fontWeight:700,color:"#f8fafc",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user.displayName}</p>
+              <p style={{margin:"0 0 .75rem",fontSize:".65rem",color:"#64748b",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user.email}</p>
+              <button onClick={signOut} style={{width:"100%",background:"#0f172a",color:"#fb7185",border:"1px solid #3f0a0a",padding:".5rem",borderRadius:".65rem",fontWeight:700,fontSize:".8rem"}}>Sign Out</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function loadSession() { try { const s=localStorage.getItem("mph_session"); return s?JSON.parse(s):null; } catch { return null; } }
+function saveSession(idx,score,pairIds) { try { localStorage.setItem("mph_session",JSON.stringify({idx,score,pairIds})); } catch {} }
+function clearSession() { localStorage.removeItem("mph_session"); }
+
+function App() {
+  const [user,      setUser]      = useState(undefined);
+  const [score,     setScore]     = useState(0);
+  const [animScore, setAnimScore] = useState(false);
+  const [pairs,     setPairs]     = useState([]);
+  const [idx,       setIdx]       = useState(0);
+  const [view,      setView]      = useState("exercises"); // "exercises" | "hub"
+
+  useEffect(() => {
+    let unsub = () => {};
+    // Garante que o resultado do signInWithRedirect seja processado
+    // antes de qualquer outra lógica de auth seguir adiante.
+    redirectResultPromise.finally(() => {
+      unsub = auth.onAuthStateChanged(u => {
+        setUser(u || null);
+        if (u) {
+          const saved = loadSession();
+          if (saved && saved.pairIds && saved.pairIds.length > 0) {
+            const ordered = saved.pairIds.map(id=>PAIRS.find(p=>p.id===id)).filter(Boolean);
+            if (ordered.length > 0) { setPairs(ordered); setIdx(saved.idx||0); setScore(saved.score||0); return; }
+          }
+          const shuffled = shuffleArray(PAIRS);
+          setPairs(shuffled); setIdx(0); setScore(0);
+          saveSession(0,0,shuffled.map(p=>p.id));
+        } else {
+          setPairs([]); setIdx(0); setScore(0);
+        }
+      });
+    });
+    return () => unsub();
+  }, []);
+
+  function advanceIdx(currentPairs, currentIdx) {
+    const next = currentIdx + 1;
+    setIdx(next);
+    saveSession(next, score, currentPairs.map(p=>p.id));
+  }
+
+  function addScore(pts, currentPairs, currentIdx, currentScore) {
+    const next = currentScore + pts;
+    setScore(next);
+    setAnimScore(true); setTimeout(()=>setAnimScore(false),300);
+    saveSession(currentIdx, next, currentPairs.map(p=>p.id));
+  }
+
+  function handleRestart() {
+    clearSession();
+    const shuffled = shuffleArray(PAIRS);
+    setScore(0); setIdx(0); setPairs(shuffled);
+    saveSession(0,0,shuffled.map(p=>p.id));
+  }
+
+  // Chamado pelo botão "Praticar agora" do Hub de Fonemas.
+  // Tenta localizar o exercício correspondente em PAIRS via id_exercicio_link;
+  // se encontrar, navega direto pra ele dentro da sessão atual. Senão, só loga.
+  function handlePracticeFromHub(phoneme) {
+    console.log("Praticar exercício:", phoneme.id_exercicio_link);
+
+    const link = phoneme.id_exercicio_link;
+    const match = PAIRS.find(p => String(p.id) === String(link));
+
+    if (match) {
+      const currentPairs = pairs.length > 0 ? pairs : PAIRS;
+      const foundIdx = currentPairs.findIndex(p => p.id === match.id);
+      if (foundIdx !== -1) {
+        setPairs(currentPairs);
+        setIdx(foundIdx);
+        saveSession(foundIdx, score, currentPairs.map(p=>p.id));
+      }
+    } else {
+      console.warn(`Nenhum exercício encontrado em PAIRS para id_exercicio_link="${link}"`);
+    }
+
+    setView("exercises");
+  }
+
+  if (user === undefined) return <Spinner/>;
+  if (user === null)      return <LoginScreen/>;
+  if (user.email === ADMIN_EMAIL) return <AdminDashboard user={user}/>;
+
+  if (view === "hub") {
+    return (
+      <PhonemeHubScreen
+        onPractice={handlePracticeFromHub}
+        onBack={() => setView("exercises")}
+      />
+    );
+  }
+
+  if (pairs.length === 0) return <Spinner/>;
+
+  if (idx >= pairs.length) return (
+    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
+      <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
+      <SummaryScreen score={score} total={pairs.length} onRestart={handleRestart}/>
+    </div>
+  );
+
+  return (
+    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
+      <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
+      <main style={{maxWidth:600,width:"100%",margin:"0 auto",padding:"1.75rem 1.25rem 3rem",flex:1}}>
+        <ExerciseView
+          pair={pairs[idx]}
+          user={user}
+          onCorrectAnswer={(pts)=>addScore(pts,pairs,idx,score)}
+          onNext={()=>advanceIdx(pairs,idx)}
+          isLast={idx===pairs.length-1}
+          progressText={`${idx+1} / ${pairs.length}`}
+        />
+      </main>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
