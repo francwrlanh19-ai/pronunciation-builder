@@ -1208,7 +1208,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
     try {
       console.log("[DEBUG] auth.currentUser:", auth.currentUser ? auth.currentUser.email : null);
       console.log("[DEBUG] db._databaseId / projectId:", db._databaseId ? db._databaseId.projectId : "n/a", db._databaseId ? db._databaseId.database : "n/a");
-      const snap = await db.collection("phoneme_hub").get();
+      const snap = await db.collection("phoneme_hub").get({ source: "server" });
       console.log("[DEBUG] snap.size:", snap.size, "snap.empty:", snap.empty, "fromCache:", snap.metadata && snap.metadata.fromCache);
       snap.forEach(d => console.log("[DEBUG] doc encontrado ->", d.id, d.data()));
       if (snap.empty) { setLoadState("empty"); return; }
