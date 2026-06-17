@@ -1148,16 +1148,33 @@ function PhonemeModal({ phoneme, accent, onClose, onPractice }) {
           {phoneme.explicacao}
         </p>
 
-        <div style={{fontSize:".72rem",fontWeight:800,textTransform:"uppercase",letterSpacing:.6,color:"#64748b",marginBottom:".6rem"}}>
-          Exemplos
+        <div style={{display:"flex",alignItems:"baseline",gap:".5rem",marginBottom:".6rem"}}>
+          <span style={{fontSize:".72rem",fontWeight:800,textTransform:"uppercase",letterSpacing:.6,color:"#64748b"}}>
+            Exemplos
+          </span>
+          <span style={{fontSize:".62rem",fontWeight:600,color:"#475569"}}>
+            (palavra · <span style={{fontFamily:"'Roboto Mono','Courier New',monospace"}}>IPA</span> = transcrição fonética)
+          </span>
         </div>
-        <div style={{display:"flex",flexDirection:"column",gap:".55rem",marginBottom:"1.5rem"}}>
-          {exemplos.map((word, i) => (
-            <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:"#0f172a",border:"1px solid #334155",borderRadius:".9rem",padding:".7rem .9rem"}}>
-              <span style={{fontSize:".92rem",fontWeight:600,color:"#f8fafc"}}>{word}</span>
-              <SpeakerButton word={word} accent={accent} />
-            </div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3" style={{marginBottom:"1.5rem"}}>
+          {exemplos.map((ex, i) => {
+            const isObj = ex && typeof ex === "object";
+            const word = isObj ? ex.word : ex;
+            const ipa  = isObj ? ex.ipa  : null;
+            return (
+              <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:".5rem",background:"#0f172a",border:"1px solid #334155",borderRadius:".9rem",padding:".65rem .8rem"}}>
+                <div style={{display:"flex",flexDirection:"column",gap:"2px",minWidth:0}}>
+                  <span style={{fontSize:".9rem",fontWeight:700,color:"#f8fafc",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{word}</span>
+                  {ipa && (
+                    <span style={{fontFamily:"'Roboto Mono','Courier New',monospace",fontSize:".75rem",color:"#64748b",letterSpacing:.3}}>
+                      {ipa}
+                    </span>
+                  )}
+                </div>
+                <SpeakerButton word={word} accent={accent} />
+              </div>
+            );
+          })}
         </div>
 
         <button onClick={() => onPractice(phoneme)}
@@ -1184,7 +1201,18 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/h/",
       explicacao: "Este é o som de \"R\" no início de palavras como 'hello'. É um suspiro seco vindo da garganta, não um som de garganta raspada como o nosso 'R', a garganta quase não vibra. É suave",
       id_exercicio_link: "exercicio_h_aspirado",
-      exemplos: ["hello", "head", "home"],
+      exemplos: [
+        { word: "hello", ipa: "/həˈloʊ/" },
+        { word: "head", ipa: "/hɛd/" },
+        { word: "home", ipa: "/hoʊm/" },
+        { word: "house", ipa: "/haʊs/" },
+        { word: "help", ipa: "/hɛlp/" },
+        { word: "hot", ipa: "/hɑːt/" },
+        { word: "here", ipa: "/hɪr/" },
+        { word: "happy", ipa: "/ˈhæpi/" },
+        { word: "heart", ipa: "/hɑːrt/" },
+        { word: "behind", ipa: "/bɪˈhaɪnd/" },
+      ],
     },
     {
       id: "consoante_th_soprado",
@@ -1192,7 +1220,18 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/θ/",
       explicacao: "O erro comum é trocar por F, T ou S. Para o som perfeito, coloque a ponta da língua levemente entre os dentes incisivos e apenas assopre o ar, sem vibrar a garganta.",
       id_exercicio_link: "exercicio_th_soprado",
-      exemplos: ["think", "three", "math"],
+      exemplos: [
+        { word: "think", ipa: "/θɪŋk/" },
+        { word: "three", ipa: "/θriː/" },
+        { word: "math", ipa: "/mæθ/" },
+        { word: "mouth", ipa: "/maʊθ/" },
+        { word: "bath", ipa: "/bæθ/" },
+        { word: "thanks", ipa: "/θæŋks/" },
+        { word: "tooth", ipa: "/tuːθ/" },
+        { word: "north", ipa: "/nɔːrθ/" },
+        { word: "thursday", ipa: "/ˈθɜːrzdeɪ/" },
+        { word: "birthday", ipa: "/ˈbɜːrθdeɪ/" },
+      ],
     },
     {
       id: "consoante_dark_l",
@@ -1200,7 +1239,18 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/ɫ/",
       explicacao: "O L final nunca vira som de U. Levante a ponta da língua e toque-a atrás dos dentes superiores, segurando o som no céu da boca.",
       id_exercicio_link: "exercicio_dark_l",
-      exemplos: ["will", "tall", "animal"],
+      exemplos: [
+        { word: "well", ipa: "/wɛɫ/" },
+        { word: "milk", ipa: "/mɪɫk/" },
+        { word: "call", ipa: "/kɔːɫ/" },
+        { word: "ball", ipa: "/bɔːɫ/" },
+        { word: "feel", ipa: "/fiːɫ/" },
+        { word: "real", ipa: "/ˈriːəɫ/" },
+        { word: "help", ipa: "/hɛɫp/" },
+        { word: "cool", ipa: "/kuːɫ/" },
+        { word: "tall", ipa: "/tɔːɫ/" },
+        { word: "pill", ipa: "/pɪɫ/" },
+      ],
     },
     {
       id: "consoante_ed_mudo",
@@ -1208,7 +1258,18 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/t/ ou /d/",
       explicacao: "O E é quase sempre mudo. Pule direto para o som seco de T ou D no final. Evite adicionar o som de \"id\" ou \"idji\" ao final das palavras.",
       id_exercicio_link: "exercicio_ed_mudo",
-      exemplos: ["worked", "played", "helped"],
+      exemplos: [
+        { word: "worked", ipa: "/wɜːrkt/" },
+        { word: "played", ipa: "/pleɪd/" },
+        { word: "helped", ipa: "/hɛlpt/" },
+        { word: "liked", ipa: "/laɪkt/" },
+        { word: "washed", ipa: "/wɑːʃt/" },
+        { word: "called", ipa: "/kɔːld/" },
+        { word: "stopped", ipa: "/stɑːpt/" },
+        { word: "loved", ipa: "/lʌvd/" },
+        { word: "watched", ipa: "/wɑːtʃt/" },
+        { word: "cleaned", ipa: "/kliːnd/" },
+      ],
     },
     {
       id: "consoante_ing",
@@ -1216,7 +1277,18 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/ŋ/",
       explicacao: "O G final é decorativo. O som nasce na parte de trás da garganta. Não bata a língua no dente nem solte um G de gato.",
       id_exercicio_link: "exercicio_ing",
-      exemplos: ["running", "speaking", "thing"],
+      exemplos: [
+        { word: "running", ipa: "/ˈrʌnɪŋ/" },
+        { word: "speaking", ipa: "/ˈspiːkɪŋ/" },
+        { word: "thing", ipa: "/θɪŋ/" },
+        { word: "song", ipa: "/sɔːŋ/" },
+        { word: "king", ipa: "/kɪŋ/" },
+        { word: "young", ipa: "/jʌŋ/" },
+        { word: "morning", ipa: "/ˈmɔːrnɪŋ/" },
+        { word: "wrong", ipa: "/rɔːŋ/" },
+        { word: "sing", ipa: "/sɪŋ/" },
+        { word: "bring", ipa: "/brɪŋ/" },
+      ],
     },
     {
       id: "consoante_m_n_final",
@@ -1224,7 +1296,18 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/m/ & /n/",
       explicacao: "Não anasalize a vogal e esqueça a consoante! Para o M, feche os lábios. Para o N, a língua toca o céu da boca. Pronuncie a consoante até o fim.",
       id_exercicio_link: "exercicio_m_n_final",
-      exemplos: ["from", "ten", "time"],
+      exemplos: [
+        { word: "from", ipa: "/frʌm/" },
+        { word: "ten", ipa: "/tɛn/" },
+        { word: "time", ipa: "/taɪm/" },
+        { word: "name", ipa: "/neɪm/" },
+        { word: "sun", ipa: "/sʌn/" },
+        { word: "room", ipa: "/ruːm/" },
+        { word: "open", ipa: "/ˈoʊpən/" },
+        { word: "game", ipa: "/geɪm/" },
+        { word: "rain", ipa: "/reɪn/" },
+        { word: "team", ipa: "/tiːm/" },
+      ],
     },
     {
       id: "consoante_v_final",
@@ -1232,7 +1315,18 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/v/",
       explicacao: "Encoste os dentes superiores no lábio inferior e faça o som vibrar. Se não vibrar, parece F. Se adicionar vogal no final, soa errado.",
       id_exercicio_link: "exercicio_v_final",
-      exemplos: ["have", "live", "love"],
+      exemplos: [
+        { word: "have", ipa: "/hæv/" },
+        { word: "live", ipa: "/lɪv/" },
+        { word: "love", ipa: "/lʌv/" },
+        { word: "give", ipa: "/gɪv/" },
+        { word: "move", ipa: "/muːv/" },
+        { word: "very", ipa: "/ˈvɛri/" },
+        { word: "voice", ipa: "/vɔɪs/" },
+        { word: "five", ipa: "/faɪv/" },
+        { word: "leave", ipa: "/liːv/" },
+        { word: "village", ipa: "/ˈvɪlɪdʒ/" },
+      ],
     },
     {
       id: "vogal_ae_aberta",
@@ -1240,15 +1334,37 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/æ/",
       explicacao: "Não é um 'A' puro e nem um 'É' puro. Para fazer esse som, você deve abrir a boca como se fosse falar 'A', mas forçar o som de 'E'. A mandíbula desce bastante. Aí sai o Æ",
       id_exercicio_link: "exercicio_ae_aberta",
-      exemplos: ["man", "bad", "cat"],
+      exemplos: [
+        { word: "man", ipa: "/mæn/" },
+        { word: "bad", ipa: "/bæd/" },
+        { word: "cat", ipa: "/kæt/" },
+        { word: "hat", ipa: "/hæt/" },
+        { word: "happy", ipa: "/ˈhæpi/" },
+        { word: "apple", ipa: "/ˈæpəl/" },
+        { word: "back", ipa: "/bæk/" },
+        { word: "family", ipa: "/ˈfæməli/" },
+        { word: "black", ipa: "/blæk/" },
+        { word: "stand", ipa: "/stænd/" },
+      ],
     },
     {
       id: "vogal_i_longo_curto",
       categoria: "Vogais Perigosas",
-      simbolo: "/i:/ & /ɪ/",
-      explicacao: "O brasileiro tende a ler tudo como o 'í' do português. Mas /i:/ (como em 'sheep') exige um sorriso tenso, enquanto /ɪ/ (como em 'ship') é um som curto e relaxado, quase puxando para o 'ê'.",
+      simbolo: "/iː/ & /ɪ/",
+      explicacao: "O /iː/ é longo, tensionado e exige que você sorria (como em 'sheep'). O /ɪ/ é um som curto, relaxado, com a boca entreaberta, caindo quase na posição de um 'ê' em português (como em 'ship').",
       id_exercicio_link: "exercicio_i_curto_longo",
-      exemplos: ["sheep", "ship", "cheap"],
+      exemplos: [
+        { word: "sheep", ipa: "/ʃiːp/" },
+        { word: "ship", ipa: "/ʃɪp/" },
+        { word: "seat", ipa: "/siːt/" },
+        { word: "sit", ipa: "/sɪt/" },
+        { word: "leave", ipa: "/liːv/" },
+        { word: "live", ipa: "/lɪv/" },
+        { word: "feet", ipa: "/fiːt/" },
+        { word: "fit", ipa: "/fɪt/" },
+        { word: "green", ipa: "/ɡriːn/" },
+        { word: "grin", ipa: "/ɡrɪn/" },
+      ],
     },
     {
       id: "vogal_u_curto",
@@ -1256,7 +1372,18 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/ʌ/",
       explicacao: "Som curto que nasce na garganta, parecido com o 'ã' de 'pãe', mas seco. O erro comum é tentar pronunciar a letra 'U' com biquinho (como 'cupa'), mas o correto é emitir o som sem arredondar os lábios.",
       id_exercicio_link: "exercicio_u_curto",
-      exemplos: ["hut", "nut"],
+      exemplos: [
+        { word: "hut", ipa: "/hʌt/" },
+        { word: "nut", ipa: "/nʌt/" },
+        { word: "cup", ipa: "/kʌp/" },
+        { word: "love", ipa: "/lʌv/" },
+        { word: "sun", ipa: "/sʌn/" },
+        { word: "much", ipa: "/mʌtʃ/" },
+        { word: "color", ipa: "/ˈkʌlər/" },
+        { word: "country", ipa: "/ˈkʌntri/" },
+        { word: "luck", ipa: "/lʌk/" },
+        { word: "summer", ipa: "/ˈsʌmər/" },
+      ],
     },
   ];
 
