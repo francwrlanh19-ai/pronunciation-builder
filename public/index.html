@@ -354,6 +354,218 @@ const PAIRS = [
   { id:25, type:"twister_only", symbol:"/f/ /r/ /ʃ/ drill", accent:"#fcd34d",
     twister:{ word:"Fresh fried fish, fish fresh fried", ipa:"/frɛʃ fraɪd fɪʃ fɪʃ frɛʃ fraɪd/", emoji:"🐟🍳🌿", hint:"Controle o fluxo de ar — lábios e dentes trabalham juntos!" },
     tip:"Foco na musculatura dos lábios e dentes: /f/ (lábio inferior nos dentes), /r/ (língua enrolada), /ʃ/ (como nosso 'x'). Articule cada consoante sem deixar o ritmo cair." },
+
+  // ── SEQUÊNCIAS DE 3 NÍVEIS POR FONEMA (Hub de Fonemas) ──────────────────
+
+  // /h/ Aspirado
+  { id:"h_aspirado_level_1", symbol:"/h/", accent:"#fbbf24",
+    words:[
+      { word:"A hat", ipa:"/ə hæt/", meaning:"Um chapéu", symbol:"/h/", emoji:"🎩", hint:"Suspiro seco da garganta 🌬️" },
+      { word:"At",    ipa:"/æt/",    meaning:"Em / Às",    symbol:"∅",  emoji:"📍", hint:"Sem nenhum som de H 🤫" },
+    ],
+    twister:{ word:"A hat at home", ipa:"/ə hæt æt hoʊm/", emoji:"🎩🏠", hint:"Solte o ar no 'hat' e 'home', nada no 'at'." },
+    tip:"O H em inglês é só um suspiro — ar saindo da garganta sem nenhuma vibração ou raspado. Se sair parecido com 'rr', você está forçando demais." },
+
+  { id:"h_aspirado_level_2", symbol:"/h/", accent:"#fbbf24",
+    words:[
+      { word:"The house", ipa:"/ðə haʊs/", meaning:"A casa",  symbol:"/h/", emoji:"🏠", hint:"Bafo antes do ditongo 🌬️" },
+      { word:"It owes",   ipa:"/ɪt oʊz/",  meaning:"Ele deve", symbol:"∅",  emoji:"💸", hint:"Direto na vogal, sem bafo 🚫" },
+    ],
+    twister:{ word:"The house owes nothing", ipa:"/ðə haʊs oʊz ˈnʌθɪŋ/", emoji:"🏠💸", hint:"Solte o ar só no 'house' — o resto começa limpo." },
+    tip:"Antes de ditongos como /aʊ/ o suspiro do H precisa ser mais longo, mas continua sendo só ar — nunca aperte a garganta como no nosso erre." },
+
+  { id:"h_aspirado_level_3", type:"twister_only", symbol:"/h/ drill", accent:"#fbbf24",
+    twister:{ word:"Harry's house has a huge hallway", ipa:"/ˈhæriz haʊs hæz ə hjuːdʒ ˈhɔːlweɪ/", emoji:"🧑🏠🚪", hint:"Quatro suspiros de H em sequência — todos leves e curtos." },
+    tip:"Frase de treino para o H repetido. Cada H deve ser um suspiro rápido e idêntico — não force a garganta, é só ar passando." },
+
+  // /ɫ/ Dark L
+  { id:"dark_l_level_1", symbol:"/ɫ/", accent:"#34d399",
+    words:[
+      { word:"To feel", ipa:"/tə fiːɫ/", meaning:"Sentir", symbol:"/ɫ/", emoji:"🤲", hint:"Língua sobe atrás dos dentes 👅" },
+      { word:"The fee", ipa:"/ðə fiː/",  meaning:"A taxa",  symbol:"∅",  emoji:"💰", hint:"Termina limpo, sem L 🚫" },
+    ],
+    twister:{ word:"Feel free, pay the fee", ipa:"/fiːɫ friː peɪ ðə fiː/", emoji:"🤲💰", hint:"Encoste a língua no céu da boca só no 'feel'." },
+    tip:"O Dark L nunca é um 'U'. A ponta da língua sobe e toca atrás dos dentes superiores — é um L real, só que com o fundo da língua elevado também." },
+
+  { id:"dark_l_level_2", symbol:"/ɫ/", accent:"#34d399",
+    words:[
+      { word:"The milk", ipa:"/ðə mɪɫk/", meaning:"O leite", symbol:"/ɫ/", emoji:"🥛", hint:"L encorpado antes do K 👅" },
+      { word:"Mick",     ipa:"/mɪk/",     meaning:"Nome",     symbol:"∅",  emoji:"🧑", hint:"Vai direto pro K, sem L 🚫" },
+    ],
+    twister:{ word:"Mick spilled the milk", ipa:"/mɪk spɪɫd ðə mɪɫk/", emoji:"🧑🥛", hint:"L encorpado em 'spilled' e 'milk', nada em 'Mick'." },
+    tip:"Antes de consoantes como K, o Dark L precisa ser pronunciado por completo antes de você passar para o próximo som — não pule direto para o K." },
+
+  { id:"dark_l_level_3", type:"twister_only", symbol:"/ɫ/ drill", accent:"#34d399",
+    twister:{ word:"The cool girl will call you at school", ipa:"/ðə kuːɫ gɜːrɫ wɪɫ kɔːɫ ju æt skuːɫ/", emoji:"😎👧📞🏫", hint:"Quatro Dark L's — toque a língua no céu da boca em cada um." },
+    tip:"Frase com Dark L em todas as posições (final e antes de consoante). Mantenha a língua subindo de verdade em cada um — não vire 'u'." },
+
+  // Silent -ED
+  { id:"ed_mudo_level_1", symbol:"/t/", accent:"#60a5fa",
+    words:[
+      { word:"He worked", ipa:"/hiː wɜːrkt/", meaning:"Ele trabalhou", symbol:"/t/", emoji:"💼", hint:"Som seco de T, sem vogal extra 🥁" },
+      { word:"He liked",  ipa:"/hiː laɪkt/",  meaning:"Ele gostou",    symbol:"/t/", emoji:"👍", hint:"Mesmo T seco no final 🥁" },
+    ],
+    twister:{ word:"He worked and liked it", ipa:"/hiː wɜːrkt ænd laɪkt ɪt/", emoji:"💼👍", hint:"Pule direto pro T — nunca diga 'idji'." },
+    tip:"Depois de sons surdos como K e CH, o -ED vira um T seco e curto. Não pronuncie nenhuma vogal extra — é só uma batida final de língua." },
+
+  { id:"ed_mudo_level_2", symbol:"/d/", accent:"#60a5fa",
+    words:[
+      { word:"She lived",  ipa:"/ʃiː lɪvd/",  meaning:"Ela viveu",  symbol:"/d/", emoji:"🏠", hint:"D suave no final 🤏" },
+      { word:"She called", ipa:"/ʃiː kɔːɫd/", meaning:"Ela ligou", symbol:"/d/", emoji:"📞", hint:"Mesmo D suave, sem vogal 🤏" },
+    ],
+    twister:{ word:"She lived there and called home", ipa:"/ʃiː lɪvd ðɛər ænd kɔːɫd hoʊm/", emoji:"🏠📞", hint:"D suave nos dois -ED — sem 'idji'." },
+    tip:"Depois de sons sonoros como V e L, o -ED vira um D suave. A regra de ouro: o E nunca soa — você decide só entre T ou D dependendo do som anterior." },
+
+  { id:"ed_mudo_level_3", type:"twister_only", symbol:"-ED drill", accent:"#60a5fa",
+    twister:{ word:"She walked and talked, then watched and waited", ipa:"/ʃiː wɔːkt ænd tɔːkt ðɛn wɑːtʃt ænd ˈweɪtɪd/", emoji:"🚶🗣️📺⏳", hint:"Os três primeiros -ED são mudos (T); o último ('waited') é a exceção com vogal, pois o verbo já termina em T." },
+    tip:"Atenção especial em 'waited': como o verbo já termina em T/D, o -ED aqui SOA como '/ɪd/' — é a única exceção à regra do E mudo. Todos os outros desta frase são T seco." },
+
+  // /iː/ & /ɪ/
+  { id:"i_longo_curto_level_1", symbol:"/iː/ vs /ɪ/", accent:"#818cf8",
+    words:[
+      { word:"A seat", ipa:"/ə siːt/", meaning:"Um assento", symbol:"/iː/", emoji:"💺", hint:"Sorriso tenso e longo 😁" },
+      { word:"To sit", ipa:"/tə sɪt/", meaning:"Sentar",     symbol:"/ɪ/",  emoji:"🪑", hint:"Curto e relaxado 😌" },
+    ],
+    twister:{ word:"Sit on a seat", ipa:"/sɪt ɒn ə siːt/", emoji:"🪑💺", hint:"Relaxe no sit, sorria largo no seat." },
+    tip:"O /iː/ exige sorriso tenso e sustentado. O /ɪ/ é rápido e a boca fica quase neutra — não estique os lábios nele." },
+
+  { id:"i_longo_curto_level_2", symbol:"/iː/ vs /ɪ/", accent:"#818cf8",
+    words:[
+      { word:"The feet", ipa:"/ðə fiːt/", meaning:"Os pés", symbol:"/iː/", emoji:"🦶", hint:"Sorriso tenso e longo 😁" },
+      { word:"To fit",   ipa:"/tə fɪt/",  meaning:"Caber",  symbol:"/ɪ/",  emoji:"📏", hint:"Curto e relaxado 😌" },
+    ],
+    twister:{ word:"Does it fit your feet?", ipa:"/dʌz ɪt fɪt jʊr fiːt/", emoji:"📏🦶", hint:"Encurte em 'fit', estique em 'feet'." },
+    tip:"Pratique alternando rápido entre os dois: tensione os lábios para 'feet' e relaxe totalmente para 'fit'. É um exercício de elasticidade facial." },
+
+  { id:"i_longo_curto_level_3", type:"twister_only", symbol:"/iː/ vs /ɪ/ drill", accent:"#818cf8",
+    twister:{ word:"Green grass grows beneath my feet", ipa:"/griːn græs groʊz bɪˈniːθ maɪ fiːt/", emoji:"🌱🌾🦶", hint:"Vários /iː/ longos — sustente o sorriso em cada um." },
+    tip:"Frase dominada pelo som longo /iː/. Mantenha a tensão do sorriso em 'green', 'beneath' e 'feet' — não deixe o som encurtar no meio da frase." },
+
+  // /θ/ TH Soprado
+  { id:"th_soprado_level_1", symbol:"/θ/", accent:"#38bdf8",
+    words:[
+      { word:"To think", ipa:"/tə θɪŋk/", meaning:"Pensar",  symbol:"/θ/", emoji:"🤔", hint:"Língua entre os dentes 👅" },
+      { word:"To sink",  ipa:"/tə sɪŋk/", meaning:"Afundar", symbol:"/s/", emoji:"⚓", hint:"Língua atrás dos dentes 🦷" },
+    ],
+    twister:{ word:"Think before you sink", ipa:"/θɪŋk bɪˈfɔːr ju sɪŋk/", emoji:"🤔⚓", hint:"Língua de fora primeiro, depois guarde ela!" },
+    tip:"Coloque a ponta da língua ENTRE os dentes da frente e sopre suavemente. Se a língua não sair da boca, você vai dizer 'sink' em vez de 'think'." },
+
+  { id:"th_soprado_level_2", symbol:"/θ/", accent:"#38bdf8",
+    words:[
+      { word:"The three", ipa:"/ðə θriː/", meaning:"O três",   symbol:"/θ/", emoji:"3️⃣", hint:"Língua nos dentes e sopra 🌬️" },
+      { word:"The tree",  ipa:"/ðə triː/", meaning:"A árvore", symbol:"/t/", emoji:"🌳", hint:"Som seco de T, sem soprar 🥁" },
+    ],
+    twister:{ word:"Three green trees", ipa:"/θriː ɡriːn triːz/", emoji:"3️⃣🌳", hint:"Ar escapando no 'three', batida seca no 'tree'." },
+    tip:"Em 'three' morda levemente a língua e solte o ar de forma contínua. Em 'tree' a língua bate rápido no céu da boca — sem nenhum ar escapando pela frente." },
+
+  { id:"th_soprado_level_3", type:"twister_only", symbol:"/θ/ drill", accent:"#38bdf8",
+    twister:{ word:"Think of three things before Thursday", ipa:"/θɪŋk əv θriː θɪŋz bɪˈfɔːr ˈθɜːrzdeɪ/", emoji:"🤔3️⃣📅", hint:"Quatro TH's seguidos — língua entra e sai da boca em cada um." },
+    tip:"Frase de treino intensivo do TH soprado. A língua precisa tocar levemente os dentes superiores e soltar ar em cada uma das quatro palavras com TH." },
+
+  // /ŋ/ -ING
+  { id:"ing_level_1", symbol:"/ŋ/", accent:"#f472b6",
+    words:[
+      { word:"To sing", ipa:"/tə sɪŋ/", meaning:"Cantar", symbol:"/ŋ/", emoji:"🎤", hint:"Som nasal no fundo da boca 👅" },
+      { word:"The sin", ipa:"/ðə sɪn/", meaning:"O pecado", symbol:"/n/", emoji:"😈", hint:"Língua na frente, atrás dos dentes 🦷" },
+    ],
+    twister:{ word:"Don't sin while you sing", ipa:"/doʊnt sɪn waɪɫ ju sɪŋ/", emoji:"😈🎤", hint:"Língua na frente no 'sin', no fundo no 'sing'." },
+    tip:"O som /ŋ/ (sing) é feito com o FUNDO da língua tocando o céu da boca — a ponta da língua fica solta. Em /n/ (sin) é a PONTA da língua que toca atrás dos dentes." },
+
+  { id:"ing_level_2", symbol:"/ŋ/", accent:"#f472b6",
+    words:[
+      { word:"The wing", ipa:"/ðə wɪŋ/", meaning:"A ala / asa", symbol:"/ŋ/", emoji:"🪽", hint:"Nasal no fundo da boca 👅" },
+      { word:"To win",   ipa:"/tə wɪn/", meaning:"Vencer",       symbol:"/n/", emoji:"🏆", hint:"Ponta da língua na frente 🦷" },
+    ],
+    twister:{ word:"We win with this wing", ipa:"/wiː wɪn wɪð ðɪs wɪŋ/", emoji:"🏆🪽", hint:"Alterne rápido: frente da língua no 'win', fundo no 'wing'." },
+    tip:"Cuidado para não adicionar um 'g' extra depois do /ŋ/ — 'wing' não é 'win-gue'. É um único som nasal contínuo, sem soltar nenhuma consoante depois." },
+
+  { id:"ing_level_3", type:"twister_only", symbol:"/ŋ/ drill", accent:"#f472b6",
+    twister:{ word:"The king is singing a long song this morning", ipa:"/ðə kɪŋ ɪz ˈsɪŋɪŋ ə lɔːŋ sɔːŋ ðɪs ˈmɔːrnɪŋ/", emoji:"👑🎤📜🌅", hint:"Cinco sons de /ŋ/ — todos com o fundo da língua, sem soltar 'g' depois." },
+    tip:"Frase repleta do som nasal /ŋ/. Mantenha o fundo da língua elevado em cada ocorrência e não adicione nenhum som de 'g' ou 'k' extra ao final." },
+
+  // /m/ & /n/ Final
+  { id:"m_n_final_level_1", symbol:"/m/ vs /n/", accent:"#a78bfa",
+    words:[
+      { word:"Some",    ipa:"/sʌm/",    meaning:"Alguns", symbol:"/m/", emoji:"🍪", hint:"Lábios fechados no final 🤐" },
+      { word:"The sun", ipa:"/ðə sʌn/", meaning:"O sol",  symbol:"/n/", emoji:"☀️", hint:"Lábios abertos no final 😮" },
+    ],
+    twister:{ word:"Some of the sun", ipa:"/sʌm əv ðə sʌn/", emoji:"🍪☀️", hint:"Feche os lábios no 'some', deixe aberto no 'sun'." },
+    tip:"O M final exige fechar completamente os dois lábios. O N final mantém a boca aberta, com só a ponta da língua tocando atrás dos dentes." },
+
+  { id:"m_n_final_level_2", symbol:"/m/ vs /n/", accent:"#a78bfa",
+    words:[
+      { word:"The time", ipa:"/ðə taɪm/", meaning:"O tempo", symbol:"/m/", emoji:"⏰", hint:"Feche os lábios ao final 🤐" },
+      { word:"The tin",  ipa:"/ðə tɪn/",  meaning:"A lata",  symbol:"/n/", emoji:"🥫", hint:"Boca aberta, língua na frente 😮" },
+    ],
+    twister:{ word:"This tin needs time", ipa:"/ðɪs tɪn niːdz taɪm/", emoji:"🥫⏰", hint:"Língua na frente no 'tin', lábios fechados no 'time'." },
+    tip:"Depois de um ditongo como /aɪ/, muitos brasileiros esquecem de fechar os lábios no M final. Force o fechamento completo — é o que diferencia 'time' de 'tine'." },
+
+  { id:"m_n_final_level_3", type:"twister_only", symbol:"/m/ /n/ drill", accent:"#a78bfa",
+    twister:{ word:"Sam ran from the sun to swim", ipa:"/sæm ræn frəm ðə sʌn tə swɪm/", emoji:"🏃☀️🏊", hint:"Alterne lábios fechados (Sam, swim) e abertos (ran, from, sun)." },
+    tip:"Frase de alternância rápida entre M e N finais. Cada M precisa de um fechamento total dos lábios; cada N mantém a boca aberta com a língua na frente." },
+
+  // /v/
+  { id:"v_final_level_1", symbol:"/v/", accent:"#fb7185",
+    words:[
+      { word:"Very",  ipa:"/ˈvɛri/",  meaning:"Muito",  symbol:"/v/", emoji:"💯", hint:"Dentes no lábio inferior, vibre 🦷" },
+      { word:"Berry", ipa:"/ˈbɛri/",  meaning:"Fruta (baga)", symbol:"/b/", emoji:"🍓", hint:"Lábios se tocam e explodem 💥" },
+    ],
+    twister:{ word:"A very sweet berry", ipa:"/ə ˈvɛri swiːt ˈbɛri/", emoji:"💯🍓", hint:"Dentes no lábio no 'very', lábios juntos no 'berry'." },
+    tip:"O V nunca é feito com os dois lábios juntos como o nosso 'B'. Os dentes superiores tocam o lábio inferior e o ar vibra continuamente saindo por ali." },
+
+  { id:"v_final_level_2", symbol:"/v/ vs /f/", accent:"#fb7185",
+    words:[
+      { word:"Five", ipa:"/faɪv/", meaning:"Cinco",   symbol:"/v/", emoji:"5️⃣", hint:"Vibra no final, com voz 🎵" },
+      { word:"Fife", ipa:"/faɪf/", meaning:"Pífaro (instrumento)", symbol:"/f/", emoji:"🎵", hint:"Só ar soprado, sem vibrar 🌬️" },
+    ],
+    twister:{ word:"Five fifes for the fair", ipa:"/faɪv faɪfs fər ðə fɛər/", emoji:"5️⃣🎵", hint:"Vibre no 'five', sopre sem voz no 'fifes'." },
+    tip:"V e F usam a mesma posição de boca (dentes no lábio), mas o V vibra as cordas vocais e o F é só ar soprado, sem som de garganta. Toque o pescoço para sentir a diferença." },
+
+  { id:"v_final_level_3", type:"twister_only", symbol:"/v/ drill", accent:"#fb7185",
+    twister:{ word:"Five very lovely visitors arrived", ipa:"/faɪv ˈvɛri ˈlʌvli ˈvɪzɪtərz əˈraɪvd/", emoji:"5️⃣💝🚪", hint:"Cinco V's seguidos — dentes no lábio, vibrando, em todos." },
+    tip:"Frase saturada de V. Mantenha os dentes superiores tocando o lábio inferior em cada ocorrência, com vibração constante das cordas vocais — nunca feche os lábios como no B." },
+
+  // /æ/ Aberta
+  { id:"ae_aberta_level_1", symbol:"/æ/", accent:"#fde047",
+    words:[
+      { word:"The cat", ipa:"/ðə kæt/", meaning:"O gato",  symbol:"/æ/", emoji:"🐱", hint:"Queixo bem aberto 😲" },
+      { word:"To cut",  ipa:"/tə kʌt/", meaning:"Cortar",  symbol:"/ʌ/", emoji:"✂️", hint:"Curto e seco, da garganta 😶" },
+    ],
+    twister:{ word:"Cut the cat's nap short", ipa:"/kʌt ðə kæts næp ʃɔːrt/", emoji:"✂️🐱", hint:"Abra bem no 'cat' e 'nap', feche rápido no 'cut'." },
+    tip:"Para /æ/ (cat) abra a boca ao máximo, baixando bem o queixo. Para /ʌ/ (cut) é um som seco e curto, quase um soco na barriga ('Uh!')." },
+
+  { id:"ae_aberta_level_2", symbol:"/æ/ vs /ɛ/", accent:"#fde047",
+    words:[
+      { word:"The bat", ipa:"/ðə bæt/", meaning:"O morcego", symbol:"/æ/", emoji:"🦇", hint:"Boca bem aberta 😲" },
+      { word:"The bet", ipa:"/ðə bɛt/", meaning:"A aposta",  symbol:"/ɛ/", emoji:"🎲", hint:"Como nosso 'é' fechado 😕" },
+    ],
+    twister:{ word:"I bet the bat is hungry", ipa:"/aɪ bɛt ðə bæt ɪz ˈhʌŋgri/", emoji:"🎲🦇", hint:"Feche no 'bet', abra bastante no 'bat'." },
+    tip:"O /ɛ/ (bet) é parecido com o nosso 'é'. Já o /æ/ (bat) precisa exagerar: abra a boca quase o dobro e empurre a língua para baixo." },
+
+  { id:"ae_aberta_level_3", type:"twister_only", symbol:"/æ/ drill", accent:"#fde047",
+    twister:{ word:"The fat cat sat on a flat black hat", ipa:"/ðə fæt kæt sæt ɒn ə flæt blæk hæt/", emoji:"🐱🎩", hint:"Seis /æ/ seguidos — queixo caindo em cada palavra." },
+    tip:"Frase saturada de /æ/. Abra bem a mandíbula em cada palavra e evite nasalizar o som — mantenha o ar saindo pela boca, não pelo nariz." },
+
+  // /ʌ/ Curta
+  { id:"u_curto_level_1", symbol:"/ʌ/", accent:"#5eead4",
+    words:[
+      { word:"A cup", ipa:"/ə kʌp/", meaning:"Um copo",     symbol:"/ʌ/", emoji:"☕", hint:"Curto e seco, sem arredondar 😶" },
+      { word:"A cop", ipa:"/ə kɑːp/", meaning:"Um policial", symbol:"/ɑː/", emoji:"👮", hint:"Longo e aberto na garganta 😮" },
+    ],
+    twister:{ word:"A cop with a cup", ipa:"/ə kɑːp wɪð ə kʌp/", emoji:"👮☕", hint:"Abra a garganta no 'cop', trave rápido no 'cup'." },
+    tip:"O /ʌ/ (cup) é curto e central — não arredonde os lábios como faríamos com 'U' em português. O /ɑː/ (cop) é longo, com a língua baixa e a boca bem aberta." },
+
+  { id:"u_curto_level_2", symbol:"/ʌ/ vs /æ/", accent:"#5eead4",
+    words:[
+      { word:"But",  ipa:"/bʌt/", meaning:"Mas",      symbol:"/ʌ/", emoji:"💬", hint:"Curto, da garganta 😶" },
+      { word:"A bat", ipa:"/ə bæt/", meaning:"Um morcego", symbol:"/æ/", emoji:"🦇", hint:"Boca bem aberta 😲" },
+    ],
+    twister:{ word:"A bat, but why?", ipa:"/ə bæt bʌt waɪ/", emoji:"🦇💬", hint:"Abra muito no 'bat', feche no 'but'." },
+    tip:"Brasileiros tendem a ler os dois sons como 'A'. Para /ʌ/ (but) é um som seco e central, quase preso na garganta. Para /æ/ (bat) abra a boca ao máximo." },
+
+  { id:"u_curto_level_3", type:"twister_only", symbol:"/ʌ/ drill", accent:"#5eead4",
+    twister:{ word:"The young son loves to run in the sun", ipa:"/ðə jʌŋ sʌn lʌvz tə rʌn ɪn ðə sʌn/", emoji:"👦☀️🏃", hint:"Cinco /ʌ/ seguidos — som curto e central em cada um, sem arredondar os lábios." },
+    tip:"Frase saturada do som /ʌ/. Mantenha o som sempre curto e central, como um pequeno soco de ar ('Uh!') — nunca arredonde os lábios como faria com o 'U' do português." },
 ];
 
 function shuffleArray(arr) {
@@ -915,7 +1127,7 @@ function ScoreRecognizer({ targetWord, accent, onResult, solved }) {
   );
 }
 
-function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressText }) {
+function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressText, nextLabel }) {
   const isTwisterOnly = pair.type === "twister_only";
 
   const [targetIndex, setTargetIndex] = useState(isTwisterOnly ? 0 : null);
@@ -1075,7 +1287,7 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
         style={{background:"transparent",color:"#94a3b8",border:"1px solid #475569",padding:"1.1rem",borderRadius:"1rem",fontSize:"1rem",fontWeight:800,transition:"all .2s"}}
         onMouseOver={e=>{e.currentTarget.style.background="#1e293b";e.currentTarget.style.color="#f8fafc";}}
         onMouseOut={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="#94a3b8";}}>
-        {isLast ? "Finish Training 🏁" : "Next Exercise ➔"}
+        {isLast ? "Finish Training 🏁" : (nextLabel || "Next Exercise ➔")}
       </button>
     </div>
   );
@@ -1201,6 +1413,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/h/",
       explicacao: "Este é o som de \"R\" no início de palavras como 'hello'. É um suspiro seco vindo da garganta, não um som de garganta raspada como o nosso 'R', a garganta quase não vibra. É suave",
       id_exercicio_link: "exercicio_h_aspirado",
+      exercicios_sequencia: ["h_aspirado_level_1", "h_aspirado_level_2", "h_aspirado_level_3"],
       exemplos: [
         { word: "hello", ipa: "/həˈloʊ/" },
         { word: "head", ipa: "/hɛd/" },
@@ -1220,6 +1433,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/θ/",
       explicacao: "O erro comum é trocar por F, T ou S. Para o som perfeito, coloque a ponta da língua levemente entre os dentes incisivos e apenas assopre o ar, sem vibrar a garganta.",
       id_exercicio_link: "exercicio_th_soprado",
+      exercicios_sequencia: ["th_soprado_level_1", "th_soprado_level_2", "th_soprado_level_3"],
       exemplos: [
         { word: "think", ipa: "/θɪŋk/" },
         { word: "three", ipa: "/θriː/" },
@@ -1239,6 +1453,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/ɫ/",
       explicacao: "O L final nunca vira som de U. Levante a ponta da língua e toque-a atrás dos dentes superiores, segurando o som no céu da boca.",
       id_exercicio_link: "exercicio_dark_l",
+      exercicios_sequencia: ["dark_l_level_1", "dark_l_level_2", "dark_l_level_3"],
       exemplos: [
         { word: "well", ipa: "/wɛɫ/" },
         { word: "milk", ipa: "/mɪɫk/" },
@@ -1258,6 +1473,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/t/ ou /d/",
       explicacao: "O E é quase sempre mudo. Pule direto para o som seco de T ou D no final. Evite adicionar o som de \"id\" ou \"idji\" ao final das palavras.",
       id_exercicio_link: "exercicio_ed_mudo",
+      exercicios_sequencia: ["ed_mudo_level_1", "ed_mudo_level_2", "ed_mudo_level_3"],
       exemplos: [
         { word: "worked", ipa: "/wɜːrkt/" },
         { word: "played", ipa: "/pleɪd/" },
@@ -1277,6 +1493,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/ŋ/",
       explicacao: "O G final é decorativo. O som nasce na parte de trás da garganta. Não bata a língua no dente nem solte um G de gato.",
       id_exercicio_link: "exercicio_ing",
+      exercicios_sequencia: ["ing_level_1", "ing_level_2", "ing_level_3"],
       exemplos: [
         { word: "running", ipa: "/ˈrʌnɪŋ/" },
         { word: "speaking", ipa: "/ˈspiːkɪŋ/" },
@@ -1296,6 +1513,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/m/ & /n/",
       explicacao: "Não anasalize a vogal e esqueça a consoante! Para o M, feche os lábios. Para o N, a língua toca o céu da boca. Pronuncie a consoante até o fim.",
       id_exercicio_link: "exercicio_m_n_final",
+      exercicios_sequencia: ["m_n_final_level_1", "m_n_final_level_2", "m_n_final_level_3"],
       exemplos: [
         { word: "from", ipa: "/frʌm/" },
         { word: "ten", ipa: "/tɛn/" },
@@ -1315,6 +1533,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/v/",
       explicacao: "Encoste os dentes superiores no lábio inferior e faça o som vibrar. Se não vibrar, parece F. Se adicionar vogal no final, soa errado.",
       id_exercicio_link: "exercicio_v_final",
+      exercicios_sequencia: ["v_final_level_1", "v_final_level_2", "v_final_level_3"],
       exemplos: [
         { word: "have", ipa: "/hæv/" },
         { word: "live", ipa: "/lɪv/" },
@@ -1334,6 +1553,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/æ/",
       explicacao: "Não é um 'A' puro e nem um 'É' puro. Para fazer esse som, você deve abrir a boca como se fosse falar 'A', mas forçar o som de 'E'. A mandíbula desce bastante. Aí sai o Æ",
       id_exercicio_link: "exercicio_ae_aberta",
+      exercicios_sequencia: ["ae_aberta_level_1", "ae_aberta_level_2", "ae_aberta_level_3"],
       exemplos: [
         { word: "man", ipa: "/mæn/" },
         { word: "bad", ipa: "/bæd/" },
@@ -1353,6 +1573,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/iː/ & /ɪ/",
       explicacao: "O /iː/ é longo, tensionado e exige que você sorria (como em 'sheep'). O /ɪ/ é um som curto, relaxado, com a boca entreaberta, caindo quase na posição de um 'ê' em português (como em 'ship').",
       id_exercicio_link: "exercicio_i_curto_longo",
+      exercicios_sequencia: ["i_longo_curto_level_1", "i_longo_curto_level_2", "i_longo_curto_level_3"],
       exemplos: [
         { word: "sheep", ipa: "/ʃiːp/" },
         { word: "ship", ipa: "/ʃɪp/" },
@@ -1372,6 +1593,7 @@ function PhonemeHubScreen({ onPractice, onBack }) {
       simbolo: "/ʌ/",
       explicacao: "Som curto que nasce na garganta, parecido com o 'ã' de 'pãe', mas seco. O erro comum é tentar pronunciar a letra 'U' com biquinho (como 'cupa'), mas o correto é emitir o som sem arredondar os lábios.",
       id_exercicio_link: "exercicio_u_curto",
+      exercicios_sequencia: ["u_curto_level_1", "u_curto_level_2", "u_curto_level_3"],
       exemplos: [
         { word: "hut", ipa: "/hʌt/" },
         { word: "nut", ipa: "/nʌt/" },
@@ -1506,6 +1728,7 @@ function App() {
   const [pairs,     setPairs]     = useState([]);
   const [idx,       setIdx]       = useState(0);
   const [view,      setView]      = useState("exercises");
+  const [sequenceMode, setSequenceMode] = useState(null); // { phonemeLabel, totalSteps } | null
 
   useEffect(() => {
     let unsub = () => {};
@@ -1532,30 +1755,45 @@ function App() {
   function advanceIdx(currentPairs, currentIdx) {
     const next = currentIdx + 1;
     setIdx(next);
-    saveSession(next, score, currentPairs.map(p=>p.id));
+    if (!sequenceMode) saveSession(next, score, currentPairs.map(p=>p.id));
   }
 
   function addScore(pts, currentPairs, currentIdx, currentScore) {
     const next = currentScore + pts;
     setScore(next);
     setAnimScore(true); setTimeout(()=>setAnimScore(false),300);
-    saveSession(currentIdx, next, currentPairs.map(p=>p.id));
+    if (!sequenceMode) saveSession(currentIdx, next, currentPairs.map(p=>p.id));
   }
 
   function handleRestart() {
     clearSession();
+    setSequenceMode(null);
     const shuffled = shuffleArray(PAIRS);
     setScore(0); setIdx(0); setPairs(shuffled);
     saveSession(0,0,shuffled.map(p=>p.id));
   }
 
   function handlePracticeFromHub(phoneme) {
-    console.log("Praticar exercício:", phoneme.id_exercicio_link);
+    const sequenceIds = Array.isArray(phoneme.exercicios_sequencia) ? phoneme.exercicios_sequencia : null;
 
+    if (sequenceIds && sequenceIds.length > 0) {
+      const sequencePairs = sequenceIds.map(id => PAIRS.find(p => String(p.id) === String(id))).filter(Boolean);
+      if (sequencePairs.length > 0) {
+        setSequenceMode({ phonemeLabel: phoneme.simbolo, totalSteps: sequencePairs.length });
+        setPairs(sequencePairs);
+        setIdx(0);
+        clearSession();
+        setView("exercises");
+        return;
+      }
+      console.warn(`Nenhum exercício encontrado em PAIRS para exercicios_sequencia=${JSON.stringify(sequenceIds)}`);
+    }
+
+    // Fallback: comportamento antigo, link único (compatibilidade com fonemas sem sequência)
     const link = phoneme.id_exercicio_link;
     const match = PAIRS.find(p => String(p.id) === String(link));
-
     if (match) {
+      setSequenceMode(null);
       const currentPairs = pairs.length > 0 ? pairs : PAIRS;
       const foundIdx = currentPairs.findIndex(p => p.id === match.id);
       if (foundIdx !== -1) {
@@ -1568,6 +1806,11 @@ function App() {
     }
 
     setView("exercises");
+  }
+
+  function handleFinishSequence() {
+    setSequenceMode(null);
+    setView("hub");
   }
 
   if (user === undefined) return <Spinner/>;
@@ -1585,12 +1828,32 @@ function App() {
 
   if (pairs.length === 0) return <Spinner/>;
 
-  if (idx >= pairs.length) return (
-    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-      <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
-      <SummaryScreen score={score} total={pairs.length} onRestart={handleRestart}/>
-    </div>
-  );
+  if (idx >= pairs.length) {
+    if (sequenceMode) {
+      return (
+        <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
+          <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
+          <main style={{maxWidth:600,width:"100%",margin:"0 auto",padding:"1.75rem 1.25rem 3rem",flex:1,display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <div className="fade-in" style={{textAlign:"center",background:"#1e293b",border:"1px solid #334155",borderRadius:"1.5rem",padding:"2.5rem 1.75rem",maxWidth:420}}>
+              <span style={{fontSize:"3rem",display:"block",marginBottom:".75rem"}}>🏅</span>
+              <h2 style={{color:"#f8fafc",fontSize:"1.4rem",fontWeight:900,margin:"0 0 .5rem"}}>Trilha {sequenceMode.phonemeLabel} completa!</h2>
+              <p style={{color:"#94a3b8",fontSize:".9rem",marginBottom:"1.75rem"}}>Você concluiu as {sequenceMode.totalSteps} etapas deste fonema.</p>
+              <button onClick={handleFinishSequence}
+                style={{width:"100%",background:"linear-gradient(135deg,#818cf8,#818cf8cc)",color:"#fff",border:"none",padding:"1rem",borderRadius:"1rem",fontSize:".95rem",fontWeight:800}}>
+                Voltar ao Hub de Fonemas ➔
+              </button>
+            </div>
+          </main>
+        </div>
+      );
+    }
+    return (
+      <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
+        <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
+        <SummaryScreen score={score} total={pairs.length} onRestart={handleRestart}/>
+      </div>
+    );
+  }
 
   return (
     <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
@@ -1602,7 +1865,8 @@ function App() {
           onCorrectAnswer={(pts)=>addScore(pts,pairs,idx,score)}
           onNext={()=>advanceIdx(pairs,idx)}
           isLast={idx===pairs.length-1}
-          progressText={`${idx+1} / ${pairs.length}`}
+          progressText={sequenceMode ? `Etapa ${idx+1}/${sequenceMode.totalSteps}` : `${idx+1} / ${pairs.length}`}
+          nextLabel={sequenceMode && idx < pairs.length-1 ? `Avançar para Etapa ${idx+2}/${sequenceMode.totalSteps} ➔` : null}
         />
       </main>
     </div>
