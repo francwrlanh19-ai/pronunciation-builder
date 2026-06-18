@@ -3,9 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Minimal Pairs Hub 🗣️</title>
+  <title>Pronunciation Builder 🇬🇧</title>
   <meta name="description" content="Master English pronunciation with minimal pairs exercises." />
   <meta name="theme-color" content="#0f172a" />
+
+  <!-- PWA: manifest e ícones -->
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+
+  <!-- PWA: comportamento "tela cheia, parece app nativo" no iOS (Android usa o manifest) -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Pronunciation Builder 🇬🇧" />
+  <meta name="mobile-web-app-capable" content="yes" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -608,7 +619,7 @@ function LoginScreen() {
     <div className="fade-in" style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#0f172a,#1e293b)",padding:"1.5rem"}}>
       <div style={{background:"#1e293b",borderRadius:"2rem",padding:"3rem 2rem",width:"100%",maxWidth:420,textAlign:"center",border:"1px solid #334155",boxShadow:"0 25px 50px -12px rgba(0,0,0,.6)"}}>
         <span style={{fontSize:"4.5rem",display:"block",marginBottom:".5rem"}}>🎧</span>
-        <h1 style={{fontSize:"1.8rem",fontWeight:900,color:"#f8fafc",margin:"0 0 .4rem"}}>Minimal Pairs Hub</h1>
+        <h1 style={{fontSize:"1.8rem",fontWeight:900,color:"#f8fafc",margin:"0 0 .4rem"}}>Pronunciation Builder 🇬🇧</h1>
         <p style={{color:"#94a3b8",fontSize:".95rem",marginBottom:"2.5rem"}}>Master English Pronunciation</p>
 
         <button onClick={handleLogin} disabled={loading}
@@ -1874,6 +1885,15 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+
+// Registro do Service Worker — necessário para o PWA ser instalável no Android/Chrome.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch((err) => {
+      console.warn("Falha ao registrar Service Worker:", err);
+    });
+  });
+}
 </script>
 </body>
 </html>
