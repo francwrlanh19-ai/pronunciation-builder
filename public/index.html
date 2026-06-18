@@ -95,6 +95,21 @@
 </div>
 
 <script>
+  // Captura o evento de instalação do PWA o quanto antes (precisa ser registrado
+  // antes do Chrome disparar o evento, senão ele se perde). Guardamos numa variável
+  // global simples para o React poder ler/usar depois, sem depender de timing.
+  window.__deferredInstallPrompt = null;
+  window.__pwaInstallListeners = [];
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    window.__deferredInstallPrompt = e;
+    window.__pwaInstallListeners.forEach((cb) => cb(e));
+  });
+  window.addEventListener("appinstalled", () => {
+    window.__deferredInstallPrompt = null;
+    window.__pwaInstallListeners.forEach((cb) => cb(null));
+  });
+
   const firebaseConfig = {
     apiKey: "AIzaSyD9c6LvsMW5ydeNrI3X7BdJQU1jicq_8CA",
     authDomain: "pronunciation-builder.firebaseapp.com",
@@ -1732,6 +1747,72 @@ function loadSession() { try { const s=localStorage.getItem("mph_session"); retu
 function saveSession(idx,score,pairIds) { try { localStorage.setItem("mph_session",JSON.stringify({idx,score,pairIds})); } catch {} }
 function clearSession() { localStorage.removeItem("mph_session"); }
 
+// Hook que conecta o evento global beforeinstallprompt (capturado fora do React,
+// no <head>) ao ciclo de vida de componentes. Retorna se dá pra instalar agora
+// e uma função pra disparar o prompt nativo do Chrome.
+function usePwaInstall() {
+  const [installEvent, setInstallEvent] = useState(window.__deferredInstallPrompt);
+  const [installed, setInstalled] = useState(false);
+
+  useEffect(() => {
+    const handler = (e) => setInstallEvent(e);
+    window.__pwaInstallListeners.push(handler);
+    return () => {
+      window.__pwaInstallListeners = window.__pwaInstallListeners.filter(cb => cb !== handler);
+    };
+  }, []);
+
+  async function promptInstall() {
+    if (!installEvent) return;
+    installEvent.prompt();
+    const { outcome } = await installEvent.userChoice;
+    if (outcome === "accepted") setInstalled(true);
+    setInstallEvent(null);
+    window.__deferredInstallPrompt = null;
+  }
+
+  const canInstall = !!installEvent && !installed;
+  return { canInstall, promptInstall };
+}
+
+// Banner fixo no rodapé incentivando a instalação. Só aparece quando o Chrome
+// sinaliza que o app é instalável (critérios do manifest + service worker ok)
+// e o aluno ainda não instalou nem fechou o banner nesta sessão.
+function InstallBanner({ canInstall, onInstall }) {
+  const [dismissed, setDismissed] = useState(false);
+  if (!canInstall || dismissed) return null;
+
+  return (
+    <div className="fade-in" style={{
+      position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
+      background: "#1e293b", borderTop: "1px solid #334155",
+      padding: "0.85rem 1.1rem", display: "flex", alignItems: "center",
+      gap: "0.85rem", boxShadow: "0 -8px 24px rgba(0,0,0,.35)",
+    }}>
+      <span style={{ fontSize: "1.6rem", flexShrink: 0 }}>🇬🇧</span>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p style={{ margin: 0, fontWeight: 800, fontSize: ".85rem", color: "#f8fafc" }}>
+          Instale o Pronunciation Builder
+        </p>
+        <p style={{ margin: 0, fontSize: ".72rem", color: "#94a3b8" }}>
+          Acesso rápido direto da tela inicial, sem precisar abrir o navegador.
+        </p>
+      </div>
+      <button onClick={onInstall} style={{
+        background: "linear-gradient(135deg,#818cf8,#6366f1)", color: "#fff",
+        border: "none", padding: ".55rem 1rem", borderRadius: ".75rem",
+        fontWeight: 800, fontSize: ".8rem", whiteSpace: "nowrap", flexShrink: 0,
+      }}>
+        Instalar
+      </button>
+      <button onClick={() => setDismissed(true)} aria-label="Fechar"
+        style={{ background: "transparent", border: "none", color: "#64748b", fontSize: "1.1rem", padding: ".25rem", flexShrink: 0 }}>
+        ✕
+      </button>
+    </div>
+  );
+}
+
 function App() {
   const [user,      setUser]      = useState(undefined);
   const [score,     setScore]     = useState(0);
@@ -1740,6 +1821,7 @@ function App() {
   const [idx,       setIdx]       = useState(0);
   const [view,      setView]      = useState("exercises");
   const [sequenceMode, setSequenceMode] = useState(null); // { phonemeLabel, totalSteps } | null
+  const { canInstall, promptInstall } = usePwaInstall();
 
   useEffect(() => {
     let unsub = () => {};
@@ -1828,20 +1910,20 @@ function App() {
   if (user === null)      return <LoginScreen/>;
   if (user.email === ADMIN_EMAIL) return <AdminDashboard user={user}/>;
 
+  let mainContent;
+
   if (view === "hub") {
-    return (
+    mainContent = (
       <PhonemeHubScreen
         onPractice={handlePracticeFromHub}
         onBack={() => setView("exercises")}
       />
     );
-  }
-
-  if (pairs.length === 0) return <Spinner/>;
-
-  if (idx >= pairs.length) {
+  } else if (pairs.length === 0) {
+    mainContent = <Spinner/>;
+  } else if (idx >= pairs.length) {
     if (sequenceMode) {
-      return (
+      mainContent = (
         <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
           <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
           <main style={{maxWidth:600,width:"100%",margin:"0 auto",padding:"1.75rem 1.25rem 3rem",flex:1,display:"flex",alignItems:"center",justifyContent:"center"}}>
@@ -1857,30 +1939,38 @@ function App() {
           </main>
         </div>
       );
+    } else {
+      mainContent = (
+        <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
+          <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
+          <SummaryScreen score={score} total={pairs.length} onRestart={handleRestart}/>
+        </div>
+      );
     }
-    return (
+  } else {
+    mainContent = (
       <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
         <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
-        <SummaryScreen score={score} total={pairs.length} onRestart={handleRestart}/>
+        <main style={{maxWidth:600,width:"100%",margin:"0 auto",padding:"1.75rem 1.25rem 3rem",flex:1}}>
+          <ExerciseView
+            pair={pairs[idx]}
+            user={user}
+            onCorrectAnswer={(pts)=>addScore(pts,pairs,idx,score)}
+            onNext={()=>advanceIdx(pairs,idx)}
+            isLast={idx===pairs.length-1}
+            progressText={sequenceMode ? `Etapa ${idx+1}/${sequenceMode.totalSteps}` : `${idx+1} / ${pairs.length}`}
+            nextLabel={sequenceMode && idx < pairs.length-1 ? `Avançar para Etapa ${idx+2}/${sequenceMode.totalSteps} ➔` : null}
+          />
+        </main>
       </div>
     );
   }
 
   return (
-    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-      <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
-      <main style={{maxWidth:600,width:"100%",margin:"0 auto",padding:"1.75rem 1.25rem 3rem",flex:1}}>
-        <ExerciseView
-          pair={pairs[idx]}
-          user={user}
-          onCorrectAnswer={(pts)=>addScore(pts,pairs,idx,score)}
-          onNext={()=>advanceIdx(pairs,idx)}
-          isLast={idx===pairs.length-1}
-          progressText={sequenceMode ? `Etapa ${idx+1}/${sequenceMode.totalSteps}` : `${idx+1} / ${pairs.length}`}
-          nextLabel={sequenceMode && idx < pairs.length-1 ? `Avançar para Etapa ${idx+2}/${sequenceMode.totalSteps} ➔` : null}
-        />
-      </main>
-    </div>
+    <>
+      {mainContent}
+      <InstallBanner canInstall={canInstall} onInstall={promptInstall} />
+    </>
   );
 }
 
