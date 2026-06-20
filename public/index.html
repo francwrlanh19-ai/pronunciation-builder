@@ -2363,7 +2363,7 @@ function PhonemeHubScreen({ onPractice, onBack, track }) {
   );
 }
 
-function Header({ user, score, animScore, onOpenHub }) {
+function Header({ user, score, animScore, onOpenHub, onChangeTrack }) {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
     <header style={{position:"sticky",top:0,zIndex:50,background:"rgba(15,23,42,.9)",backdropFilter:"blur(14px)",borderBottom:"1px solid #1e293b",padding:".9rem 1.25rem",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"1rem"}}>
@@ -2388,6 +2388,12 @@ function Header({ user, score, animScore, onOpenHub }) {
             <div className="fade-in" style={{position:"absolute",right:0,top:"calc(100% + 8px)",background:"#1e293b",border:"1px solid #334155",borderRadius:"1rem",padding:".75rem",minWidth:180,boxShadow:"0 12px 30px rgba(0,0,0,.5)",zIndex:100}}>
               <p style={{margin:"0 0 4px",fontSize:".8rem",fontWeight:700,color:"#f8fafc",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user.displayName}</p>
               <p style={{margin:"0 0 .75rem",fontSize:".65rem",color:"#64748b",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user.email}</p>
+              {onChangeTrack && (
+                <button onClick={()=>{ setMenuOpen(false); onChangeTrack(); }}
+                  style={{width:"100%",background:"#0f172a",color:"#f8fafc",border:"1px solid #334155",padding:".5rem",borderRadius:".65rem",fontWeight:700,fontSize:".8rem",marginBottom:".5rem"}}>
+                  🌍 Trocar trilha
+                </button>
+              )}
               <button onClick={signOut} style={{width:"100%",background:"#0f172a",color:"#fb7185",border:"1px solid #3f0a0a",padding:".5rem",borderRadius:".65rem",fontWeight:700,fontSize:".8rem"}}>Sign Out</button>
             </div>
           )}
@@ -2519,6 +2525,14 @@ function App() {
     saveSession(0,0,shuffled.map(p=>p.id));
   }
 
+  function handleChangeTrack() {
+    localStorage.removeItem("mph_track");
+    clearSession();
+    setSequenceMode(null);
+    setView("exercises");
+    setTrack(null); // volta para a tela de seleção de trilha
+  }
+
   useEffect(() => {
     let unsub = () => {};
     redirectResultPromise.finally(() => {
@@ -2629,7 +2643,7 @@ function App() {
     if (sequenceMode) {
       mainContent = (
         <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-          <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
+          <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")} onChangeTrack={handleChangeTrack}/>
           <main style={{maxWidth:600,width:"100%",margin:"0 auto",padding:"1.75rem 1.25rem 3rem",flex:1,display:"flex",alignItems:"center",justifyContent:"center"}}>
             <div className="fade-in" style={{textAlign:"center",background:"#1e293b",border:"1px solid #334155",borderRadius:"1.5rem",padding:"2.5rem 1.75rem",maxWidth:420}}>
               <span style={{fontSize:"3rem",display:"block",marginBottom:".75rem"}}>🏅</span>
@@ -2646,7 +2660,7 @@ function App() {
     } else {
       mainContent = (
         <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-          <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
+          <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")} onChangeTrack={handleChangeTrack}/>
           <SummaryScreen score={score} total={pairs.length} onRestart={handleRestart}/>
         </div>
       );
@@ -2654,7 +2668,7 @@ function App() {
   } else {
     mainContent = (
       <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-        <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")}/>
+        <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")} onChangeTrack={handleChangeTrack}/>
         <main style={{maxWidth:600,width:"100%",margin:"0 auto",padding:"1.75rem 1.25rem 3rem",flex:1}}>
           <ExerciseView
             pair={pairs[idx]}
