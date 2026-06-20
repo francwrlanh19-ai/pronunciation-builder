@@ -202,7 +202,7 @@ const ADMIN_EMAIL = "francwrlanh19@gmail.com";
 
 // ── TIPO: par mínimo (2 palavras + trava-língua)
 // ── TIPO: twister_only (apenas trava-língua — sem par mínimo, sem seleção de carta)
-const PAIRS = [
+const PAIRS_EN = [
   { id:1, symbol:"/iː/ vs /ɪ/", accent:"#818cf8",
     words:[
       { word:"The sheep", ipa:"/ðə ʃiːp/", meaning:"A ovelha",  symbol:"/iː/", emoji:"🐑", hint:"Longo · Sorriso tenso 😁" },
@@ -594,6 +594,836 @@ const PAIRS = [
     tip:"Frase saturada do som /ʌ/. Mantenha o som sempre curto e central, como um pequeno soco de ar ('Uh!') — nunca arredonde os lábios como faria com o 'U' do português." },
 ];
 
+// ═══════════════════════════════════════════════════════════════════════
+// TRILHA NORUEGUÊS (BOKMÅL) — gerado a partir do HANDOFF_conteudo_norueguês.md
+// IPA conferido contra Help:IPA/Norwegian (padrão Urban East Norwegian / Oslo)
+// ═══════════════════════════════════════════════════════════════════════
+
+const PAIRS_NO = [
+  { id:1, symbol:"/y/ vs /u/", accent:"#818cf8",
+    words:[
+      { word:"Et hus", ipa:"/ɛt hʉːs/", meaning:"Uma casa", symbol:"/ʉː/", emoji:"🏠", hint:"Biquinho fechado, língua na frente 😗" },
+      { word:"En hule", ipa:"/ɛn ˈhʉːlə/", meaning:"Uma caverna", symbol:"/ʉː/", emoji:"🕳️", hint:"Mesmo som, não vire 'u' 😗" },
+    ],
+    twister:{ word:"Huset har en hule", ipa:"/ˈhʉːsə hɑːr ɛn ˈhʉːlə/", emoji:"🏠🕳️", hint:"Repita o /ʉː/ sem arredondar demais 😗" },
+    tip:"Esse som não existe em português. A língua fica na frente da boca, quase como um 'i', mas os lábios ficam comprimidos para a frente (não arredondados como em 'u'). Não é 'rrhus' nem 'risse' — é um som só, com a língua alta e à frente." },
+
+  { id:2, symbol:"/ø/", accent:"#f472b6",
+    words:[
+      { word:"Tysk", ipa:"/tʏsk/", meaning:"Alemão (idioma)", symbol:"/ʏ/", emoji:"🇩🇪", hint:"Curto, lábios arredondados 😮" },
+      { word:"Tørst", ipa:"/tœʁʃt/", meaning:"Sede", symbol:"/œ/", emoji:"🥤", hint:"Boca aberta, lábios redondos 😮" },
+    ],
+    twister:{ word:"Jeg er tørst etter tysk øl", ipa:"/jæi æːr tœʁʃt ˈɛtːər tʏsk øːl/", emoji:"🥤🍺", hint:"Não troque /œ/ por 'ó' nem 'é' 😮" },
+    tip:"O /ø/ e o /œ/ não existem em português. Para fazer o som, arredonde os lábios como se fosse falar 'o', mas a língua fica na posição de 'e'. É um som de 'e' com biquinho de 'o' — bem diferente do nosso 'ô'." },
+
+  { id:3, symbol:"/u/ vs /o/", accent:"#34d399",
+    words:[
+      { word:"En bukk", ipa:"/ɛn bʊkː/", meaning:"Um bode", symbol:"/ʊ/", emoji:"🐐", hint:"Curto e fechado, sem força 🤐" },
+      { word:"Å bukke", ipa:"/oː ˈbʉkːə/", meaning:"Curvar-se", symbol:"/ʉ/", emoji:"🙇", hint:"Bem diferente do anterior, mais fino 😗" },
+    ],
+    twister:{ word:"Bukken bukker for noen", ipa:"/ˈbʉkːən ˈbʉkːər fɔːr nuən/", emoji:"🐐🙇", hint:"Atenção à vogal que muda de cada vez 🎯" },
+    tip:"O brasileiro tende a igualar todo som perto de 'u'. No norueguês, /ʊ/ é curto e mais aberto (como em 'put' do inglês), enquanto /ʉ/ é o som comprimido sem arredondar muito os lábios. São fonemas diferentes — confundir os dois muda o sentido da palavra." },
+
+  { id:4, symbol:"/æ/ longo vs curto", accent:"#fbbf24",
+    words:[
+      { word:"Vær", ipa:"/væːr/", meaning:"Clima/tempo", symbol:"/æː/", emoji:"🌦️", hint:"Vogal longa, sustente o som 🕰️" },
+      { word:"Ferdig", ipa:"/ˈfæʁdi/", meaning:"Pronto/terminado", symbol:"/æ/", emoji:"✅", hint:"Curto e seco, sem alongar ⏱️" },
+    ],
+    twister:{ word:"Været er ferdig med å skifte", ipa:"/ˈvæːrə æːr ˈfæʁdi me oː ˈʃɪftə/", emoji:"🌦️✅", hint:"Diferencie o longo do curto pela duração 🎯" },
+    tip:"O /æ/ do norueguês é parecido com o do inglês, mas tem uma versão longa e uma curta que mudam o sentido da palavra — algo que não existe em português, onde a duração da vogal raramente importa. Preste atenção: se a sílaba é aberta (termina em vogal ou tem só uma consoante depois), o som tende a ser longo." },
+
+  { id:5, symbol:"Tonem (tom 1 vs tom 2)", accent:"#a78bfa",
+    words:[
+      { word:"Bønder", ipa:"/ˈbœ̀nːər/", meaning:"Fazendeiros (tom 1, contorno descendente-suave)", symbol:"tom 1", emoji:"👨‍🌾", hint:"Contorno mais reto/baixo 📉" },
+      { word:"Bønner", ipa:"/ˈbœ̂nːər/", meaning:"Feijões (tom 2, contorno ascendente-descendente)", symbol:"tom 2", emoji:"🫘", hint:"Sobe e desce na sílaba 📈📉" },
+    ],
+    twister:{ word:"Bønder spiser bønner", ipa:"/ˈbœ̀nːər ˈspiːsər ˈbœ̂nːər/", emoji:"👨‍🌾🫘", hint:"A melodia muda o sentido, não a letra 🎵" },
+    tip:"Esse é o 'fonema invisível' do norueguês: duas palavras escritas quase iguais (e com os mesmos sons) podem significar coisas diferentes só pela melodia da fala. O brasileiro não está acostumado a usar o tom para distinguir palavras — aqui, a curva da voz dentro da própria palavra é a única pista para diferenciar 'fazendeiros' de 'feijões'." },
+
+  { id:6, symbol:"/ç/ (KJ) vs /ʃ/ (SJ)", accent:"#fb7185",
+    words:[
+      { word:"Kjip", ipa:"/çiːp/", meaning:"Chato/ruim", symbol:"/ç/", emoji:"😒", hint:"Som fino, língua no céu da boca 🗣️" },
+      { word:"Sjø", ipa:"/ʂøː/", meaning:"Mar", symbol:"/ʂ/", emoji:"🌊", hint:"Som mais grosso, lábios projetados 👄" },
+    ],
+    twister:{ word:"Kjipt vær ved sjøen", ipa:"/çiːpt væːr ve ˈʂøːən/", emoji:"😒🌊", hint:"Dois chiados bem diferentes seguidos 🎯" },
+    tip:"O brasileiro tende a jogar os dois sons em um só 'X' ou 'CH'. Mas KJ é um som fino e suave, feito com o meio da língua subindo para o céu da boca (parecido com o 'h' forte de 'huge' em inglês). Já SJ é mais grosso e arredondado, com os lábios projetados para frente — mais parecido com o 'ch' encorpado." },
+
+  { id:7, symbol:"R norueguês", accent:"#60a5fa",
+    words:[
+      { word:"Rar", ipa:"/rɑːr/", meaning:"Estranho", symbol:"/r/", emoji:"🤨", hint:"Vibração rápida na ponta da língua 〜" },
+      { word:"Rister", ipa:"/ˈrɪstər/", meaning:"Treme/sacode", symbol:"/r/", emoji:"😬", hint:"Não troque pelo 'r' fraco do português 〜" },
+    ],
+    twister:{ word:"Rar og rister rart", ipa:"/rɑːr oː ˈrɪstər rɑːʁt/", emoji:"🤨😬", hint:"Mantenha o R forte do início ao fim 🎯" },
+    tip:"O R de Oslo é uma vibração rápida feita com a ponta da língua batendo no céu da boca (parecido com o 'r' do espanhol em 'pero'), bem diferente do nosso 'r' fraco de 'cara'. Em outras regiões da Noruega o R é gutural, mas para o padrão de Oslo, treine a vibração curta na ponta da língua." },
+
+  { id:8, symbol:"Grupos finais -ND/-NG", accent:"#2dd4bf",
+    words:[
+      { word:"Vind", ipa:"/vɪn/", meaning:"Vento", symbol:"∅", emoji:"💨", hint:"O D no final é mudo, não solte vogal 🤐" },
+      { word:"Ring", ipa:"/rɪŋ/", meaning:"Anel/círculo", symbol:"/ŋ/", emoji:"💍", hint:"Som nasal só na garganta, sem 'gui' 🤐" },
+    ],
+    twister:{ word:"Vinden ringer i ring", ipa:"/ˈvɪnːən ˈrɪŋːər iː rɪŋ/", emoji:"💨💍", hint:"Não adicione vogal de apoio no final ⛔" },
+    tip:"O brasileiro tem o hábito de colocar uma vogalzinha depois de toda consoante final (como em 'clube' → 'clubi'). Em norueguês isso quebra a palavra. Em '-nd', o D geralmente é mudo; em '-ng', é um único som nasal de garganta, sem nenhum 'g' explodido depois." },
+
+  { id:9, symbol:"L claro vs Tjukk L", accent:"#c084fc",
+    words:[
+      { word:"Sol", ipa:"/suːl/", meaning:"Sol", symbol:"/l/", emoji:"☀️", hint:"L claro, língua na frente dos dentes 👅" },
+      { word:"Jord", ipa:"/juːɽ/", meaning:"Terra (em dialetos com tjukk L)", symbol:"/ɽ/", emoji:"🌍", hint:"Variação regional, em Oslo soa mais como R 🗺️" },
+    ],
+    twister:{ word:"Solen varmer jorden", ipa:"/ˈsuːlən ˈvɑrmər ˈjuːʁən/", emoji:"☀️🌍", hint:"Use o padrão de Oslo como referência neutra 🎯" },
+    tip:"Em vários dialetos noruegueses existe o 'tjukk L' (L retroflexo, dito com a língua curvada para trás), que substitui certos grupos com R. No padrão de Oslo, ensinado a estrangeiros, isso normalmente vira um som parecido com R. Não se preocupe em dominar o tjukk L — foque no L claro padrão, comum a todas as variantes." },
+
+  { id:10, symbol:"Ditongos AI/EI/ØY", accent:"#f59e0b",
+    words:[
+      { word:"Hai", ipa:"/hɑɪ/", meaning:"Tubarão", symbol:"/ɑɪ/", emoji:"🦈", hint:"Desliza de 'a' pra 'i', sem nasalizar 🎢" },
+      { word:"Hei", ipa:"/hæɪ/", meaning:"Olá", symbol:"/æɪ/", emoji:"👋", hint:"Começa mais aberto que o anterior 🎢" },
+    ],
+    twister:{ word:"Hei, der er en hai med høy røyk", ipa:"/hæɪ dæːr æːr ɛn hɑɪ me hœʏ rœʏk/", emoji:"👋🦈💨", hint:"Três ditongos diferentes na mesma frase 🎯" },
+    tip:"Ditongos em norueguês são dois sons de vogal que deslizam suavemente, sem nasalizar como o brasileiro costuma fazer com 'ai', 'ei' em português. Cada ditongo (AI, EI, ØY) começa numa vogal e termina sempre num movimento rápido em direção a 'i' ou 'y' — mantenha os dois sons claros, sem achatar em um só." },
+
+  { id:11, symbol:"/y/ vs /i/", accent:"#818cf8",
+    words:[
+      { word:"Lys", ipa:"/lyːs/", meaning:"Luz", symbol:"/yː/", emoji:"💡", hint:"Lábios arredondados e projetados 😗" },
+      { word:"Lise", ipa:"/ˈliːsə/", meaning:"Nome próprio feminino", symbol:"/iː/", emoji:"👩", hint:"Lábios espalhados, sorriso 😁" },
+    ],
+    twister:{ word:"Lys og Lise lyser", ipa:"/lyːs oː ˈliːsə ˈlyːsər/", emoji:"💡👩", hint:"Diferencie pela posição dos lábios, não da língua 🎯" },
+    tip:"O brasileiro tende a ouvir tanto /y/ quanto /i/ como o nosso 'i'. A diferença real está nos lábios: para /y/, a língua fica na posição de 'i', mas os lábios se projetam para frente e arredondam, como um bico. Para /i/, os lábios ficam espalhados, como um sorriso." },
+
+  { id:12, symbol:"/ø/ vs /e/", accent:"#f472b6",
+    words:[
+      { word:"Dø", ipa:"/døː/", meaning:"Morrer", symbol:"/øː/", emoji:"💀", hint:"Lábios redondos, língua na frente 😮" },
+      { word:"De", ipa:"/diː/", meaning:"Eles/elas", symbol:"/iː/", emoji:"👥", hint:"Lábios espalhados, sem arredondar 😁" },
+    ],
+    twister:{ word:"De vil ikke dø", ipa:"/diː vɪl ˈɪkːə døː/", emoji:"👥💀", hint:"Cuidado para não trocar 'dø' por 'di' 🎯" },
+    tip:"Sem arredondar os lábios em /ø/, a palavra muda de som e pode confundir o ouvinte. Pratique falando 'e' (como em 'dedo') e, mantendo a língua no mesmo lugar, vá arredondando os lábios lentamente até sentir o som mudar para o /ø/." },
+
+  { id:13, symbol:"/u/ vs /ʉ/", accent:"#34d399",
+    words:[
+      { word:"Bot", ipa:"/buːt/", meaning:"Multa", symbol:"/uː/", emoji:"🎫", hint:"Lábios bem arredondados e projetados 😗" },
+      { word:"But", ipa:"/bʉːt/", meaning:"(forma verbal, ex: 'her but')", symbol:"/ʉː/", emoji:"➡️", hint:"Lábios comprimidos, não projetados 😬" },
+    ],
+    twister:{ word:"Boten var en stor but", ipa:"/ˈbuːtən vɑːʁ ɛn stuːr bʉːt/", emoji:"🎫➡️", hint:"Ambos têm biquinho, mas de tipos diferentes 🎯" },
+    tip:"Essa é considerada uma das distinções mais difíceis do norueguês para estrangeiros. /uː/ tem lábios projetados para frente, como um beijo. /ʉː/ tem lábios comprimidos, mas não projetados — mais como se você estivesse 'segurando' o ar sem fazer bico." },
+
+  { id:14, symbol:"/æ/ antes de R", accent:"#fbbf24",
+    words:[
+      { word:"Fersk", ipa:"/færʃk/", meaning:"Fresco (comida)", symbol:"/æ/", emoji:"🥬", hint:"Abre mais a boca por causa do R seguinte 😮" },
+      { word:"Fersk fisk", ipa:"/færʃk fɪsk/", meaning:"Peixe fresco", symbol:"/æ/", emoji:"🐟", hint:"O R muda a vogal antes dele 🎯" },
+    ],
+    twister:{ word:"Ferske fisk er ferdig", ipa:"/ˈfæʁʃkə fɪsk æːr ˈfæʁdi/", emoji:"🐟✅", hint:"Toda vogal antes de R abre um pouco mais 📐" },
+    tip:"Antes de R, vogais como /e/ tendem a abrir para /æ/. O brasileiro costuma manter o som de 'e' fechado mesmo antes de R, mas em norueguês a vogal muda de qualidade — abre mais a boca quando o R vem depois." },
+
+  { id:15, symbol:"-ET mudo (substantivo neutro)", accent:"#2dd4bf",
+    words:[
+      { word:"Huset", ipa:"/ˈhʉːsə/", meaning:"A casa (definida)", symbol:"∅", emoji:"🏠", hint:"O T final nunca é pronunciado 🤐" },
+      { word:"Målet", ipa:"/ˈmoːlə/", meaning:"O objetivo/a meta", symbol:"∅", emoji:"🎯", hint:"Mesmo padrão, T sempre mudo 🤐" },
+    ],
+    twister:{ word:"Huset er målet mitt", ipa:"/ˈhʉːsə æːr ˈmoːlə mɪtː/", emoji:"🏠🎯", hint:"Dois T's mudos na mesma frase 🎯" },
+    tip:"Quando um substantivo neutro está na forma definida (terminando em -et), o T quase nunca é pronunciado. O brasileiro tende a querer pronunciar toda letra escrita — aqui é importante deixar essa letra muda, só engolindo o som no final." },
+
+  { id:16, symbol:"/o/ vs /å/", accent:"#a78bfa",
+    words:[
+      { word:"Hatt", ipa:"/hɑtː/", meaning:"Chapéu", symbol:"/ɑ/", emoji:"🎩", hint:"Vogal aberta, boca solta 😮" },
+      { word:"Hått", ipa:"/hɔtː/", meaning:"(forma fonética próxima, exemplo didático)", symbol:"/ɔ/", emoji:"〇", hint:"Mais fechado, lábios arredondados 😯" },
+    ],
+    twister:{ word:"Han har en hatt, ikke en hått", ipa:"/hɑn hɑːr ɛn hɑtː ˈɪkːə ɛn hɔtː/", emoji:"🎩〇", hint:"A diferença é sutil mas muda a palavra 🎯" },
+    tip:"O som escrito com 'å' (/ɔ/) é mais fechado e arredondado que o 'a' aberto (/ɑ/). Em português, normalmente não diferenciamos esses dois tipos de 'o/a' — preste atenção ao arredondamento dos lábios para não confundir as duas vogais." },
+
+  { id:17, symbol:"KJ em -tj-", accent:"#fb7185",
+    words:[
+      { word:"Tjene", ipa:"/ˈçeːnə/", meaning:"Ganhar (dinheiro)", symbol:"/ç/", emoji:"💰", hint:"Som fino de KJ, não vire 'tch' 🗣️" },
+      { word:"Kjenne", ipa:"/ˈçɛnːə/", meaning:"Conhecer/sentir", symbol:"/ç/", emoji:"🤝", hint:"Mesmo som inicial fino 🗣️" },
+    ],
+    twister:{ word:"Jeg kjenner at jeg tjener lite", ipa:"/jæi ˈçɛnːər at jæi ˈçeːnər ˈliːtə/", emoji:"🤝💰", hint:"Mantenha o som fino em ambas as palavras 🎯" },
+    tip:"O brasileiro tende a ler 'tj' e 'kj' como 'tch'. No padrão de Oslo, esse som é o /ç/ fino — mais parecido com um 'h' soprado forte, feito com o meio da língua, e não uma explosão de 't' seguida de chiado." },
+
+  { id:18, symbol:"SJ/SKJ", accent:"#60a5fa",
+    words:[
+      { word:"Skje", ipa:"/ʂeː/", meaning:"Colher", symbol:"/ʂ/", emoji:"🥄", hint:"Som grosso, lábios projetados 👄" },
+      { word:"Sjelden", ipa:"/ˈʂɛlːən/", meaning:"Raro/raramente", symbol:"/ʂ/", emoji:"🍀", hint:"Mesmo chiado grosso do início 👄" },
+    ],
+    twister:{ word:"Det er sjelden å finne en skje", ipa:"/de æːr ˈʂɛlːən oː ˈfɪnːə ɛn ʂeː/", emoji:"🍀🥄", hint:"Chiado grosso e arredondado o tempo todo 🎯" },
+    tip:"Diferente do /ç/ fino do exercício anterior, esse som (SJ, SKJ) é mais grosso, parecido com 'sh' do inglês mas com a língua um pouco mais para trás e os lábios arredondados. Não confunda os dois chiados — eles são fonemas diferentes em norueguês." },
+
+  { id:19, symbol:"Consoantes retroflexas (RT/RD/RN)", accent:"#34d399",
+    words:[
+      { word:"Bart", ipa:"/bɑʈ/", meaning:"Bigode", symbol:"/ʈ/", emoji:"👨", hint:"R + T virou um som só, língua curvada 🌀" },
+      { word:"Gard", ipa:"/gɑːɖ/", meaning:"Fazenda/sítio", symbol:"/ɖ/", emoji:"🚜", hint:"R + D virou um som só também 🌀" },
+    ],
+    twister:{ word:"Bart fra garden er rart", ipa:"/bɑʈ frɑ ˈgɑːɳ æːr rɑːʁt/", emoji:"👨🚜", hint:"R nunca aparece separado antes da consoante 🎯" },
+    tip:"Em muitos dialetos (incluindo o padrão urbano), quando R encontra T, D, N, L ou S, os dois sons se fundem em uma única consoante 'retroflexa' (a língua se curva para trás). O brasileiro tende a pronunciar o R separado da consoante seguinte — aqui eles se tornam um som só, sem pausa entre eles." },
+
+  { id:20, symbol:"/æ/ vs /e/", accent:"#fbbf24",
+    words:[
+      { word:"Vegg", ipa:"/vɛgː/", meaning:"Parede", symbol:"/ɛ/", emoji:"🧱", hint:"Boca meio aberta, neutro 😐" },
+      { word:"Vær så god", ipa:"/væːʃɔ ˈɡuː/", meaning:"De nada/aqui está", symbol:"/æː/", emoji:"🙏", hint:"Mais aberto e longo que o anterior 😮" },
+    ],
+    twister:{ word:"Vær så god, her er veggen", ipa:"/væːʃɔ ɡuː hæːr æːr ˈvɛgːən/", emoji:"🙏🧱", hint:"Não troque o /æː/ longo pelo /ɛ/ curto 🎯" },
+    tip:"O /ɛ/ é uma vogal média, parecida com o 'é' do português. O /æː/ é mais aberta e alongada — a mandíbula desce mais e o som se sustenta por mais tempo. Praticar a diferença de abertura entre as duas evita confundir palavras comuns do dia a dia." },
+
+  { id:21, symbol:"Epêntese final (consoantes 'soltas')", accent:"#c084fc",
+    words:[
+      { word:"Takk", ipa:"/tɑkː/", meaning:"Obrigado", symbol:"∅", emoji:"🙏", hint:"Para seco no K, sem vogal de apoio 🤐" },
+      { word:"Opp", ipa:"/ɔpː/", meaning:"Para cima", symbol:"∅", emoji:"⬆️", hint:"Para seco no P, sem 'pi' no final 🤐" },
+    ],
+    twister:{ word:"Takk, gå opp og ned", ipa:"/tɑkː ɡoː ɔpː oː neː/", emoji:"🙏⬆️", hint:"Nenhuma consoante final ganha vogal extra ⛔" },
+    tip:"Esse é um dos erros mais comuns de brasileiros em qualquer língua estrangeira: adicionar uma vogalzinha de apoio depois de toda consoante final (a famosa epêntese, como em 'clube' → 'clubi'). Em norueguês, palavras terminadas em consoante param de forma seca, sem nenhum som extra depois." },
+
+  { id:22, symbol:"Tonem em compostos", accent:"#a78bfa",
+    words:[
+      { word:"Bilen", ipa:"/ˈbiːlən/", meaning:"O carro (tom 2 tipicamente)", symbol:"tom 2", emoji:"🚗", hint:"Melodia sobe e desce numa palavra só 📈📉" },
+      { word:"Biler", ipa:"/ˈbiːlər/", meaning:"Carros (plural)", symbol:"tom 1", emoji:"🚗🚗", hint:"Melodia mais reta/descendente 📉" },
+    ],
+    twister:{ word:"Bilen og bilene er røde", ipa:"/ˈbiːlən oː ˈbiːlənə æːr ˈrøːdə/", emoji:"🚗🔴", hint:"Escute a curva melódica em cada palavra 🎵" },
+    tip:"Assim como no par 'bønder/bønner', muitas palavras noruegueses com mais de uma sílaba carregam uma melodia própria (tom 1 ou tom 2) que ajuda a identificar a forma gramatical. Não tem equivalente direto em português — o ideal é ouvir bastante e imitar o contorno, sem se preocupar em 'traduzir' a regra." },
+
+  { id:23, symbol:"/ʉ/ vs /o/", accent:"#f59e0b",
+    words:[
+      { word:"Mur", ipa:"/mʉːr/", meaning:"Muro", symbol:"/ʉː/", emoji:"🧱", hint:"Lábios comprimidos, língua na frente 😬" },
+      { word:"Mor", ipa:"/muːr/", meaning:"Mãe", symbol:"/uː/", emoji:"👩‍👧", hint:"Lábios projetados, língua atrás 😗" },
+    ],
+    twister:{ word:"Min mor bygde en mur", ipa:"/mɪn muːr ˈbʏɡːdə ɛn mʉːr/", emoji:"👩‍👧🧱", hint:"Troque 'mur' por 'mor' e muda tudo 🎯" },
+    tip:"Esse par confunde até estudantes avançados: 'mur' (muro) e 'mor' (mãe) só diferem pela posição da língua — em /ʉː/ ela fica na frente da boca, em /uː/ vai para trás. Os lábios também mudam: comprimidos no primeiro, projetados no segundo." },
+
+  { id:24, symbol:"/ø/ vs /ʉ/", accent:"#fb7185",
+    words:[
+      { word:"Søt", ipa:"/søːt/", meaning:"Doce/fofo", symbol:"/øː/", emoji:"🍬", hint:"Língua na frente, boca mais aberta 😮" },
+      { word:"Sut", ipa:"/sʉːt/", meaning:"(exemplo didático, som próximo a 'choro' em alguns contextos)", symbol:"/ʉː/", emoji:"😢", hint:"Língua na frente, boca mais fechada 😬" },
+    ],
+    twister:{ word:"Den søte hunden sutret", ipa:"/dɛn ˈsøːtə ˈhʉnːən ˈsʉːtʁət/", emoji:"🍬🐶", hint:"Cuidado com a altura da língua nos dois sons 🎯" },
+    tip:"Tanto /ø/ quanto /ʉ/ têm a língua na parte frontal da boca, mas a abertura é diferente: /ø/ é mais aberto (boca mais solta), /ʉ/ é mais fechado e comprimido. É uma diferença sutil de altura da língua que o ouvido brasileiro não está treinado a perceber de cara." },
+
+  { id:25, symbol:"Trava-língua final: revisão geral", accent:"#34d399", type:"twister_only",
+    twister:{ word:"Tørre høye trær gror nær sjøen i ro", ipa:"/ˈtœrːə ˈhœʏə træːr gruːr næːr ˈʂøːən iː ruː/", emoji:"🌳🌊", hint:"Revisão: /ø/, /œ/, ditongo øy e SJ juntos 🎯" },
+    tip:"Essa frase final combina vários dos sons mais difíceis: a vogal /œ/ de 'tørre', o ditongo /œʏ/ de 'høye', e o chiado grosso /ʂ/ de 'sjøen'. Vá devagar, isolando cada som antes de juntar a frase inteira — é normal precisar de várias tentativas." },
+
+  // ── Trilhas de sequência por fonema (3 níveis cada) ──────────────────
+  { id:"y_fechada_level_1", symbol:"/ʉː/", accent:"#818cf8",
+    words:[
+      { word:"Hus", ipa:"/hʉːs/", meaning:"Casa", symbol:"/ʉː/", emoji:"🏠", hint:"Lábios comprimidos, língua na frente 😗" },
+      { word:"Sur", ipa:"/sʉːr/", meaning:"Ácido/azedo", symbol:"/ʉː/", emoji:"🍋", hint:"Mesmo som, mantenha a tensão dos lábios 😗" },
+    ],
+    twister:{ word:"Huset er surt", ipa:"/ˈhʉːsə æːr sʉʈː/", emoji:"🏠🍋", hint:"Repita o /ʉː/ duas vezes na frase 🎯" },
+    tip:"Nível 1: foque só em ouvir e repetir o som isolado em palavras curtas e comuns, sem se preocupar ainda com variações." },
+  { id:"y_fechada_level_2", symbol:"/ʉː/ & /ʏ/", accent:"#818cf8",
+    words:[
+      { word:"Ute", ipa:"/ˈʉːtə/", meaning:"Fora/lá fora", symbol:"/ʉː/", emoji:"🌳", hint:"Vogal longa no início da palavra 😗" },
+      { word:"Nytt", ipa:"/nʏtː/", meaning:"Novo", symbol:"/ʏ/", emoji:"✨", hint:"Versão curta do mesmo tipo de som 😬" },
+    ],
+    twister:{ word:"Noe nytt er ute", ipa:"/nuːə nʏtː æːr ˈʉːtə/", emoji:"✨🌳", hint:"Alterne entre a versão longa e curta 🎯" },
+    tip:"Nível 2: agora distinga a versão longa (/ʉː/) da curta (/ʏ/) do mesmo tipo de vogal — a duração muda o sentido da palavra." },
+  { id:"y_fechada_level_3", symbol:"/ʉː/, /ʏ/ & /yː/", accent:"#818cf8",
+    words:[
+      { word:"Dyr", ipa:"/dyːr/", meaning:"Animal/caro", symbol:"/yː/", emoji:"🦌", hint:"Lábios arredondados e projetados, diferente de /ʉː/ 😗" },
+      { word:"Sykkel", ipa:"/ˈsʏkːəl/", meaning:"Bicicleta", symbol:"/ʏ/", emoji:"🚲", hint:"Curto e arredondado 😬" },
+    ],
+    twister:{ word:"Dyret er ute med sykkelen", ipa:"/ˈdyːrə æːr ˈʉːtə me ˈsʏkːələn/", emoji:"🦌🚲", hint:"Três variações do som na mesma frase — desafio final 🎯" },
+    tip:"Nível 3: combine as três variações (/ʉː/, /ʏ/, /yː/) na mesma frase. Se você consegue ouvir a diferença entre as três, já passou do ponto mais difícil desse grupo de vogais." },
+
+  { id:"o_aberta_level_1", symbol:"/øː/", accent:"#f472b6",
+    words:[
+      { word:"Dø", ipa:"/døː/", meaning:"Morrer", symbol:"/øː/", emoji:"💀", hint:"Lábios redondos, língua na frente 😮" },
+      { word:"Øre", ipa:"/ˈøːrə/", meaning:"Orelha/centavo", symbol:"/øː/", emoji:"👂", hint:"Mesmo som no início da palavra 😮" },
+    ],
+    twister:{ word:"Øret hører alt", ipa:"/ˈøːrə ˈhøːrər ɑlt/", emoji:"👂🔊", hint:"Repita o /øː/ em sequência 🎯" },
+    tip:"Nível 1: pratique o /øː/ isolado — arredonde os lábios mantendo a língua na posição de 'e'." },
+  { id:"o_aberta_level_2", symbol:"/øː/ & /œ/", accent:"#f472b6",
+    words:[
+      { word:"Nøtt", ipa:"/nœtː/", meaning:"Noz/porca (peça)", symbol:"/œ/", emoji:"🌰", hint:"Versão curta e mais aberta 😮" },
+      { word:"Møte", ipa:"/ˈmøːtə/", meaning:"Reunião/encontro", symbol:"/øː/", emoji:"🤝", hint:"Versão longa, mais fechada 😮" },
+    ],
+    twister:{ word:"Møtet handler om nøtter", ipa:"/ˈmøːtə ˈhɑnːlər ɔm ˈnœtːər/", emoji:"🤝🌰", hint:"Alterne entre o longo e o curto 🎯" },
+    tip:"Nível 2: diferencie /øː/ (longo, mais fechado) de /œ/ (curto, mais aberto) — ambos arredondados, mas com abertura de mandíbula diferente." },
+  { id:"o_aberta_level_3", symbol:"/øː/, /œ/ & /œʏ/", accent:"#f472b6",
+    words:[
+      { word:"Større", ipa:"/ˈstœrːə/", meaning:"Maior", symbol:"/œ/", emoji:"📏", hint:"Curto e aberto, junto de R 😮" },
+      { word:"Høy", ipa:"/hœʏ/", meaning:"Alto/feno", symbol:"/œʏ/", emoji:"📈", hint:"Agora desliza para um ditongo 🎢" },
+    ],
+    twister:{ word:"Den større fyren er høy", ipa:"/dɛn ˈstœrːə ˈfyːrən æːr hœʏ/", emoji:"📏📈", hint:"Combine a vogal simples com o ditongo 🎯" },
+    tip:"Nível 3: una a vogal simples /œ/ ao ditongo /œʏ/, que começa no mesmo lugar da boca mas termina deslizando para 'y'." },
+
+  { id:"u_o_a_arredondamento_level_1", symbol:"/ɑ/ vs /ɔ/", accent:"#34d399",
+    words:[
+      { word:"Fast", ipa:"/fɑst/", meaning:"Fixo/firme", symbol:"/ɑ/", emoji:"📌", hint:"Vogal aberta, sem arredondar os lábios 😮" },
+      { word:"Godt", ipa:"/ɡɔtː/", meaning:"Bom/gostoso", symbol:"/ɔ/", emoji:"😋", hint:"Lábios arredondados, mais fechado 😯" },
+    ],
+    twister:{ word:"Det er fast og godt", ipa:"/de æːr fɑst oː ɡɔtː/", emoji:"📌😋", hint:"Alterne aberto e arredondado 🎯" },
+    tip:"Nível 1: comece notando a diferença simples entre vogal aberta sem arredondar (/ɑ/) e vogal arredondada (/ɔ/)." },
+  { id:"u_o_a_arredondamento_level_2", symbol:"/ʊ/ vs /ɔ/", accent:"#34d399",
+    words:[
+      { word:"Bukk", ipa:"/bʊkː/", meaning:"Bode", symbol:"/ʊ/", emoji:"🐐", hint:"Curto, levemente arredondado 🤐" },
+      { word:"Kropp", ipa:"/krɔpː/", meaning:"Corpo", symbol:"/ɔ/", emoji:"🧍", hint:"Mais arredondado e aberto que o anterior 😯" },
+    ],
+    twister:{ word:"Bukken har en sterk kropp", ipa:"/ˈbʊkːən hɑːr ɛn stæʁk krɔpː/", emoji:"🐐🧍", hint:"Compare o grau de arredondamento dos lábios 🎯" },
+    tip:"Nível 2: agora compare /ʊ/ (mais neutro) com /ɔ/ (mais arredondado e aberto) — sons próximos que o brasileiro tende a igualar." },
+  { id:"u_o_a_arredondamento_level_3", symbol:"/ɑ/, /ʊ/ & /ɔ/", accent:"#34d399",
+    words:[
+      { word:"Rund", ipa:"/rʊnː/", meaning:"Redondo", symbol:"/ʊ/", emoji:"⭕", hint:"Som curto e neutro 🤐" },
+      { word:"Klar", ipa:"/klɑːr/", meaning:"Claro/pronto", symbol:"/ɑː/", emoji:"☀️", hint:"Aberto, sem arredondamento 😮" },
+    ],
+    twister:{ word:"Den runde, klare bonden er god", ipa:"/dɛn ˈrʊnːə ˈklɑːrə ˈbɔnːən æːr ɡuː/", emoji:"⭕☀️", hint:"Três graus de abertura na mesma frase — desafio final 🎯" },
+    tip:"Nível 3: junte as três vogais (/ɑ/, /ʊ/, /ɔ/) na mesma frase para treinar a transição rápida entre graus de abertura e arredondamento." },
+
+  { id:"ae_norueguesa_level_1", symbol:"/æː/", accent:"#fbbf24",
+    words:[
+      { word:"Vær", ipa:"/væːr/", meaning:"Clima/tempo", symbol:"/æː/", emoji:"🌦️", hint:"Vogal longa, sustente o som 🕰️" },
+      { word:"Være", ipa:"/ˈværə/", meaning:"Ser/estar", symbol:"/æː/", emoji:"🧘", hint:"Mesmo som no início da palavra 🕰️" },
+    ],
+    twister:{ word:"Været kan være rart", ipa:"/ˈvæːrə kɑn ˈværə rɑːʁt/", emoji:"🌦️🧘", hint:"Repita o /æː/ longo três vezes 🎯" },
+    tip:"Nível 1: pratique apenas a versão longa do /æː/, sustentando o som por mais tempo que faria em português." },
+  { id:"ae_norueguesa_level_2", symbol:"/æː/ vs /æ/", accent:"#fbbf24",
+    words:[
+      { word:"Lærer", ipa:"/ˈlæːrər/", meaning:"Professor(a)/aprende", symbol:"/æː/", emoji:"🍎", hint:"Longo na primeira sílaba 🕰️" },
+      { word:"Ferdig", ipa:"/ˈfæʁdi/", meaning:"Pronto/terminado", symbol:"/æ/", emoji:"✅", hint:"Curto e seco 1️⃣" },
+    ],
+    twister:{ word:"Læreren er ferdig", ipa:"/ˈlæːrərən æːr ˈfæʁdi/", emoji:"🍎✅", hint:"Alterne longo e curto na mesma frase 🎯" },
+    tip:"Nível 2: agora compare a versão longa com a curta do /æ/ — a duração da vogal pode mudar completamente o sentido da palavra." },
+  { id:"ae_norueguesa_level_3", symbol:"/æː/, /æ/ & antes de R", accent:"#fbbf24",
+    words:[
+      { word:"Nær", ipa:"/næːr/", meaning:"Próximo/perto", symbol:"/æː/", emoji:"📍", hint:"Longo, sustentado antes do R 🕰️" },
+      { word:"Fersk", ipa:"/færʃk/", meaning:"Fresco", symbol:"/æ/", emoji:"🥬", hint:"Curto, mas ainda aberto por causa do R 😮" },
+    ],
+    twister:{ word:"Den nære butikken har fersk fisk", ipa:"/dɛn ˈnæːrə bʉˈtɪkːən hɑːr færʃk fɪsk/", emoji:"📍🥬", hint:"Note como o R muda a abertura da vogal antes dele — desafio final 🎯" },
+    tip:"Nível 3: combine a duração (longa/curta) com o efeito do R antes da vogal, que tende a abrir ainda mais o som." },
+
+  { id:"tonem_acento_tonal_level_1", symbol:"Tom 1 vs Tom 2 (pares simples)", accent:"#a78bfa",
+    words:[
+      { word:"Bønder (tom 1)", ipa:"/ˈbœ̀nːər/", meaning:"Fazendeiros", symbol:"tom 1", emoji:"👨‍🌾", hint:"Contorno mais reto/descendente 📉" },
+      { word:"Bønner (tom 2)", ipa:"/ˈbœ̂nːər/", meaning:"Feijões", symbol:"tom 2", emoji:"🫘", hint:"Sobe e desce dentro da sílaba 📈📉" },
+    ],
+    twister:{ word:"Bønder spiser bønner", ipa:"/ˈbœ̀nːər ˈspiːsər ˈbœ̂nːər/", emoji:"👨‍🌾🫘", hint:"Ouça a melodia, não só os sons 🎵" },
+    tip:"Nível 1: comece com o par mais clássico de tonema, focando só em perceber que existe uma diferença melódica, mesmo que sutil ainda." },
+  { id:"tonem_acento_tonal_level_2", symbol:"Tom em verbo vs substantivo", accent:"#a78bfa",
+    words:[
+      { word:"Tenner (tom 1, dentes)", ipa:"/ˈtɛ̀nːər/", meaning:"Dentes", symbol:"tom 1", emoji:"🦷", hint:"Melodia mais plana 📉" },
+      { word:"Tenner (tom 2, acende)", ipa:"/ˈtɛ̂nːər/", meaning:"Acende/ele acende", symbol:"tom 2", emoji:"🔥", hint:"Melodia sobe e desce 📈📉" },
+    ],
+    twister:{ word:"Hun tenner et lys med tenner", ipa:"/hʉn ˈtɛ̂nːər ɛt lyːs me ˈtɛ̀nːər/", emoji:"🔥🦷", hint:"Mesma palavra escrita, melodias diferentes 🎯" },
+    tip:"Nível 2: pratique pares em que a mesma grafia muda de categoria gramatical só pela melodia — um desafio puramente auditivo." },
+  { id:"tonem_acento_tonal_level_3", symbol:"Tom em frases mais longas", accent:"#a78bfa",
+    words:[
+      { word:"Bilen (tom 2)", ipa:"/ˈbiːlən/", meaning:"O carro", symbol:"tom 2", emoji:"🚗", hint:"Melodia sobe e desce numa palavra só 📈📉" },
+      { word:"Skinne (tom 2, trilho)", ipa:"/ˈʃɪ̂nːə/", meaning:"Trilho", symbol:"tom 2", emoji:"🛤️", hint:"Mesma curva melódica do anterior 📈📉" },
+    ],
+    twister:{ word:"Bilen kjører på skinnen som skinner", ipa:"/ˈbiːlən ˈçøːrər poː ˈʃɪ̂nːən sɔm ˈʃɪ̀nːər/", emoji:"🚗🛤️✨", hint:"Frase final: várias palavras com tons diferentes seguidas 🎯" },
+    tip:"Nível 3: junte várias palavras com tons diferentes em uma frase só — o desafio final de ouvido para esse fonema." },
+
+  { id:"consoante_kj_sj_level_1", symbol:"/ç/ (KJ)", accent:"#fb7185",
+    words:[
+      { word:"Kjip", ipa:"/çiːp/", meaning:"Chato/ruim", symbol:"/ç/", emoji:"😒", hint:"Som fino, língua no céu da boca 🗣️" },
+      { word:"Kjenne", ipa:"/ˈçɛnːə/", meaning:"Conhecer/sentir", symbol:"/ç/", emoji:"🤝", hint:"Mesmo som fino no início 🗣️" },
+    ],
+    twister:{ word:"Jeg kjenner at det er kjipt", ipa:"/jæi ˈçɛnːər at de æːr çiːpt/", emoji:"🤝😒", hint:"Repita o /ç/ fino duas vezes 🎯" },
+    tip:"Nível 1: foque só no som fino de KJ, isolado — sem comparar ainda com o SJ grosso." },
+  { id:"consoante_kj_sj_level_2", symbol:"/ʃ/ (SJ)", accent:"#fb7185",
+    words:[
+      { word:"Skje", ipa:"/ʂeː/", meaning:"Colher", symbol:"/ʂ/", emoji:"🥄", hint:"Som grosso, lábios projetados 👄" },
+      { word:"Sjelden", ipa:"/ˈʂɛlːən/", meaning:"Raro", symbol:"/ʂ/", emoji:"🍀", hint:"Mesmo chiado grosso 👄" },
+    ],
+    twister:{ word:"Det er sjelden å se en skje her", ipa:"/de æːr ˈʂɛlːən oː seː ɛn ʂeː hæːr/", emoji:"🍀🥄", hint:"Repita o chiado grosso na frase 🎯" },
+    tip:"Nível 2: agora pratique só o SJ grosso, isolado, antes de juntar com o KJ fino no próximo nível." },
+  { id:"consoante_kj_sj_level_3", symbol:"/ç/ vs /ʃ/ juntos", accent:"#fb7185",
+    words:[
+      { word:"Kjøre", ipa:"/ˈçøːrə/", meaning:"Dirigir", symbol:"/ç/", emoji:"🚗", hint:"Som fino de novo 🗣️" },
+      { word:"Skjorte", ipa:"/ˈʂuʈːə/", meaning:"Camisa", symbol:"/ʂ/", emoji:"👔", hint:"Som grosso, contraste direto 👄" },
+    ],
+    twister:{ word:"Han kjører i skjorte til sjøen", ipa:"/hɑn ˈçøːrər iː ˈʂuʈːə tiː ˈʂøːən/", emoji:"🚗👔🌊", hint:"Alterne entre os dois chiados na mesma frase — desafio final 🎯" },
+    tip:"Nível 3: alterne entre KJ fino e SJ grosso na mesma frase, treinando a troca rápida entre os dois pontos de articulação." },
+
+  { id:"consoante_r_norueguesa_level_1", symbol:"/r/ inicial", accent:"#60a5fa",
+    words:[
+      { word:"Rar", ipa:"/rɑːr/", meaning:"Estranho", symbol:"/r/", emoji:"🤨", hint:"Vibração rápida na ponta da língua 〜" },
+      { word:"Rolig", ipa:"/ˈruːli/", meaning:"Calmo/tranquilo", symbol:"/r/", emoji:"😌", hint:"Mesmo R vibrante no início 〜" },
+    ],
+    twister:{ word:"Vær rolig, det er bare rart", ipa:"/væːr ˈruːli de æːr ˈbɑːrə rɑːʁt/", emoji:"😌🤨", hint:"Repita o R vibrante em sequência 🎯" },
+    tip:"Nível 1: pratique o R vibrante só em posição inicial de palavra, onde é mais fácil de isolar." },
+  { id:"consoante_r_norueguesa_level_2", symbol:"/r/ entre vogais", accent:"#60a5fa",
+    words:[
+      { word:"Rister", ipa:"/ˈrɪstər/", meaning:"Treme/sacode", symbol:"/r/", emoji:"😬", hint:"R vibrante seguido de outra sílaba 〜" },
+      { word:"Rope", ipa:"/ˈruːpə/", meaning:"Gritar/chamar", symbol:"/r/", emoji:"📢", hint:"R no início, vogal longa depois 〜" },
+    ],
+    twister:{ word:"Hun roper og rister", ipa:"/hʉn ˈruːpər oː ˈrɪstər/", emoji:"📢😬", hint:"Dois R's vibrantes na mesma frase 🎯" },
+    tip:"Nível 2: pratique o R seguido imediatamente por outra sílaba, garantindo que a vibração não se perca no meio da palavra." },
+  { id:"consoante_r_norueguesa_level_3", symbol:"/r/ em frases mais longas", accent:"#60a5fa",
+    words:[
+      { word:"Rute", ipa:"/ˈrʉːtə/", meaning:"Rota/trajeto", symbol:"/r/", emoji:"🗺️", hint:"R seguido da vogal /ʉː/ — combine os dois desafios 〜" },
+      { word:"Rister brød", ipa:"/ˈrɪstər brøː/", meaning:"Torra pão", symbol:"/r/", emoji:"🍞", hint:"R aparece duas vezes na expressão 〜" },
+    ],
+    twister:{ word:"Den rare ruten rister brødet", ipa:"/dɛn ˈrɑːrə ˈrʉːtən ˈrɪstər ˈbrøːə/", emoji:"🗺️🍞", hint:"Quatro R's na mesma frase — desafio final 🎯" },
+    tip:"Nível 3: uma frase com múltiplos R's seguidos, testando se a vibração se mantém consistente do início ao fim." },
+
+  { id:"consoante_finais_grupos_level_1", symbol:"-ND mudo", accent:"#2dd4bf",
+    words:[
+      { word:"Vind", ipa:"/vɪn/", meaning:"Vento", symbol:"∅", emoji:"💨", hint:"O D no final é mudo 🤐" },
+      { word:"Land", ipa:"/lɑnː/", meaning:"País/terra", symbol:"∅", emoji:"🌍", hint:"Mesmo padrão, D mudo 🤐" },
+    ],
+    twister:{ word:"Vinden kommer fra landet", ipa:"/ˈvɪnːən ˈkɔmːər frɑ ˈlɑnːə/", emoji:"💨🌍", hint:"Nenhum D explodido nessa frase 🎯" },
+    tip:"Nível 1: pratique só o grupo -ND, lembrando que o D quase sempre desaparece no final da palavra." },
+  { id:"consoante_finais_grupos_level_2", symbol:"-NG nasal", accent:"#2dd4bf",
+    words:[
+      { word:"Ring", ipa:"/rɪŋ/", meaning:"Anel/círculo", symbol:"/ŋ/", emoji:"💍", hint:"Som nasal só na garganta 🤐" },
+      { word:"Sang", ipa:"/sɑŋ/", meaning:"Canção", symbol:"/ŋ/", emoji:"🎵", hint:"Mesmo som nasal final 🤐" },
+    ],
+    twister:{ word:"Han synger en sang om ringen", ipa:"/hɑn ˈsʏŋːər ɛn sɑŋ ɔm ˈrɪŋːən/", emoji:"🎵💍", hint:"Sem nenhum 'g' explodido depois do nasal 🎯" },
+    tip:"Nível 2: agora o grupo -NG, que é só um som nasal de garganta, sem nenhuma consoante extra depois." },
+  { id:"consoante_finais_grupos_level_3", symbol:"-RT/-RD retroflexos", accent:"#2dd4bf",
+    words:[
+      { word:"Kort", ipa:"/kɔʈː/", meaning:"Curto/cartão", symbol:"/ʈ/", emoji:"💳", hint:"R + T fundem em um som só 🌀" },
+      { word:"Barn", ipa:"/bɑːɳ/", meaning:"Criança", symbol:"/ɳ/", emoji:"👶", hint:"R + N também se fundem 🌀" },
+    ],
+    twister:{ word:"Barnet har et kort fjell-kart", ipa:"/ˈbɑːʁnə hɑːr ɛt kɔʈː ˈfjɛlː kɑʈː/", emoji:"👶💳🗺️", hint:"Vários grupos retroflexos seguidos — desafio final 🎯" },
+    tip:"Nível 3: combine -ND, -NG e os grupos retroflexos (-RT/-RN) na mesma frase, fechando o desafio das terminações." },
+
+  { id:"consoante_l_claro_tjukk_level_1", symbol:"/l/ claro inicial", accent:"#c084fc",
+    words:[
+      { word:"Sol", ipa:"/suːl/", meaning:"Sol", symbol:"/l/", emoji:"☀️", hint:"L claro, língua na frente dos dentes 👅" },
+      { word:"Leke", ipa:"/ˈleːkə/", meaning:"Brincar", symbol:"/l/", emoji:"🧸", hint:"L claro no início da palavra 👅" },
+    ],
+    twister:{ word:"Solen er en lek", ipa:"/ˈsuːlən æːr ɛn leːk/", emoji:"☀️🧸", hint:"Repita o L claro duas vezes 🎯" },
+    tip:"Nível 1: pratique o L claro simples, sem se preocupar ainda com variações regionais do tjukk L." },
+  { id:"consoante_l_claro_tjukk_level_2", symbol:"/l/ em grupos consonantais", accent:"#c084fc",
+    words:[
+      { word:"Blå", ipa:"/bloː/", meaning:"Azul", symbol:"/l/", emoji:"🔵", hint:"L depois de outra consoante, sem perder clareza 👅" },
+      { word:"Klar", ipa:"/klɑːr/", meaning:"Claro/pronto", symbol:"/l/", emoji:"☀️", hint:"Mesmo padrão, grupo consonantal com L 👅" },
+    ],
+    twister:{ word:"Den blå himmelen er klar", ipa:"/dɛn bloː ˈhɪmːələn æːr klɑːr/", emoji:"🔵☀️", hint:"L sempre claro, mesmo em grupos 🎯" },
+    tip:"Nível 2: agora o L em grupos consonantais (BL, KL), garantindo que o som continue claro e não fique 'engolido'." },
+  { id:"consoante_l_claro_tjukk_level_3", symbol:"/l/ final e variação regional", accent:"#c084fc",
+    words:[
+      { word:"Fjell", ipa:"/fjɛlː/", meaning:"Montanha", symbol:"/l/", emoji:"⛰️", hint:"L final, mantenha claro mesmo no fim da palavra 👅" },
+      { word:"Selv", ipa:"/sɛlː/", meaning:"Próprio/mesmo", symbol:"/l/", emoji:"🪞", hint:"L final antes de consoante 👅" },
+    ],
+    twister:{ word:"Fjellet selv er stort", ipa:"/ˈfjɛlːə sɛlː æːr stuːʁt/", emoji:"⛰️🪞", hint:"L final claro em duas palavras seguidas — desafio final 🎯" },
+    tip:"Nível 3: pratique o L em posição final, lembrando que em alguns dialetos ele pode variar para o tjukk L — mas o padrão de Oslo mantém o L claro." },
+
+  { id:"ditongos_ai_ei_oy_level_1", symbol:"/ɑɪ/ vs /æɪ/", accent:"#f59e0b",
+    words:[
+      { word:"Hai", ipa:"/hɑɪ/", meaning:"Tubarão", symbol:"/ɑɪ/", emoji:"🦈", hint:"Desliza de 'a' pra 'i' 🎢" },
+      { word:"Hei", ipa:"/hæɪ/", meaning:"Olá", symbol:"/æɪ/", emoji:"👋", hint:"Começa mais aberto que o anterior 🎢" },
+    ],
+    twister:{ word:"Hei, jeg så en hai", ipa:"/hæɪ jæi soː ɛn hɑɪ/", emoji:"👋🦈", hint:"Dois ditongos parecidos, mas diferentes 🎯" },
+    tip:"Nível 1: compare os dois ditongos mais parecidos entre si, prestando atenção ao ponto de partida de cada um." },
+  { id:"ditongos_ai_ei_oy_level_2", symbol:"/œʏ/", accent:"#f59e0b",
+    words:[
+      { word:"Høy", ipa:"/hœʏ/", meaning:"Alto/feno", symbol:"/œʏ/", emoji:"📈", hint:"Lábios arredondados do início ao fim 🎢" },
+      { word:"Røyk", ipa:"/rœʏk/", meaning:"Fumaça", symbol:"/œʏ/", emoji:"💨", hint:"Mesmo ditongo arredondado 🎢" },
+    ],
+    twister:{ word:"Høy røyk fra fjellet", ipa:"/hœʏ rœʏk frɑ ˈfjɛlːə/", emoji:"📈💨⛰️", hint:"Repita o ditongo arredondado duas vezes 🎯" },
+    tip:"Nível 2: agora o ditongo arredondado /œʏ/, que mantém os lábios projetados do início ao fim do movimento." },
+  { id:"ditongos_ai_ei_oy_level_3", symbol:"Todos os ditongos juntos", accent:"#f59e0b",
+    words:[
+      { word:"Greie", ipa:"/ˈgræɪə/", meaning:"Resolver/coisa", symbol:"/æɪ/", emoji:"🔧", hint:"Ditongo dentro de uma palavra maior 🎢" },
+      { word:"Øy", ipa:"/œʏ/", meaning:"Ilha", symbol:"/œʏ/", emoji:"🏝️", hint:"Ditongo arredondado isolado 🎢" },
+    ],
+    twister:{ word:"Jeg skal greie å se øya fra kaien", ipa:"/jæi skɑl ˈgræɪə oː seː ˈœʏɑ frɑ ˈkɑɪən/", emoji:"🔧🏝️⚓", hint:"Quatro ditongos diferentes na mesma frase — desafio final 🎯" },
+    tip:"Nível 3: uma frase final que combina todos os ditongos trabalhados nesse grupo, fechando a trilha de vogais complexas." },
+];
+
+const PHONEMES_DATA_NO = [
+  {
+    id: "vogal_y_fechada",
+    categoria: "Vogais Norueguesas Inexistentes em Português",
+    simbolo: "/ʉː/ & /yː/",
+    explicacao: "Esses sons não existem em português. O brasileiro tende a substituir por 'u' ou 'i'. A língua fica alta e na frente da boca (como em 'i'), mas os lábios ficam comprimidos ou arredondados para frente — nunca espalhados como num sorriso.",
+    id_exercicio_link: "exercicio_y_fechada",
+    exercicios_sequencia: ["y_fechada_level_1", "y_fechada_level_2", "y_fechada_level_3"],
+    exemplos: [
+      { word: "hus", ipa: "/hʉːs/" },
+      { word: "lys", ipa: "/lyːs/" },
+      { word: "mur", ipa: "/mʉːr/" },
+      { word: "sykkel", ipa: "/ˈsʏkːəl/" },
+      { word: "fyrste", ipa: "/ˈfʏʃtə/" },
+      { word: "dyr", ipa: "/dyːr/" },
+      { word: "sur", ipa: "/sʉːr/" },
+      { word: "by", ipa: "/byː/" },
+      { word: "ute", ipa: "/ˈʉːtə/" },
+      { word: "nytt", ipa: "/nʏtː/" },
+    ],
+  },
+  {
+    id: "vogal_o_aberta",
+    categoria: "Vogais Norueguesas Inexistentes em Português",
+    simbolo: "/ø/ & /œ/",
+    explicacao: "Som feito com a língua na posição de 'e', mas com os lábios arredondados para frente, como em 'o'. O brasileiro tende a trocar por 'ô' ou 'é' — mas é um som único, combinando as duas articulações ao mesmo tempo.",
+    id_exercicio_link: "exercicio_o_aberta",
+    exercicios_sequencia: ["o_aberta_level_1", "o_aberta_level_2", "o_aberta_level_3"],
+    exemplos: [
+      { word: "dø", ipa: "/døː/" },
+      { word: "søt", ipa: "/søːt/" },
+      { word: "nøtt", ipa: "/nœtː/" },
+      { word: "tørst", ipa: "/tœʁʃt/" },
+      { word: "høy", ipa: "/hœʏ/" },
+      { word: "øre", ipa: "/ˈøːrə/" },
+      { word: "først", ipa: "/fœʃt/" },
+      { word: "møte", ipa: "/ˈmøːtə/" },
+      { word: "større", ipa: "/ˈstœrːə/" },
+      { word: "kjøre", ipa: "/ˈçøːrə/" },
+    ],
+  },
+  {
+    id: "vogal_u_o_a_arredondamento",
+    categoria: "Vogais Norueguesas Inexistentes em Português",
+    simbolo: "/ʊ/, /ɔ/ & /ɑ/",
+    explicacao: "Distinções de arredondamento e abertura que o português não marca com a mesma precisão. /ʊ/ é curto e relaxado, /ɔ/ é arredondado e médio, /ɑ/ é aberto e sem arredondamento. Trocar um pelo outro pode mudar o sentido da palavra.",
+    id_exercicio_link: "exercicio_u_o_a_arredondamento",
+    exercicios_sequencia: ["u_o_a_arredondamento_level_1", "u_o_a_arredondamento_level_2", "u_o_a_arredondamento_level_3"],
+    exemplos: [
+      { word: "bukk", ipa: "/bʊkː/" },
+      { word: "hatt", ipa: "/hɑtː/" },
+      { word: "godt", ipa: "/ɡɔtː/" },
+      { word: "tolv", ipa: "/tɔl/" },
+      { word: "ond", ipa: "/ʊnː/" },
+      { word: "fast", ipa: "/fɑst/" },
+      { word: "bonde", ipa: "/ˈbɔnːə/" },
+      { word: "rund", ipa: "/rʊnː/" },
+      { word: "klar", ipa: "/klɑːr/" },
+      { word: "kropp", ipa: "/krɔpː/" },
+    ],
+  },
+  {
+    id: "vogal_ae_norueguesa",
+    categoria: "Vogais Norueguesas Inexistentes em Português",
+    simbolo: "/æː/ & /æ/",
+    explicacao: "O /æ/ norueguês tem uma versão longa e uma curta que mudam o sentido das palavras — diferente do /æ/ do inglês, que não costuma variar em duração da mesma forma. Cuidado para não misturar os dois sistemas se você já estudou inglês.",
+    id_exercicio_link: "exercicio_ae_norueguesa",
+    exercicios_sequencia: ["ae_norueguesa_level_1", "ae_norueguesa_level_2", "ae_norueguesa_level_3"],
+    exemplos: [
+      { word: "vær", ipa: "/væːr/" },
+      { word: "være", ipa: "/ˈværə/" },
+      { word: "lære", ipa: "/ˈlæːrə/" },
+      { word: "færre", ipa: "/ˈfærːə/" },
+      { word: "ære", ipa: "/ˈæːrə/" },
+      { word: "fersk", ipa: "/færʃk/" },
+      { word: "kjær", ipa: "/çæːr/" },
+      { word: "værsel", ipa: "/ˈværsəl/" },
+      { word: "lærer", ipa: "/ˈlæːrər/" },
+      { word: "nær", ipa: "/næːr/" },
+    ],
+  },
+  {
+    id: "tonem_acento_tonal",
+    categoria: "Tom e Melodia",
+    simbolo: "Tom 1 vs Tom 2",
+    explicacao: "Pares de palavras que mudam de significado só pela melodia da fala, não pelos sons em si. É o fonema 'invisível' mais difícil para brasileiros, porque o português não usa o tom para distinguir palavras dentro de uma sílaba.",
+    id_exercicio_link: "exercicio_tonem_acento_tonal",
+    exercicios_sequencia: ["tonem_acento_tonal_level_1", "tonem_acento_tonal_level_2", "tonem_acento_tonal_level_3"],
+    exemplos: [
+      { word: "bønder (tom 1)", ipa: "/ˈbœ̀nːər/" },
+      { word: "bønner (tom 2)", ipa: "/ˈbœ̂nːər/" },
+      { word: "tenner (tom 1, dentes)", ipa: "/ˈtɛ̀nːər/" },
+      { word: "tenner (tom 2, acende)", ipa: "/ˈtɛ̂nːər/" },
+      { word: "bilen (tom 2)", ipa: "/ˈbiːlən/" },
+      { word: "biler (tom 1)", ipa: "/ˈbiːlər/" },
+      { word: "været (tom 2)", ipa: "/ˈvæːrə/" },
+      { word: "skinne (tom 1, brilhar)", ipa: "/ˈʃɪ̀nːə/" },
+      { word: "skinne (tom 2, trilho)", ipa: "/ˈʃɪ̂nːə/" },
+      { word: "hammer (tom 1)", ipa: "/ˈhɑ̀mːər/" },
+    ],
+  },
+  {
+    id: "consoante_kj_sj",
+    categoria: "Consoantes e Grupos Finais",
+    simbolo: "/ç/ (KJ) vs /ʃ/ (SJ)",
+    explicacao: "Dois chiados diferentes que o brasileiro tende a igualar ao nosso 'X'. KJ é fino e feito com o meio da língua subindo ao céu da boca; SJ é mais grosso e arredondado, com os lábios projetados para frente.",
+    id_exercicio_link: "exercicio_consoante_kj_sj",
+    exercicios_sequencia: ["consoante_kj_sj_level_1", "consoante_kj_sj_level_2", "consoante_kj_sj_level_3"],
+    exemplos: [
+      { word: "kjip", ipa: "/çiːp/" },
+      { word: "sjø", ipa: "/ʂøː/" },
+      { word: "kjenne", ipa: "/ˈçɛnːə/" },
+      { word: "skje", ipa: "/ʂeː/" },
+      { word: "kjøre", ipa: "/ˈçøːrə/" },
+      { word: "sjelden", ipa: "/ˈʂɛlːən/" },
+      { word: "kjole", ipa: "/ˈçoːlə/" },
+      { word: "skjorte", ipa: "/ˈʂuʈːə/" },
+      { word: "kjapp", ipa: "/çɑpː/" },
+      { word: "skjebne", ipa: "/ˈʂeːbnə/" },
+    ],
+  },
+  {
+    id: "consoante_r_norueguesa",
+    categoria: "Consoantes e Grupos Finais",
+    simbolo: "/r/",
+    explicacao: "O R do padrão de Oslo é vibrante (a língua bate rápido no céu da boca), bem diferente do R fraco do português. Em outras regiões da Noruega o R pode ser gutural — vale lembrar que existe variação dialetal, mas o padrão de Oslo é a referência mais ensinada a estrangeiros.",
+    id_exercicio_link: "exercicio_consoante_r_norueguesa",
+    exercicios_sequencia: ["consoante_r_norueguesa_level_1", "consoante_r_norueguesa_level_2", "consoante_r_norueguesa_level_3"],
+    exemplos: [
+      { word: "rar", ipa: "/rɑːr/" },
+      { word: "rister", ipa: "/ˈrɪstər/" },
+      { word: "rød", ipa: "/røː/" },
+      { word: "regn", ipa: "/ræɪn/" },
+      { word: "rolig", ipa: "/ˈruːli/" },
+      { word: "rik", ipa: "/riːk/" },
+      { word: "rute", ipa: "/ˈrʉːtə/" },
+      { word: "rope", ipa: "/ˈruːpə/" },
+      { word: "rar fyr", ipa: "/rɑːr fyːr/" },
+      { word: "rister brød", ipa: "/ˈrɪstər brøː/" },
+    ],
+  },
+  {
+    id: "consoante_finais_grupos",
+    categoria: "Consoantes e Grupos Finais",
+    simbolo: "-ND, -NG, -RT, -RD",
+    explicacao: "O brasileiro tende a inserir uma vogal de apoio depois de consoantes finais (epêntese), como faz em inglês também. Em norueguês, grupos como -ND e -NG terminam de forma seca, e -RT/-RD/-RN/-RL costumam se fundir num único som retroflexo.",
+    id_exercicio_link: "exercicio_consoante_finais_grupos",
+    exercicios_sequencia: ["consoante_finais_grupos_level_1", "consoante_finais_grupos_level_2", "consoante_finais_grupos_level_3"],
+    exemplos: [
+      { word: "vind", ipa: "/vɪn/" },
+      { word: "ring", ipa: "/rɪŋ/" },
+      { word: "bart", ipa: "/bɑʈ/" },
+      { word: "gard", ipa: "/gɑːɖ/" },
+      { word: "land", ipa: "/lɑnː/" },
+      { word: "sang", ipa: "/sɑŋ/" },
+      { word: "kort", ipa: "/kɔʈː/" },
+      { word: "barn", ipa: "/bɑːɳ/" },
+      { word: "lang", ipa: "/lɑŋ/" },
+      { word: "fort", ipa: "/fɔʈː/" },
+    ],
+  },
+  {
+    id: "consoante_l_claro_tjukk",
+    categoria: "Consoantes e Grupos Finais",
+    simbolo: "/l/ vs tjukk L",
+    explicacao: "Em alguns dialetos existe o 'tjukk L' (L retroflexo), uma variação regional opcional. No padrão de Oslo, ensinado a estrangeiros, o L costuma ser claro e simples — foque nesse padrão neutro antes de se preocupar com variações dialetais.",
+    id_exercicio_link: "exercicio_consoante_l_claro_tjukk",
+    exercicios_sequencia: ["consoante_l_claro_tjukk_level_1", "consoante_l_claro_tjukk_level_2", "consoante_l_claro_tjukk_level_3"],
+    exemplos: [
+      { word: "sol", ipa: "/suːl/" },
+      { word: "skole", ipa: "/ˈskuːlə/" },
+      { word: "leke", ipa: "/ˈleːkə/" },
+      { word: "blå", ipa: "/bloː/" },
+      { word: "land", ipa: "/lɑnː/" },
+      { word: "klar", ipa: "/klɑːr/" },
+      { word: "fjell", ipa: "/fjɛlː/" },
+      { word: "tale", ipa: "/ˈtɑːlə/" },
+      { word: "lese", ipa: "/ˈleːsə/" },
+      { word: "selv", ipa: "/sɛlː/" },
+    ],
+  },
+  {
+    id: "ditongos_ai_ei_oy",
+    categoria: "Vogais Norueguesas Inexistentes em Português",
+    simbolo: "/ɑɪ/, /æɪ/ & /œʏ/",
+    explicacao: "O brasileiro tende a achatar ou nasalizar ditongos. Em norueguês, cada ditongo é um deslize claro entre duas vogais, sem nasalização — mantenha as duas partes do som bem definidas, sem misturar com o 'ão' ou 'ãe' do português.",
+    id_exercicio_link: "exercicio_ditongos_ai_ei_oy",
+    exercicios_sequencia: ["ditongos_ai_ei_oy_level_1", "ditongos_ai_ei_oy_level_2", "ditongos_ai_ei_oy_level_3"],
+    exemplos: [
+      { word: "hai", ipa: "/hɑɪ/" },
+      { word: "hei", ipa: "/hæɪ/" },
+      { word: "høy", ipa: "/hœʏ/" },
+      { word: "vei", ipa: "/væɪ/" },
+      { word: "kai", ipa: "/kɑɪ/" },
+      { word: "øy", ipa: "/œʏ/" },
+      { word: "greie", ipa: "/ˈgræɪə/" },
+      { word: "leie", ipa: "/ˈlæɪə/" },
+      { word: "røyk", ipa: "/rœʏk/" },
+      { word: "lai", ipa: "/lɑɪ/" },
+    ],
+  },
+];
+
+const PHONEMES_DATA_EN = [
+  {
+    id: "consoante_h_aspirado",
+    categoria: "Consoantes Desafiadoras",
+    simbolo: "/h/",
+    explicacao: "Este é o som de \"R\" no início de palavras como 'hello'. É um suspiro seco vindo da garganta, não um som de garganta raspada como o nosso 'R', a garganta quase não vibra. É suave",
+    id_exercicio_link: "exercicio_h_aspirado",
+    exercicios_sequencia: ["h_aspirado_level_1", "h_aspirado_level_2", "h_aspirado_level_3"],
+    exemplos: [
+      { word: "hello", ipa: "/həˈloʊ/" },
+      { word: "head", ipa: "/hɛd/" },
+      { word: "home", ipa: "/hoʊm/" },
+      { word: "house", ipa: "/haʊs/" },
+      { word: "help", ipa: "/hɛlp/" },
+      { word: "hot", ipa: "/hɑːt/" },
+      { word: "here", ipa: "/hɪr/" },
+      { word: "happy", ipa: "/ˈhæpi/" },
+      { word: "heart", ipa: "/hɑːrt/" },
+      { word: "behind", ipa: "/bɪˈhaɪnd/" },
+    ],
+  },
+  {
+    id: "consoante_th_soprado",
+    categoria: "Consoantes Desafiadoras",
+    simbolo: "/θ/",
+    explicacao: "O erro comum é trocar por F, T ou S. Para o som perfeito, coloque a ponta da língua levemente entre os dentes incisivos e apenas assopre o ar, sem vibrar a garganta.",
+    id_exercicio_link: "exercicio_th_soprado",
+    exercicios_sequencia: ["th_soprado_level_1", "th_soprado_level_2", "th_soprado_level_3"],
+    exemplos: [
+      { word: "think", ipa: "/θɪŋk/" },
+      { word: "three", ipa: "/θriː/" },
+      { word: "math", ipa: "/mæθ/" },
+      { word: "mouth", ipa: "/maʊθ/" },
+      { word: "bath", ipa: "/bæθ/" },
+      { word: "thanks", ipa: "/θæŋks/" },
+      { word: "tooth", ipa: "/tuːθ/" },
+      { word: "north", ipa: "/nɔːrθ/" },
+      { word: "thursday", ipa: "/ˈθɜːrzdeɪ/" },
+      { word: "birthday", ipa: "/ˈbɜːrθdeɪ/" },
+    ],
+  },
+  {
+    id: "consoante_dark_l",
+    categoria: "Finalizações e Consoantes Mudas",
+    simbolo: "/ɫ/",
+    explicacao: "O L final nunca vira som de U. Levante a ponta da língua e toque-a atrás dos dentes superiores, segurando o som no céu da boca.",
+    id_exercicio_link: "exercicio_dark_l",
+    exercicios_sequencia: ["dark_l_level_1", "dark_l_level_2", "dark_l_level_3"],
+    exemplos: [
+      { word: "well", ipa: "/wɛɫ/" },
+      { word: "milk", ipa: "/mɪɫk/" },
+      { word: "call", ipa: "/kɔːɫ/" },
+      { word: "ball", ipa: "/bɔːɫ/" },
+      { word: "feel", ipa: "/fiːɫ/" },
+      { word: "real", ipa: "/ˈriːəɫ/" },
+      { word: "help", ipa: "/hɛɫp/" },
+      { word: "cool", ipa: "/kuːɫ/" },
+      { word: "tall", ipa: "/tɔːɫ/" },
+      { word: "pill", ipa: "/pɪɫ/" },
+    ],
+  },
+  {
+    id: "consoante_ed_mudo",
+    categoria: "Finalizações e Consoantes Mudas",
+    simbolo: "/t/ ou /d/",
+    explicacao: "O E é quase sempre mudo. Pule direto para o som seco de T ou D no final. Evite adicionar o som de \"id\" ou \"idji\" ao final das palavras.",
+    id_exercicio_link: "exercicio_ed_mudo",
+    exercicios_sequencia: ["ed_mudo_level_1", "ed_mudo_level_2", "ed_mudo_level_3"],
+    exemplos: [
+      { word: "worked", ipa: "/wɜːrkt/" },
+      { word: "played", ipa: "/pleɪd/" },
+      { word: "helped", ipa: "/hɛlpt/" },
+      { word: "liked", ipa: "/laɪkt/" },
+      { word: "washed", ipa: "/wɑːʃt/" },
+      { word: "called", ipa: "/kɔːld/" },
+      { word: "stopped", ipa: "/stɑːpt/" },
+      { word: "loved", ipa: "/lʌvd/" },
+      { word: "watched", ipa: "/wɑːtʃt/" },
+      { word: "cleaned", ipa: "/kliːnd/" },
+    ],
+  },
+  {
+    id: "consoante_ing",
+    categoria: "Finalizações e Consoantes Mudas",
+    simbolo: "/ŋ/",
+    explicacao: "O G final é decorativo. O som nasce na parte de trás da garganta. Não bata a língua no dente nem solte um G de gato.",
+    id_exercicio_link: "exercicio_ing",
+    exercicios_sequencia: ["ing_level_1", "ing_level_2", "ing_level_3"],
+    exemplos: [
+      { word: "running", ipa: "/ˈrʌnɪŋ/" },
+      { word: "speaking", ipa: "/ˈspiːkɪŋ/" },
+      { word: "thing", ipa: "/θɪŋ/" },
+      { word: "song", ipa: "/sɔːŋ/" },
+      { word: "king", ipa: "/kɪŋ/" },
+      { word: "young", ipa: "/jʌŋ/" },
+      { word: "morning", ipa: "/ˈmɔːrnɪŋ/" },
+      { word: "wrong", ipa: "/rɔːŋ/" },
+      { word: "sing", ipa: "/sɪŋ/" },
+      { word: "bring", ipa: "/brɪŋ/" },
+    ],
+  },
+  {
+    id: "consoante_m_n_final",
+    categoria: "Finalizações e Consoantes Mudas",
+    simbolo: "/m/ & /n/",
+    explicacao: "Não anasalize a vogal e esqueça a consoante! Para o M, feche os lábios. Para o N, a língua toca o céu da boca. Pronuncie a consoante até o fim.",
+    id_exercicio_link: "exercicio_m_n_final",
+    exercicios_sequencia: ["m_n_final_level_1", "m_n_final_level_2", "m_n_final_level_3"],
+    exemplos: [
+      { word: "from", ipa: "/frʌm/" },
+      { word: "ten", ipa: "/tɛn/" },
+      { word: "time", ipa: "/taɪm/" },
+      { word: "name", ipa: "/neɪm/" },
+      { word: "sun", ipa: "/sʌn/" },
+      { word: "room", ipa: "/ruːm/" },
+      { word: "open", ipa: "/ˈoʊpən/" },
+      { word: "game", ipa: "/geɪm/" },
+      { word: "rain", ipa: "/reɪn/" },
+      { word: "team", ipa: "/tiːm/" },
+    ],
+  },
+  {
+    id: "consoante_v_final",
+    categoria: "Finalizações e Consoantes Mudas",
+    simbolo: "/v/",
+    explicacao: "Encoste os dentes superiores no lábio inferior e faça o som vibrar. Se não vibrar, parece F. Se adicionar vogal no final, soa errado.",
+    id_exercicio_link: "exercicio_v_final",
+    exercicios_sequencia: ["v_final_level_1", "v_final_level_2", "v_final_level_3"],
+    exemplos: [
+      { word: "have", ipa: "/hæv/" },
+      { word: "live", ipa: "/lɪv/" },
+      { word: "love", ipa: "/lʌv/" },
+      { word: "give", ipa: "/gɪv/" },
+      { word: "move", ipa: "/muːv/" },
+      { word: "very", ipa: "/ˈvɛri/" },
+      { word: "voice", ipa: "/vɔɪs/" },
+      { word: "five", ipa: "/faɪv/" },
+      { word: "leave", ipa: "/liːv/" },
+      { word: "village", ipa: "/ˈvɪlɪdʒ/" },
+    ],
+  },
+  {
+    id: "vogal_ae_aberta",
+    categoria: "Vogais Perigosas",
+    simbolo: "/æ/",
+    explicacao: "Não é um 'A' puro e nem um 'É' puro. Para fazer esse som, você deve abrir a boca como se fosse falar 'A', mas forçar o som de 'E'. A mandíbula desce bastante. Aí sai o Æ",
+    id_exercicio_link: "exercicio_ae_aberta",
+    exercicios_sequencia: ["ae_aberta_level_1", "ae_aberta_level_2", "ae_aberta_level_3"],
+    exemplos: [
+      { word: "man", ipa: "/mæn/" },
+      { word: "bad", ipa: "/bæd/" },
+      { word: "cat", ipa: "/kæt/" },
+      { word: "hat", ipa: "/hæt/" },
+      { word: "happy", ipa: "/ˈhæpi/" },
+      { word: "apple", ipa: "/ˈæpəl/" },
+      { word: "back", ipa: "/bæk/" },
+      { word: "family", ipa: "/ˈfæməli/" },
+      { word: "black", ipa: "/blæk/" },
+      { word: "stand", ipa: "/stænd/" },
+    ],
+  },
+  {
+    id: "vogal_i_longo_curto",
+    categoria: "Vogais Perigosas",
+    simbolo: "/iː/ & /ɪ/",
+    explicacao: "O /iː/ é longo, tensionado e exige que você sorria (como em 'sheep'). O /ɪ/ é um som curto, relaxado, com a boca entreaberta, caindo quase na posição de um 'ê' em português (como em 'ship').",
+    id_exercicio_link: "exercicio_i_curto_longo",
+    exercicios_sequencia: ["i_longo_curto_level_1", "i_longo_curto_level_2", "i_longo_curto_level_3"],
+    exemplos: [
+      { word: "sheep", ipa: "/ʃiːp/" },
+      { word: "ship", ipa: "/ʃɪp/" },
+      { word: "seat", ipa: "/siːt/" },
+      { word: "sit", ipa: "/sɪt/" },
+      { word: "leave", ipa: "/liːv/" },
+      { word: "live", ipa: "/lɪv/" },
+      { word: "feet", ipa: "/fiːt/" },
+      { word: "fit", ipa: "/fɪt/" },
+      { word: "green", ipa: "/ɡriːn/" },
+      { word: "grin", ipa: "/ɡrɪn/" },
+    ],
+  },
+  {
+    id: "vogal_u_curto",
+    categoria: "Vogais Perigosas",
+    simbolo: "/ʌ/",
+    explicacao: "Som curto que nasce na garganta, parecido com o 'ã' de 'pãe', mas seco. O erro comum é tentar pronunciar a letra 'U' com biquinho (como 'cupa'), mas o correto é emitir o som sem arredondar os lábios.",
+    id_exercicio_link: "exercicio_u_curto",
+    exercicios_sequencia: ["u_curto_level_1", "u_curto_level_2", "u_curto_level_3"],
+    exemplos: [
+      { word: "hut", ipa: "/hʌt/" },
+      { word: "nut", ipa: "/nʌt/" },
+      { word: "cup", ipa: "/kʌp/" },
+      { word: "love", ipa: "/lʌv/" },
+      { word: "sun", ipa: "/sʌn/" },
+      { word: "much", ipa: "/mʌtʃ/" },
+      { word: "color", ipa: "/ˈkʌlər/" },
+      { word: "country", ipa: "/ˈkʌntri/" },
+      { word: "luck", ipa: "/lʌk/" },
+      { word: "summer", ipa: "/ˈsʌmər/" },
+    ],
+  },
+];
+
 function shuffleArray(arr) {
   const a = [...arr];
   for (let i = a.length-1; i>0; i--) {
@@ -634,8 +1464,8 @@ function LoginScreen() {
     <div className="fade-in" style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#0f172a,#1e293b)",padding:"1.5rem"}}>
       <div style={{background:"#1e293b",borderRadius:"2rem",padding:"3rem 2rem",width:"100%",maxWidth:420,textAlign:"center",border:"1px solid #334155",boxShadow:"0 25px 50px -12px rgba(0,0,0,.6)"}}>
         <span style={{fontSize:"4.5rem",display:"block",marginBottom:".5rem"}}>🎧</span>
-        <h1 style={{fontSize:"1.8rem",fontWeight:900,color:"#f8fafc",margin:"0 0 .4rem"}}>Pronunciation Builder 🇬🇧</h1>
-        <p style={{color:"#94a3b8",fontSize:".95rem",marginBottom:"2.5rem"}}>Master English Pronunciation</p>
+        <h1 style={{fontSize:"1.8rem",fontWeight:900,color:"#f8fafc",margin:"0 0 .4rem"}}>Pronunciation Builder</h1>
+        <p style={{color:"#94a3b8",fontSize:".95rem",marginBottom:"2.5rem"}}>Treine sua pronúncia com pares mínimos</p>
 
         <button onClick={handleLogin} disabled={loading}
           style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"1rem 1.5rem",borderRadius:"1rem",border:"1px solid #334155",background:loading?"#1e3a8a":"#0f172a",color:"#f8fafc",fontSize:"1rem",fontWeight:700,transition:"all .2s"}}>
@@ -1426,221 +2256,18 @@ function PhonemeModal({ phoneme, accent, onClose, onPractice }) {
   );
 }
 
-function PhonemeHubScreen({ onPractice, onBack }) {
+function PhonemeHubScreen({ onPractice, onBack, track }) {
   const [phonemes, setPhonemes] = useState([]);
   const [loadState, setLoadState] = useState("loading");
   const [selected, setSelected] = useState(null);
 
-  // ── Dados embutidos — sem chamada ao Firestore ──────────────────────
-  const PHONEMES_DATA = [
-    {
-      id: "consoante_h_aspirado",
-      categoria: "Consoantes Desafiadoras",
-      simbolo: "/h/",
-      explicacao: "Este é o som de \"R\" no início de palavras como 'hello'. É um suspiro seco vindo da garganta, não um som de garganta raspada como o nosso 'R', a garganta quase não vibra. É suave",
-      id_exercicio_link: "exercicio_h_aspirado",
-      exercicios_sequencia: ["h_aspirado_level_1", "h_aspirado_level_2", "h_aspirado_level_3"],
-      exemplos: [
-        { word: "hello", ipa: "/həˈloʊ/" },
-        { word: "head", ipa: "/hɛd/" },
-        { word: "home", ipa: "/hoʊm/" },
-        { word: "house", ipa: "/haʊs/" },
-        { word: "help", ipa: "/hɛlp/" },
-        { word: "hot", ipa: "/hɑːt/" },
-        { word: "here", ipa: "/hɪr/" },
-        { word: "happy", ipa: "/ˈhæpi/" },
-        { word: "heart", ipa: "/hɑːrt/" },
-        { word: "behind", ipa: "/bɪˈhaɪnd/" },
-      ],
-    },
-    {
-      id: "consoante_th_soprado",
-      categoria: "Consoantes Desafiadoras",
-      simbolo: "/θ/",
-      explicacao: "O erro comum é trocar por F, T ou S. Para o som perfeito, coloque a ponta da língua levemente entre os dentes incisivos e apenas assopre o ar, sem vibrar a garganta.",
-      id_exercicio_link: "exercicio_th_soprado",
-      exercicios_sequencia: ["th_soprado_level_1", "th_soprado_level_2", "th_soprado_level_3"],
-      exemplos: [
-        { word: "think", ipa: "/θɪŋk/" },
-        { word: "three", ipa: "/θriː/" },
-        { word: "math", ipa: "/mæθ/" },
-        { word: "mouth", ipa: "/maʊθ/" },
-        { word: "bath", ipa: "/bæθ/" },
-        { word: "thanks", ipa: "/θæŋks/" },
-        { word: "tooth", ipa: "/tuːθ/" },
-        { word: "north", ipa: "/nɔːrθ/" },
-        { word: "thursday", ipa: "/ˈθɜːrzdeɪ/" },
-        { word: "birthday", ipa: "/ˈbɜːrθdeɪ/" },
-      ],
-    },
-    {
-      id: "consoante_dark_l",
-      categoria: "Finalizações e Consoantes Mudas",
-      simbolo: "/ɫ/",
-      explicacao: "O L final nunca vira som de U. Levante a ponta da língua e toque-a atrás dos dentes superiores, segurando o som no céu da boca.",
-      id_exercicio_link: "exercicio_dark_l",
-      exercicios_sequencia: ["dark_l_level_1", "dark_l_level_2", "dark_l_level_3"],
-      exemplos: [
-        { word: "well", ipa: "/wɛɫ/" },
-        { word: "milk", ipa: "/mɪɫk/" },
-        { word: "call", ipa: "/kɔːɫ/" },
-        { word: "ball", ipa: "/bɔːɫ/" },
-        { word: "feel", ipa: "/fiːɫ/" },
-        { word: "real", ipa: "/ˈriːəɫ/" },
-        { word: "help", ipa: "/hɛɫp/" },
-        { word: "cool", ipa: "/kuːɫ/" },
-        { word: "tall", ipa: "/tɔːɫ/" },
-        { word: "pill", ipa: "/pɪɫ/" },
-      ],
-    },
-    {
-      id: "consoante_ed_mudo",
-      categoria: "Finalizações e Consoantes Mudas",
-      simbolo: "/t/ ou /d/",
-      explicacao: "O E é quase sempre mudo. Pule direto para o som seco de T ou D no final. Evite adicionar o som de \"id\" ou \"idji\" ao final das palavras.",
-      id_exercicio_link: "exercicio_ed_mudo",
-      exercicios_sequencia: ["ed_mudo_level_1", "ed_mudo_level_2", "ed_mudo_level_3"],
-      exemplos: [
-        { word: "worked", ipa: "/wɜːrkt/" },
-        { word: "played", ipa: "/pleɪd/" },
-        { word: "helped", ipa: "/hɛlpt/" },
-        { word: "liked", ipa: "/laɪkt/" },
-        { word: "washed", ipa: "/wɑːʃt/" },
-        { word: "called", ipa: "/kɔːld/" },
-        { word: "stopped", ipa: "/stɑːpt/" },
-        { word: "loved", ipa: "/lʌvd/" },
-        { word: "watched", ipa: "/wɑːtʃt/" },
-        { word: "cleaned", ipa: "/kliːnd/" },
-      ],
-    },
-    {
-      id: "consoante_ing",
-      categoria: "Finalizações e Consoantes Mudas",
-      simbolo: "/ŋ/",
-      explicacao: "O G final é decorativo. O som nasce na parte de trás da garganta. Não bata a língua no dente nem solte um G de gato.",
-      id_exercicio_link: "exercicio_ing",
-      exercicios_sequencia: ["ing_level_1", "ing_level_2", "ing_level_3"],
-      exemplos: [
-        { word: "running", ipa: "/ˈrʌnɪŋ/" },
-        { word: "speaking", ipa: "/ˈspiːkɪŋ/" },
-        { word: "thing", ipa: "/θɪŋ/" },
-        { word: "song", ipa: "/sɔːŋ/" },
-        { word: "king", ipa: "/kɪŋ/" },
-        { word: "young", ipa: "/jʌŋ/" },
-        { word: "morning", ipa: "/ˈmɔːrnɪŋ/" },
-        { word: "wrong", ipa: "/rɔːŋ/" },
-        { word: "sing", ipa: "/sɪŋ/" },
-        { word: "bring", ipa: "/brɪŋ/" },
-      ],
-    },
-    {
-      id: "consoante_m_n_final",
-      categoria: "Finalizações e Consoantes Mudas",
-      simbolo: "/m/ & /n/",
-      explicacao: "Não anasalize a vogal e esqueça a consoante! Para o M, feche os lábios. Para o N, a língua toca o céu da boca. Pronuncie a consoante até o fim.",
-      id_exercicio_link: "exercicio_m_n_final",
-      exercicios_sequencia: ["m_n_final_level_1", "m_n_final_level_2", "m_n_final_level_3"],
-      exemplos: [
-        { word: "from", ipa: "/frʌm/" },
-        { word: "ten", ipa: "/tɛn/" },
-        { word: "time", ipa: "/taɪm/" },
-        { word: "name", ipa: "/neɪm/" },
-        { word: "sun", ipa: "/sʌn/" },
-        { word: "room", ipa: "/ruːm/" },
-        { word: "open", ipa: "/ˈoʊpən/" },
-        { word: "game", ipa: "/geɪm/" },
-        { word: "rain", ipa: "/reɪn/" },
-        { word: "team", ipa: "/tiːm/" },
-      ],
-    },
-    {
-      id: "consoante_v_final",
-      categoria: "Finalizações e Consoantes Mudas",
-      simbolo: "/v/",
-      explicacao: "Encoste os dentes superiores no lábio inferior e faça o som vibrar. Se não vibrar, parece F. Se adicionar vogal no final, soa errado.",
-      id_exercicio_link: "exercicio_v_final",
-      exercicios_sequencia: ["v_final_level_1", "v_final_level_2", "v_final_level_3"],
-      exemplos: [
-        { word: "have", ipa: "/hæv/" },
-        { word: "live", ipa: "/lɪv/" },
-        { word: "love", ipa: "/lʌv/" },
-        { word: "give", ipa: "/gɪv/" },
-        { word: "move", ipa: "/muːv/" },
-        { word: "very", ipa: "/ˈvɛri/" },
-        { word: "voice", ipa: "/vɔɪs/" },
-        { word: "five", ipa: "/faɪv/" },
-        { word: "leave", ipa: "/liːv/" },
-        { word: "village", ipa: "/ˈvɪlɪdʒ/" },
-      ],
-    },
-    {
-      id: "vogal_ae_aberta",
-      categoria: "Vogais Perigosas",
-      simbolo: "/æ/",
-      explicacao: "Não é um 'A' puro e nem um 'É' puro. Para fazer esse som, você deve abrir a boca como se fosse falar 'A', mas forçar o som de 'E'. A mandíbula desce bastante. Aí sai o Æ",
-      id_exercicio_link: "exercicio_ae_aberta",
-      exercicios_sequencia: ["ae_aberta_level_1", "ae_aberta_level_2", "ae_aberta_level_3"],
-      exemplos: [
-        { word: "man", ipa: "/mæn/" },
-        { word: "bad", ipa: "/bæd/" },
-        { word: "cat", ipa: "/kæt/" },
-        { word: "hat", ipa: "/hæt/" },
-        { word: "happy", ipa: "/ˈhæpi/" },
-        { word: "apple", ipa: "/ˈæpəl/" },
-        { word: "back", ipa: "/bæk/" },
-        { word: "family", ipa: "/ˈfæməli/" },
-        { word: "black", ipa: "/blæk/" },
-        { word: "stand", ipa: "/stænd/" },
-      ],
-    },
-    {
-      id: "vogal_i_longo_curto",
-      categoria: "Vogais Perigosas",
-      simbolo: "/iː/ & /ɪ/",
-      explicacao: "O /iː/ é longo, tensionado e exige que você sorria (como em 'sheep'). O /ɪ/ é um som curto, relaxado, com a boca entreaberta, caindo quase na posição de um 'ê' em português (como em 'ship').",
-      id_exercicio_link: "exercicio_i_curto_longo",
-      exercicios_sequencia: ["i_longo_curto_level_1", "i_longo_curto_level_2", "i_longo_curto_level_3"],
-      exemplos: [
-        { word: "sheep", ipa: "/ʃiːp/" },
-        { word: "ship", ipa: "/ʃɪp/" },
-        { word: "seat", ipa: "/siːt/" },
-        { word: "sit", ipa: "/sɪt/" },
-        { word: "leave", ipa: "/liːv/" },
-        { word: "live", ipa: "/lɪv/" },
-        { word: "feet", ipa: "/fiːt/" },
-        { word: "fit", ipa: "/fɪt/" },
-        { word: "green", ipa: "/ɡriːn/" },
-        { word: "grin", ipa: "/ɡrɪn/" },
-      ],
-    },
-    {
-      id: "vogal_u_curto",
-      categoria: "Vogais Perigosas",
-      simbolo: "/ʌ/",
-      explicacao: "Som curto que nasce na garganta, parecido com o 'ã' de 'pãe', mas seco. O erro comum é tentar pronunciar a letra 'U' com biquinho (como 'cupa'), mas o correto é emitir o som sem arredondar os lábios.",
-      id_exercicio_link: "exercicio_u_curto",
-      exercicios_sequencia: ["u_curto_level_1", "u_curto_level_2", "u_curto_level_3"],
-      exemplos: [
-        { word: "hut", ipa: "/hʌt/" },
-        { word: "nut", ipa: "/nʌt/" },
-        { word: "cup", ipa: "/kʌp/" },
-        { word: "love", ipa: "/lʌv/" },
-        { word: "sun", ipa: "/sʌn/" },
-        { word: "much", ipa: "/mʌtʃ/" },
-        { word: "color", ipa: "/ˈkʌlər/" },
-        { word: "country", ipa: "/ˈkʌntri/" },
-        { word: "luck", ipa: "/lʌk/" },
-        { word: "summer", ipa: "/ˈsʌmər/" },
-      ],
-    },
-  ];
 
   function loadPhonemes() {
-    setPhonemes(PHONEMES_DATA);
+    setPhonemes(track === "no" ? PHONEMES_DATA_NO : PHONEMES_DATA_EN);
     setLoadState("ready");
   }
 
-  useEffect(() => { loadPhonemes(); }, []);
+  useEffect(() => { loadPhonemes(); }, [track]);
 
   // Agrupa por categoria preservando a ordem de primeira ocorrência
   const groups = [];
@@ -1746,6 +2373,8 @@ function Header({ user, score, animScore, onOpenHub }) {
 function loadSession() { try { const s=localStorage.getItem("mph_session"); return s?JSON.parse(s):null; } catch { return null; } }
 function saveSession(idx,score,pairIds) { try { localStorage.setItem("mph_session",JSON.stringify({idx,score,pairIds})); } catch {} }
 function clearSession() { localStorage.removeItem("mph_session"); }
+function loadTrack() { try { return localStorage.getItem("mph_track") || null; } catch { return null; } }
+function saveTrack(track) { try { localStorage.setItem("mph_track", track); } catch {} }
 
 // Hook que conecta o evento global beforeinstallprompt (capturado fora do React,
 // no <head>) ao ciclo de vida de componentes. Retorna se dá pra instalar agora
@@ -1813,6 +2442,34 @@ function InstallBanner({ canInstall, onInstall }) {
   );
 }
 
+function TrackSelectScreen({ onChoose }) {
+  return (
+    <div className="fade-in" style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#0f172a,#1e293b)",padding:"1.5rem"}}>
+      <div style={{background:"#1e293b",borderRadius:"2rem",padding:"3rem 2rem",width:"100%",maxWidth:420,textAlign:"center",border:"1px solid #334155",boxShadow:"0 25px 50px -12px rgba(0,0,0,.6)"}}>
+        <span style={{fontSize:"4.5rem",display:"block",marginBottom:".5rem"}}>🌍</span>
+        <h1 style={{fontSize:"1.6rem",fontWeight:900,color:"#f8fafc",margin:"0 0 .4rem"}}>Escolha sua trilha</h1>
+        <p style={{color:"#94a3b8",fontSize:".95rem",marginBottom:"2.25rem"}}>Qual idioma você quer treinar?</p>
+
+        <button onClick={()=>onChoose("en")}
+          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"1.1rem 1.5rem",borderRadius:"1rem",border:"1px solid #334155",background:"#0f172a",color:"#f8fafc",fontSize:"1.05rem",fontWeight:800,marginBottom:"1rem",transition:"all .2s"}}
+          onMouseOver={e=>e.currentTarget.style.filter="brightness(1.15)"}
+          onMouseOut={e=>e.currentTarget.style.filter="brightness(1)"}>
+          🇬🇧 Inglês
+        </button>
+
+        <button onClick={()=>onChoose("no")}
+          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"1.1rem 1.5rem",borderRadius:"1rem",border:"1px solid #334155",background:"#0f172a",color:"#f8fafc",fontSize:"1.05rem",fontWeight:800,transition:"all .2s"}}
+          onMouseOver={e=>e.currentTarget.style.filter="brightness(1.15)"}
+          onMouseOut={e=>e.currentTarget.style.filter="brightness(1)"}>
+          🇳🇴 Norueguês
+        </button>
+
+        <p style={{marginTop:"2rem",fontSize:".75rem",color:"#475569"}}>Você pode trocar de trilha depois, se quiser 🔄</p>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [user,      setUser]      = useState(undefined);
   const [score,     setScore]     = useState(0);
@@ -1820,8 +2477,20 @@ function App() {
   const [pairs,     setPairs]     = useState([]);
   const [idx,       setIdx]       = useState(0);
   const [view,      setView]      = useState("exercises");
+  const [track,     setTrack]     = useState(undefined); // "en" | "no" | undefined (ainda não escolhida)
   const [sequenceMode, setSequenceMode] = useState(null); // { phonemeLabel, totalSteps } | null
   const { canInstall, promptInstall } = usePwaInstall();
+
+  function getPairsForTrack(t) { return t === "no" ? PAIRS_NO : PAIRS_EN; }
+
+  function handleChooseTrack(t) {
+    saveTrack(t);
+    setTrack(t);
+    clearSession();
+    const shuffled = shuffleArray(getPairsForTrack(t));
+    setScore(0); setIdx(0); setPairs(shuffled);
+    saveSession(0,0,shuffled.map(p=>p.id));
+  }
 
   useEffect(() => {
     let unsub = () => {};
@@ -1829,16 +2498,20 @@ function App() {
       unsub = auth.onAuthStateChanged(u => {
         setUser(u || null);
         if (u) {
+          const savedTrack = loadTrack();
+          setTrack(savedTrack || null); // null = precisa escolher
+          if (!savedTrack) { setPairs([]); setIdx(0); setScore(0); return; }
+          const activePairs = getPairsForTrack(savedTrack);
           const saved = loadSession();
           if (saved && saved.pairIds && saved.pairIds.length > 0) {
-            const ordered = saved.pairIds.map(id=>PAIRS.find(p=>p.id===id)).filter(Boolean);
+            const ordered = saved.pairIds.map(id=>activePairs.find(p=>p.id===id)).filter(Boolean);
             if (ordered.length > 0) { setPairs(ordered); setIdx(saved.idx||0); setScore(saved.score||0); return; }
           }
-          const shuffled = shuffleArray(PAIRS);
+          const shuffled = shuffleArray(activePairs);
           setPairs(shuffled); setIdx(0); setScore(0);
           saveSession(0,0,shuffled.map(p=>p.id));
         } else {
-          setPairs([]); setIdx(0); setScore(0);
+          setPairs([]); setIdx(0); setScore(0); setTrack(undefined);
         }
       });
     });
@@ -1861,16 +2534,17 @@ function App() {
   function handleRestart() {
     clearSession();
     setSequenceMode(null);
-    const shuffled = shuffleArray(PAIRS);
+    const shuffled = shuffleArray(getPairsForTrack(track));
     setScore(0); setIdx(0); setPairs(shuffled);
     saveSession(0,0,shuffled.map(p=>p.id));
   }
 
   function handlePracticeFromHub(phoneme) {
+    const activePairs = getPairsForTrack(track);
     const sequenceIds = Array.isArray(phoneme.exercicios_sequencia) ? phoneme.exercicios_sequencia : null;
 
     if (sequenceIds && sequenceIds.length > 0) {
-      const sequencePairs = sequenceIds.map(id => PAIRS.find(p => String(p.id) === String(id))).filter(Boolean);
+      const sequencePairs = sequenceIds.map(id => activePairs.find(p => String(p.id) === String(id))).filter(Boolean);
       if (sequencePairs.length > 0) {
         setSequenceMode({ phonemeLabel: phoneme.simbolo, totalSteps: sequencePairs.length });
         setPairs(sequencePairs);
@@ -1879,15 +2553,15 @@ function App() {
         setView("exercises");
         return;
       }
-      console.warn(`Nenhum exercício encontrado em PAIRS para exercicios_sequencia=${JSON.stringify(sequenceIds)}`);
+      console.warn(`Nenhum exercício encontrado para exercicios_sequencia=${JSON.stringify(sequenceIds)}`);
     }
 
     // Fallback: comportamento antigo, link único (compatibilidade com fonemas sem sequência)
     const link = phoneme.id_exercicio_link;
-    const match = PAIRS.find(p => String(p.id) === String(link));
+    const match = activePairs.find(p => String(p.id) === String(link));
     if (match) {
       setSequenceMode(null);
-      const currentPairs = pairs.length > 0 ? pairs : PAIRS;
+      const currentPairs = pairs.length > 0 ? pairs : activePairs;
       const foundIdx = currentPairs.findIndex(p => p.id === match.id);
       if (foundIdx !== -1) {
         setPairs(currentPairs);
@@ -1895,7 +2569,7 @@ function App() {
         saveSession(foundIdx, score, currentPairs.map(p=>p.id));
       }
     } else {
-      console.warn(`Nenhum exercício encontrado em PAIRS para id_exercicio_link="${link}"`);
+      console.warn(`Nenhum exercício encontrado para id_exercicio_link="${link}"`);
     }
 
     setView("exercises");
@@ -1909,6 +2583,8 @@ function App() {
   if (user === undefined) return <Spinner/>;
   if (user === null)      return <LoginScreen/>;
   if (user.email === ADMIN_EMAIL) return <AdminDashboard user={user}/>;
+  if (track === undefined) return <Spinner/>;
+  if (track === null) return <TrackSelectScreen onChoose={handleChooseTrack}/>;
 
   let mainContent;
 
@@ -1917,6 +2593,7 @@ function App() {
       <PhonemeHubScreen
         onPractice={handlePracticeFromHub}
         onBack={() => setView("exercises")}
+        track={track}
       />
     );
   } else if (pairs.length === 0) {
