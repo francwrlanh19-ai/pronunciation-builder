@@ -1743,7 +1743,27 @@ function SummaryScreen({ score, total, onRestart }) {
   );
 }
 
-function WordCard({ wordData, accent, isTarget, isSolved, onSelect, isTwister }) {
+// Escolhe a melhor voz disponível no navegador para o idioma pedido,
+// preferindo uma voz masculina quando o navegador expõe essa informação
+// (nem todo navegador/SO marca o gênero da voz no nome).
+function pickVoice(langCode) {
+  if (!window.speechSynthesis) return null;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices || voices.length === 0) return null;
+
+  const sameLang = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(langCode.toLowerCase().slice(0,2)));
+  if (sameLang.length === 0) return null;
+
+  const maleHints = ["male","mann","herre","man)","(man","david","james","daniel","george","fredrik","henrik","olav","erik","magnus"];
+  const male = sameLang.find(v => maleHints.some(h => v.name.toLowerCase().includes(h)));
+  if (male) return male;
+
+  // Sem marcação de gênero disponível: usa a primeira voz nativa (não remota) do idioma
+  const local = sameLang.find(v => v.localService);
+  return local || sameLang[0];
+}
+
+function WordCard({ wordData, accent, isTarget, isSolved, onSelect, isTwister, track }) {
   const [speaking, setSpeaking] = useState(false);
 
   function handleSpeak(e) {
@@ -1751,7 +1771,10 @@ function WordCard({ wordData, accent, isTarget, isSolved, onSelect, isTwister })
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const utt = new SpeechSynthesisUtterance(wordData.word);
-    utt.lang = "en-US"; utt.rate = isTwister ? .72 : .85;
+    utt.lang = track === "no" ? "nb-NO" : "en-US";
+    utt.rate = isTwister ? .72 : .85;
+    const voice = pickVoice(utt.lang);
+    if (voice) utt.voice = voice;
     setSpeaking(true);
     utt.onend = () => setSpeaking(false);
     utt.onerror = () => setSpeaking(false);
@@ -1870,7 +1893,7 @@ function PracticeRecorder({ accent }) {
   );
 }
 
-function ScoreRecognizer({ targetWord, accent, onResult, solved }) {
+function ScoreRecognizer({ targetWord, accent, onResult, solved, track }) {
   const [phase,   setPhase]   = useState("idle");
   const [interim, setInterim] = useState("");
   const [final,   setFinal]   = useState("");
@@ -1897,7 +1920,7 @@ function ScoreRecognizer({ targetWord, accent, onResult, solved }) {
     if (!SR) { onResult("__no_sr__"); return; }
 
     const rec = new SR();
-    rec.lang = "en-US";
+    rec.lang = track === "no" ? "nb-NO" : "en-US";
     rec.continuous = false;
     rec.interimResults = true;
     rec.maxAlternatives = 5;
@@ -1983,7 +2006,7 @@ function ScoreRecognizer({ targetWord, accent, onResult, solved }) {
   );
 }
 
-function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressText, nextLabel }) {
+function ExerciseView({ pair, user, track, onCorrectAnswer, onNext, isLast, progressText, nextLabel }) {
   const isTwisterOnly = pair.type === "twister_only";
 
   const [targetIndex, setTargetIndex] = useState(isTwisterOnly ? 0 : null);
@@ -2088,7 +2111,7 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
       {!isTwisterOnly && words && (
         <div style={{display:"flex",gap:".75rem"}}>
           {words.map((w,i) => (
-            <WordCard key={w.word} wordData={w} accent={accent} isTarget={targetIndex===i} isSolved={solvedSet.has(i)} onSelect={()=>selectTarget(i)} />
+            <WordCard key={w.word} wordData={w} accent={accent} isTarget={targetIndex===i} isSolved={solvedSet.has(i)} onSelect={()=>selectTarget(i)} track={track} />
           ))}
         </div>
       )}
@@ -2100,6 +2123,7 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
         isSolved={solvedSet.has(isTwisterOnly ? 0 : 2)}
         onSelect={isTwisterOnly ? ()=>{} : ()=>selectTarget(2)}
         isTwister={true}
+        track={track}
       />
 
       <div style={{background:"#1e293b",borderRadius:"1.5rem",padding:"1.5rem",border:"1px solid #334155",display:"flex",flexDirection:"column",gap:"1rem"}}>
@@ -2127,6 +2151,7 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
             accent={accent}
             onResult={handleResult}
             solved={currentCardSolved}
+            track={track}
           />
         )}
 
@@ -2153,7 +2178,7 @@ function ExerciseView({ pair, user, onCorrectAnswer, onNext, isLast, progressTex
 // HUB DE FONEMAS — dados embutidos diretamente (sem chamada ao Firestore)
 // ═══════════════════════════════════════════════════════════════════════
 
-function SpeakerButton({ word, accent }) {
+function SpeakerButton({ word, accent, track }) {
   const [speaking, setSpeaking] = useState(false);
 
   function handleSpeak(e) {
@@ -2161,8 +2186,10 @@ function SpeakerButton({ word, accent }) {
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const utt = new SpeechSynthesisUtterance(word);
-    utt.lang = "en-US";
+    utt.lang = track === "no" ? "nb-NO" : "en-US";
     utt.rate = 0.9;
+    const voice = pickVoice(utt.lang);
+    if (voice) utt.voice = voice;
     setSpeaking(true);
     utt.onend = () => setSpeaking(false);
     utt.onerror = () => setSpeaking(false);
@@ -2239,7 +2266,7 @@ function PhonemeModal({ phoneme, accent, onClose, onPractice }) {
                     </span>
                   )}
                 </div>
-                <SpeakerButton word={word} accent={accent} />
+                <SpeakerButton word={word} accent={accent} track={track} />
               </div>
             );
           })}
@@ -2632,6 +2659,7 @@ function App() {
           <ExerciseView
             pair={pairs[idx]}
             user={user}
+            track={track}
             onCorrectAnswer={(pts)=>addScore(pts,pairs,idx,score)}
             onNext={()=>advanceIdx(pairs,idx)}
             isLast={idx===pairs.length-1}
