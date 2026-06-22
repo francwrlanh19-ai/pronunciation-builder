@@ -147,8 +147,14 @@
 
   async function logActivity(data) {
     try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        console.warn("logActivity: usuário não autenticado, atividade não foi salva.");
+        return;
+      }
       await db.collection("activity_logs").add({
         ...data,
+        uid: currentUser.uid,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         clientTime: new Date().toISOString(),
       });
@@ -177,18 +183,20 @@
   async function fetchLogs() {
     try {
       const snap = await db.collection("activity_logs")
-        .orderBy("timestamp", "desc")
-        .limit(500)
+        .limit(2000)
         .get();
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      docs.sort((a, b) => {
+        const ta = a.clientTime ? new Date(a.clientTime).getTime() : 0;
+        const tb = b.clientTime ? new Date(b.clientTime).getTime() : 0;
+        return tb - ta;
+      });
+      return docs;
     } catch(e) {
       const isPermission = e.code === "permission-denied" || (e.message && e.message.includes("Missing or insufficient permissions"));
-      const isIndex      = e.code === "failed-precondition" || (e.message && e.message.includes("index"));
 
       if (isPermission) {
         throw new Error("PERMISSION_DENIED: " + e.message);
-      } else if (isIndex) {
-        throw new Error("MISSING_INDEX: Crie um índice composto em activity_logs para o campo 'timestamp' (descending). Link no console: " + e.message);
       } else {
         throw new Error("UNKNOWN: " + e.message);
       }
@@ -1469,6 +1477,42 @@ function AdminDashboard({ user }) {
     ? Math.round((logs.filter(l=>l.isCorrect).length / totalAttempts) * 100)
     : 0;
 
+  // Agrupa por dia + aluno: quantas tentativas cada aluno fez em cada dia
+  const dailyMap = {};
+  logs.forEach(l => {
+    if (!l.clientTime) return;
+    const d = new Date(l.clientTime);
+    const dayKey = d.toLocaleDateString("pt-BR"); // ex: 22/06/2026
+    const studentKey = l.studentEmail || "unknown";
+    const mapKey = `${dayKey}|${studentKey}`;
+    if (!dailyMap[mapKey]) {
+      dailyMap[mapKey] = {
+        dayKey,
+        dayDate: new Date(d.getFullYear(), d.getMonth(), d.getDate()),
+        studentEmail: studentKey,
+        studentName: l.studentName || "Anônimo",
+        attempts: 0,
+        correct: 0,
+      };
+    }
+    dailyMap[mapKey].attempts++;
+    if (l.isCorrect) dailyMap[mapKey].correct++;
+  });
+
+  const dailyList = Object.values(dailyMap).sort((a,b) => b.dayDate - a.dayDate || a.studentName.localeCompare(b.studentName));
+
+  // Agrupa só por dia (visão geral: quantos alunos distintos entraram naquele dia e total de tentativas)
+  const dayOverviewMap = {};
+  dailyList.forEach(d => {
+    if (!dayOverviewMap[d.dayKey]) dayOverviewMap[d.dayKey] = { dayKey: d.dayKey, dayDate: d.dayDate, students: new Set(), attempts: 0 };
+    dayOverviewMap[d.dayKey].students.add(d.studentEmail);
+    dayOverviewMap[d.dayKey].attempts += d.attempts;
+  });
+  const dayOverviewList = Object.values(dayOverviewMap)
+    .map(d => ({ ...d, studentCount: d.students.size }))
+    .sort((a,b) => b.dayDate - a.dayDate);
+
+
   const TAB_STYLE = (active) => ({
     padding:".45rem 1rem", borderRadius:".65rem", border:"none",
     background: active ? "#334155" : "transparent",
@@ -1496,9 +1540,6 @@ function AdminDashboard({ user }) {
             </code>
             </span>
           )}
-          {error.startsWith("MISSING_INDEX") && (
-            <span>Índice composto ausente. Vá em Firestore {">"} Indexes e crie um índice para <code>activity_logs</code> com campo <code>timestamp</code> (descending).<br/></span>
-          )}
           <code style={{fontSize:".72rem",opacity:.8}}>{error}</code>
         </div>
       )}
@@ -1522,6 +1563,7 @@ function AdminDashboard({ user }) {
           <div style={{display:"flex",gap:6,marginBottom:"1.25rem",background:"#0f172a",padding:6,borderRadius:".85rem",width:"fit-content"}}>
             <button style={TAB_STYLE(tab==="overview")}  onClick={()=>setTab("overview")}>📊 Sons Difíceis</button>
             <button style={TAB_STYLE(tab==="students")}  onClick={()=>setTab("students")}>👩‍🎓 Alunos</button>
+            <button style={TAB_STYLE(tab==="daily")}      onClick={()=>setTab("daily")}>📅 Entradas por dia</button>
             <button style={TAB_STYLE(tab==="activity")}  onClick={()=>setTab("activity")}>📋 Atividade</button>
           </div>
 
@@ -1616,6 +1658,61 @@ function AdminDashboard({ user }) {
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {tab === "daily" && (
+            <div className="fade-in" style={{display:"flex",flexDirection:"column",gap:"1.25rem"}}>
+              <div style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.25rem"}}>
+                <h3 style={{margin:"0 0 .25rem",fontSize:".95rem",fontWeight:800,color:"#f8fafc"}}>📅 Resumo por dia</h3>
+                <p style={{margin:"0 0 1rem",fontSize:".72rem",color:"#64748b"}}>Quantos alunos entraram e quantas tentativas no total, por dia</p>
+                {dayOverviewList.length === 0 ? (
+                  <p style={{color:"#475569",fontSize:".85rem",textAlign:"center",padding:"1rem"}}>Nenhum dado ainda.</p>
+                ) : (
+                  <div style={{overflowX:"auto"}}>
+                    <table style={{width:"100%",borderCollapse:"collapse",fontSize:".8rem",color:"#cbd5e1"}}>
+                      <thead><tr style={{color:"#64748b"}}>
+                        {["Dia","Alunos que entraram","Total de tentativas"].map(h=><th key={h} style={{textAlign:"left",padding:"6px 8px"}}>{h}</th>)}
+                      </tr></thead>
+                      <tbody>
+                        {dayOverviewList.map(d=>(
+                          <tr key={d.dayKey} style={{borderTop:"1px solid #0f172a"}}>
+                            <td style={{padding:"6px 8px",fontWeight:700,color:"#f8fafc"}}>{d.dayKey}</td>
+                            <td style={{padding:"6px 8px",color:"#818cf8",fontWeight:700}}>{d.studentCount}</td>
+                            <td style={{padding:"6px 8px"}}>{d.attempts}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              <div style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.25rem"}}>
+                <h3 style={{margin:"0 0 .25rem",fontSize:".95rem",fontWeight:800,color:"#f8fafc"}}>👩‍🎓 Detalhe por aluno e dia</h3>
+                <p style={{margin:"0 0 1rem",fontSize:".72rem",color:"#64748b"}}>Quantas vezes cada aluno praticou em cada dia</p>
+                {dailyList.length === 0 ? (
+                  <p style={{color:"#475569",fontSize:".85rem",textAlign:"center",padding:"1rem"}}>Nenhum dado ainda.</p>
+                ) : (
+                  <div style={{overflowX:"auto"}}>
+                    <table style={{width:"100%",borderCollapse:"collapse",fontSize:".8rem",color:"#cbd5e1"}}>
+                      <thead><tr style={{color:"#64748b"}}>
+                        {["Dia","Aluno","Tentativas","Acertos"].map(h=><th key={h} style={{textAlign:"left",padding:"6px 8px"}}>{h}</th>)}
+                      </tr></thead>
+                      <tbody>
+                        {dailyList.map((d,i)=>(
+                          <tr key={d.dayKey+d.studentEmail+i} style={{borderTop:"1px solid #0f172a"}}>
+                            <td style={{padding:"6px 8px",color:"#94a3b8"}}>{d.dayKey}</td>
+                            <td style={{padding:"6px 8px",fontWeight:700,color:"#f8fafc"}}>{d.studentName}</td>
+                            <td style={{padding:"6px 8px",color:"#818cf8",fontWeight:700}}>{d.attempts}</td>
+                            <td style={{padding:"6px 8px",color:"#4ade80"}}>{d.correct}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
