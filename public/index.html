@@ -120,7 +120,9 @@
   };
   firebase.initializeApp(firebaseConfig);
   const db   = firebase.firestore();
+  db.settings({ experimentalAutoDetectLongPolling: true, merge: true });
   const auth = firebase.auth();
+  console.log("🟣 [DEBUG] Versão do app carregada: LONGPOLLING-FIX-v1");
 
   async function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
