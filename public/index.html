@@ -146,18 +146,21 @@
     });
 
   async function logActivity(data) {
+    console.log("🔵 [DEBUG] logActivity CHAMADA com:", data);
     try {
       const currentUser = auth.currentUser;
       if (!currentUser) {
         console.warn("logActivity: usuário não autenticado, atividade não foi salva.");
         return;
       }
-      await db.collection("activity_logs").add({
+      console.log("🔵 [DEBUG] usuário autenticado, uid:", currentUser.uid, "email:", currentUser.email);
+      const ref = await db.collection("activity_logs").add({
         ...data,
         uid: currentUser.uid,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         clientTime: new Date().toISOString(),
       });
+      console.log("✅ [DEBUG] logActivity SALVOU com sucesso! doc id:", ref.id);
     } catch(e) {
       const isPermission = e.code === "permission-denied" || (e.message && e.message.includes("Missing or insufficient permissions"));
       const isIndex      = e.code === "failed-precondition" || (e.message && e.message.includes("index"));
