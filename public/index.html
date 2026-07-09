@@ -120,9 +120,7 @@
   };
   firebase.initializeApp(firebaseConfig);
   const db   = firebase.firestore();
-  db.settings({ experimentalForceLongPolling: true, merge: true });
   const auth = firebase.auth();
-  console.log("🟣 [DEBUG] Versão do app carregada: FIX-v3");
 
   async function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -148,21 +146,18 @@
     });
 
   async function logActivity(data) {
-    console.log("🔵 [DEBUG] logActivity CHAMADA com:", data);
     try {
       const currentUser = auth.currentUser;
       if (!currentUser) {
         console.warn("logActivity: usuário não autenticado, atividade não foi salva.");
         return;
       }
-      console.log("🔵 [DEBUG] usuário autenticado, uid:", currentUser.uid, "email:", currentUser.email);
-      const ref = await db.collection("activity_logs").add({
+      await db.collection("activity_logs").add({
         ...data,
         uid: currentUser.uid,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         clientTime: new Date().toISOString(),
       });
-      console.log("✅ [DEBUG] logActivity SALVOU com sucesso! doc id:", ref.id);
     } catch(e) {
       const isPermission = e.code === "permission-denied" || (e.message && e.message.includes("Missing or insufficient permissions"));
       const isIndex      = e.code === "failed-precondition" || (e.message && e.message.includes("index"));
@@ -206,74 +201,6 @@
         throw new Error("UNKNOWN: " + e.message);
       }
     }
-  }
-
-  // ── LISTENING: converte um link comum do Google Drive (compartilhado como
-  // "qualquer pessoa com o link") num link de streaming direto que funciona
-  // dentro de uma tag <audio>.
-  function extractDriveFileId(url) {
-    if (!url) return null;
-    const patterns = [
-      /\/d\/([a-zA-Z0-9_-]{10,})/,      // .../file/d/ID/view
-      /[?&]id=([a-zA-Z0-9_-]{10,})/,    // .../open?id=ID  ou  .../uc?id=ID
-    ];
-    for (const re of patterns) {
-      const m = url.match(re);
-      if (m) return m[1];
-    }
-    return null;
-  }
-
-  function driveLinkToAudioUrl(url) {
-    const id = extractDriveFileId(url);
-    if (!id) return url; // não parece um link do Drive, usa como veio (ex: link direto de outro host)
-    return `https://drive.google.com/uc?export=download&id=${id}`;
-  }
-
-  // ── LISTENING: CRUD dos exercícios no Firestore. Nada disso mexe em código —
-  // é só o professor preenchendo um formulário na tela de admin.
-  async function fetchListeningExercises() {
-    const snap = await db.collection("listening_exercises").orderBy("createdAt", "desc").get();
-    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  }
-
-  async function saveListeningExercise(data, id) {
-    if (id) {
-      await db.collection("listening_exercises").doc(id).set(data, { merge: true });
-      return id;
-    }
-    const ref = await db.collection("listening_exercises").add({
-      ...data,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    });
-    return ref.id;
-  }
-
-  async function deleteListeningExercise(id) {
-    await db.collection("listening_exercises").doc(id).delete();
-  }
-
-  // ── LISTENING: progresso do aluno (1 doc por aluno+exercício)
-  async function saveListeningProgress(exerciseId, data) {
-    const user = auth.currentUser;
-    if (!user) return;
-    await db.collection("listening_progress").doc(`${user.uid}_${exerciseId}`).set({
-      uid: user.uid,
-      studentEmail: user.email,
-      studentName: user.displayName || user.email,
-      exerciseId,
-      ...data,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-    }, { merge: true });
-  }
-
-  async function fetchListeningProgressForCurrentUser() {
-    const user = auth.currentUser;
-    if (!user) return {};
-    const snap = await db.collection("listening_progress").where("uid", "==", user.uid).get();
-    const map = {};
-    snap.docs.forEach(d => { map[d.data().exerciseId] = d.data(); });
-    return map;
   }
 </script>
 
@@ -1638,7 +1565,6 @@ function AdminDashboard({ user }) {
             <button style={TAB_STYLE(tab==="students")}  onClick={()=>setTab("students")}>👩‍🎓 Alunos</button>
             <button style={TAB_STYLE(tab==="daily")}      onClick={()=>setTab("daily")}>📅 Entradas por dia</button>
             <button style={TAB_STYLE(tab==="activity")}  onClick={()=>setTab("activity")}>📋 Atividade</button>
-            <button style={TAB_STYLE(tab==="listening")}  onClick={()=>setTab("listening")}>🎧 Listening</button>
           </div>
 
           {tab === "overview" && (
@@ -1815,231 +1741,9 @@ function AdminDashboard({ user }) {
               </div>
             </div>
           )}
-
-          {tab === "listening" && <ListeningAdminPanel />}
         </>
       )}
     </div>
-  );
-}
-
-// ── LISTENING (ADMIN) ──────────────────────────────────────────────────────
-// Painel onde o professor cadastra, edita e apaga exercícios de listening,
-// sem precisar tocar em código. Cada exercício vira 1 documento no Firestore.
-const LISTENING_LEVELS = ["Iniciante", "Intermediário", "Avançado", "Todos os níveis"];
-
-function emptyQuestion() {
-  return { id: Math.random().toString(36).slice(2), text: "", options: ["", ""], correct: 0 };
-}
-
-function emptyExercise() {
-  return { title: "", level: "Todos os níveis", driveLink: "", transcript: "", questions: [emptyQuestion()] };
-}
-
-function ListeningAdminPanel() {
-  const [items, setItems]     = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState(null);
-  const [editing, setEditing] = useState(null); // null = lista | {} novo | objeto = editar
-  const [busyId, setBusyId]   = useState(null);
-
-  function reload() {
-    setLoading(true);
-    fetchListeningExercises()
-      .then(d => { setItems(d); setLoading(false); })
-      .catch(e => { setError(e.message); setLoading(false); });
-  }
-
-  useEffect(() => { reload(); }, []);
-
-  async function handleDelete(id) {
-    if (!confirm("Apagar este exercício de listening? Essa ação não pode ser desfeita.")) return;
-    setBusyId(id);
-    try { await deleteListeningExercise(id); reload(); }
-    catch (e) { alert("Erro ao apagar: " + e.message); }
-    finally { setBusyId(null); }
-  }
-
-  if (editing !== null) {
-    return (
-      <ListeningExerciseForm
-        initial={editing}
-        onCancel={() => setEditing(null)}
-        onSaved={() => { setEditing(null); reload(); }}
-      />
-    );
-  }
-
-  return (
-    <div className="fade-in" style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <p style={{margin:0,fontSize:".78rem",color:"#64748b"}}>{items.length} exercício(s) cadastrado(s)</p>
-        <button onClick={() => setEditing(emptyExercise())}
-          style={{background:"linear-gradient(135deg,#818cf8,#6366f1)",color:"#fff",border:"none",padding:".55rem 1.1rem",borderRadius:".75rem",fontWeight:800,fontSize:".8rem"}}>
-          + Novo exercício
-        </button>
-      </div>
-
-      {error && <p style={{color:"#fb7185",fontSize:".8rem"}}>{error}</p>}
-      {loading ? <Spinner/> : items.length === 0 ? (
-        <p style={{color:"#475569",fontSize:".85rem",textAlign:"center",padding:"2rem"}}>Nenhum exercício de listening ainda. Clique em "+ Novo exercício" pra criar o primeiro.</p>
-      ) : (
-        items.map(ex => (
-          <div key={ex.id} style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.1rem 1.25rem",display:"flex",justifyContent:"space-between",alignItems:"center",gap:"1rem",flexWrap:"wrap"}}>
-            <div>
-              <p style={{margin:0,fontWeight:800,color:"#f8fafc",fontSize:".9rem"}}>{ex.title || "(sem título)"}</p>
-              <p style={{margin:"4px 0 0",fontSize:".7rem",color:"#94a3b8"}}>
-                {ex.level} · {(ex.questions||[]).length} pergunta(s)
-              </p>
-            </div>
-            <div style={{display:"flex",gap:8}}>
-              <button onClick={() => setEditing(ex)}
-                style={{background:"#0f172a",color:"#f8fafc",border:"1px solid #334155",padding:".45rem .9rem",borderRadius:".65rem",fontWeight:700,fontSize:".75rem"}}>
-                ✏️ Editar
-              </button>
-              <button onClick={() => handleDelete(ex.id)} disabled={busyId===ex.id}
-                style={{background:"#0f172a",color:"#fb7185",border:"1px solid #3f0a0a",padding:".45rem .9rem",borderRadius:".65rem",fontWeight:700,fontSize:".75rem",opacity:busyId===ex.id?.5:1}}>
-                {busyId===ex.id ? "..." : "🗑️ Apagar"}
-              </button>
-            </div>
-          </div>
-        ))
-      )}
-    </div>
-  );
-}
-
-const INPUT_STYLE = {
-  width:"100%", background:"#0f172a", border:"1px solid #334155", color:"#f8fafc",
-  padding:".7rem .9rem", borderRadius:".75rem", fontSize:".85rem", outline:"none",
-};
-const LABEL_STYLE = { display:"block", fontSize:".72rem", fontWeight:700, color:"#94a3b8", marginBottom:".4rem" };
-
-function ListeningExerciseForm({ initial, onCancel, onSaved }) {
-  const isNew = !initial.id;
-  const [title, setTitle]           = useState(initial.title || "");
-  const [level, setLevel]           = useState(initial.level || LISTENING_LEVELS[0]);
-  const [driveLink, setDriveLink]   = useState(initial.driveLink || "");
-  const [transcript, setTranscript] = useState(initial.transcript || "");
-  const [questions, setQuestions]   = useState(
-    initial.questions && initial.questions.length > 0 ? initial.questions : [emptyQuestion()]
-  );
-  const [saving, setSaving] = useState(false);
-  const [err, setErr]       = useState(null);
-
-  function updateQuestion(qid, patch) {
-    setQuestions(qs => qs.map(q => q.id === qid ? { ...q, ...patch } : q));
-  }
-  function updateOption(qid, optIdx, value) {
-    setQuestions(qs => qs.map(q => q.id === qid ? { ...q, options: q.options.map((o,i)=> i===optIdx ? value : o) } : q));
-  }
-  function addOption(qid) {
-    setQuestions(qs => qs.map(q => q.id === qid && q.options.length < 6 ? { ...q, options: [...q.options, ""] } : q));
-  }
-  function removeOption(qid, optIdx) {
-    setQuestions(qs => qs.map(q => {
-      if (q.id !== qid || q.options.length <= 2) return q;
-      const options = q.options.filter((_,i)=>i!==optIdx);
-      const correct = q.correct >= options.length ? 0 : (optIdx < q.correct ? q.correct - 1 : q.correct);
-      return { ...q, options, correct };
-    }));
-  }
-  function addQuestion() { setQuestions(qs => [...qs, emptyQuestion()]); }
-  function removeQuestion(qid) { setQuestions(qs => qs.length > 1 ? qs.filter(q=>q.id!==qid) : qs); }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setErr(null);
-
-    if (!title.trim())      return setErr("Dê um título ao exercício.");
-    if (!driveLink.trim())  return setErr("Cole o link do áudio no Google Drive.");
-    if (questions.some(q => !q.text.trim() || q.options.some(o=>!o.trim())))
-      return setErr("Preencha todas as perguntas e alternativas (não deixe nenhuma em branco).");
-
-    setSaving(true);
-    try {
-      const audioUrl = driveLinkToAudioUrl(driveLink.trim());
-      await saveListeningExercise({
-        title: title.trim(),
-        level,
-        driveLink: driveLink.trim(),
-        audioUrl,
-        transcript: transcript.trim(),
-        questions: questions.map(q => ({ text: q.text.trim(), options: q.options.map(o=>o.trim()), correct: q.correct })),
-      }, initial.id);
-      onSaved();
-    } catch (e2) {
-      setErr("Erro ao salvar: " + e2.message);
-      setSaving(false);
-    }
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="fade-in" style={{display:"flex",flexDirection:"column",gap:"1.1rem"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <h3 style={{margin:0,fontSize:"1rem",fontWeight:900,color:"#f8fafc"}}>{isNew ? "Novo exercício de listening" : "Editar exercício"}</h3>
-        <button type="button" onClick={onCancel} style={{background:"transparent",border:"none",color:"#64748b",fontSize:".8rem"}}>✕ Cancelar</button>
-      </div>
-
-      {err && <div style={{background:"#450a0a",border:"1px solid #dc2626",color:"#fca5a5",borderRadius:".75rem",padding:".75rem 1rem",fontSize:".8rem"}}>{err}</div>}
-
-      <div>
-        <label style={LABEL_STYLE}>Título</label>
-        <input style={INPUT_STYLE} value={title} onChange={e=>setTitle(e.target.value)} placeholder="Ex: Semana 12 — Podcast sobre viagens" />
-      </div>
-
-      <div>
-        <label style={LABEL_STYLE}>Nível / turma</label>
-        <select style={INPUT_STYLE} value={level} onChange={e=>setLevel(e.target.value)}>
-          {LISTENING_LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
-        </select>
-      </div>
-
-      <div>
-        <label style={LABEL_STYLE}>Link do áudio (Google Drive)</label>
-        <input style={INPUT_STYLE} value={driveLink} onChange={e=>setDriveLink(e.target.value)} placeholder="Cole aqui o link de compartilhamento do Drive" />
-        <p style={{margin:".4rem 0 0",fontSize:".68rem",color:"#475569"}}>No Drive: botão direito no arquivo → Compartilhar → "Qualquer pessoa com o link" → Copiar link.</p>
-      </div>
-
-      <div>
-        <label style={LABEL_STYLE}>Transcrição</label>
-        <textarea style={{...INPUT_STYLE,minHeight:120,resize:"vertical",fontFamily:"inherit"}} value={transcript} onChange={e=>setTranscript(e.target.value)} placeholder="Cole aqui o texto que o áudio fala" />
-      </div>
-
-      <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
-        <label style={LABEL_STYLE}>Perguntas de múltipla escolha</label>
-        {questions.map((q, qi) => (
-          <div key={q.id} style={{background:"#0f172a",border:"1px solid #334155",borderRadius:"1rem",padding:"1rem",display:"flex",flexDirection:"column",gap:".65rem"}}>
-            <div style={{display:"flex",gap:8,alignItems:"center"}}>
-              <span style={{fontSize:".72rem",fontWeight:800,color:"#818cf8"}}>Pergunta {qi+1}</span>
-              {questions.length > 1 && (
-                <button type="button" onClick={()=>removeQuestion(q.id)} style={{marginLeft:"auto",background:"transparent",border:"none",color:"#fb7185",fontSize:".72rem"}}>Remover pergunta</button>
-              )}
-            </div>
-            <input style={INPUT_STYLE} value={q.text} onChange={e=>updateQuestion(q.id,{text:e.target.value})} placeholder="Digite a pergunta" />
-            {q.options.map((opt, oi) => (
-              <div key={oi} style={{display:"flex",gap:8,alignItems:"center"}}>
-                <input type="radio" name={`correct-${q.id}`} checked={q.correct===oi} onChange={()=>updateQuestion(q.id,{correct:oi})} />
-                <input style={{...INPUT_STYLE,flex:1}} value={opt} onChange={e=>updateOption(q.id,oi,e.target.value)} placeholder={`Alternativa ${oi+1}`} />
-                {q.options.length > 2 && (
-                  <button type="button" onClick={()=>removeOption(q.id,oi)} style={{background:"transparent",border:"none",color:"#64748b",fontSize:"1rem"}}>✕</button>
-                )}
-              </div>
-            ))}
-            <p style={{margin:0,fontSize:".65rem",color:"#475569"}}>Marque a bolinha ao lado da alternativa correta.</p>
-            {q.options.length < 6 && (
-              <button type="button" onClick={()=>addOption(q.id)} style={{alignSelf:"flex-start",background:"transparent",border:"1px dashed #334155",color:"#94a3b8",padding:".35rem .7rem",borderRadius:".6rem",fontSize:".72rem"}}>+ Alternativa</button>
-            )}
-          </div>
-        ))}
-        <button type="button" onClick={addQuestion} style={{alignSelf:"flex-start",background:"#1e293b",border:"1px solid #334155",color:"#f8fafc",padding:".5rem 1rem",borderRadius:".75rem",fontWeight:700,fontSize:".8rem"}}>+ Adicionar pergunta</button>
-      </div>
-
-      <button type="submit" disabled={saving}
-        style={{background:"linear-gradient(135deg,#818cf8,#6366f1)",color:"#fff",border:"none",padding:"1rem",borderRadius:"1rem",fontWeight:800,fontSize:".9rem",opacity:saving?.6:1}}>
-        {saving ? "Salvando..." : "💾 Salvar exercício"}
-      </button>
-    </form>
   );
 }
 
@@ -2683,20 +2387,12 @@ function PhonemeHubScreen({ onPractice, onBack, track }) {
   );
 }
 
-function Header({ user, score, animScore, onOpenHub, onOpenListening, onChangeTrack }) {
+function Header({ user, score, animScore, onOpenHub, onChangeTrack }) {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
     <header style={{position:"sticky",top:0,zIndex:50,background:"rgba(15,23,42,.9)",backdropFilter:"blur(14px)",borderBottom:"1px solid #1e293b",padding:".9rem 1.25rem",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"1rem"}}>
       <h1 style={{margin:0,fontSize:"1rem",fontWeight:900,color:"#f8fafc",whiteSpace:"nowrap"}}>🗣️ Pronunciation Builder</h1>
       <div style={{display:"flex",alignItems:"center",gap:".75rem"}}>
-        {onOpenListening && (
-          <button onClick={onOpenListening} aria-label="Listening"
-            style={{background:"#1e293b",border:"1px solid #334155",color:"#f8fafc",width:36,height:36,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.05rem",flexShrink:0}}
-            onMouseOver={e=>e.currentTarget.style.background="#334155"}
-            onMouseOut={e=>e.currentTarget.style.background="#1e293b"}>
-            🎧
-          </button>
-        )}
         {onOpenHub && (
           <button onClick={onOpenHub} aria-label="Hub de Fonemas"
             style={{background:"#1e293b",border:"1px solid #334155",color:"#f8fafc",width:36,height:36,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.05rem",flexShrink:0}}
@@ -2831,169 +2527,6 @@ function TrackSelectScreen({ onChoose }) {
   );
 }
 
-// ── LISTENING (ALUNO) ──────────────────────────────────────────────────────
-function loadListeningLevel() { try { return localStorage.getItem("mph_listening_level") || null; } catch { return null; } }
-function saveListeningLevel(l) { try { localStorage.setItem("mph_listening_level", l); } catch {} }
-
-function ListeningLevelScreen({ onChoose }) {
-  return (
-    <div className="fade-in" style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#0f172a,#1e293b)",padding:"1.5rem"}}>
-      <div style={{background:"#1e293b",borderRadius:"2rem",padding:"3rem 2rem",width:"100%",maxWidth:420,textAlign:"center",border:"1px solid #334155",boxShadow:"0 25px 50px -12px rgba(0,0,0,.6)"}}>
-        <span style={{fontSize:"4.5rem",display:"block",marginBottom:".5rem"}}>🎧</span>
-        <h1 style={{fontSize:"1.6rem",fontWeight:900,color:"#f8fafc",margin:"0 0 .4rem"}}>Qual é o seu nível?</h1>
-        <p style={{color:"#94a3b8",fontSize:".95rem",marginBottom:"2.25rem"}}>Assim mostramos os exercícios de listening certos pra você</p>
-        {LISTENING_LEVELS.filter(l=>l!=="Todos os níveis").map(l => (
-          <button key={l} onClick={()=>onChoose(l)}
-            style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"1.1rem 1.5rem",borderRadius:"1rem",border:"1px solid #334155",background:"#0f172a",color:"#f8fafc",fontSize:"1.05rem",fontWeight:800,marginBottom:"1rem",transition:"all .2s"}}
-            onMouseOver={e=>e.currentTarget.style.filter="brightness(1.15)"}
-            onMouseOut={e=>e.currentTarget.style.filter="brightness(1)"}>
-            {l}
-          </button>
-        ))}
-        <p style={{marginTop:"1rem",fontSize:".75rem",color:"#475569"}}>Você pode trocar de nível depois, se quiser 🔄</p>
-      </div>
-    </div>
-  );
-}
-
-function ListeningListScreen({ level, onOpen, onBack, onChangeLevel }) {
-  const [items, setItems]     = useState(null);
-  const [progress, setProgress] = useState({});
-  const [error, setError]     = useState(null);
-
-  useEffect(() => {
-    Promise.all([fetchListeningExercises(), fetchListeningProgressForCurrentUser()])
-      .then(([ex, prog]) => { setItems(ex); setProgress(prog); })
-      .catch(e => setError(e.message));
-  }, []);
-
-  const visible = (items || []).filter(ex => ex.level === level || ex.level === "Todos os níveis");
-
-  return (
-    <div className="fade-in" style={{maxWidth:600,margin:"0 auto",padding:"1.75rem 1.25rem 3rem"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"1.25rem",flexWrap:"wrap",gap:8}}>
-        <div>
-          <h2 style={{margin:0,fontSize:"1.3rem",fontWeight:900,color:"#f8fafc"}}>🎧 Listening</h2>
-          <p style={{margin:"4px 0 0",fontSize:".75rem",color:"#64748b"}}>Nível: {level}</p>
-        </div>
-        <div style={{display:"flex",gap:8}}>
-          <button onClick={onChangeLevel} style={{background:"#1e293b",border:"1px solid #334155",color:"#f8fafc",padding:".5rem 1rem",borderRadius:".75rem",fontWeight:700,fontSize:".78rem"}}>Trocar nível</button>
-          <button onClick={onBack} style={{background:"#1e293b",border:"1px solid #334155",color:"#f8fafc",padding:".5rem 1rem",borderRadius:".75rem",fontWeight:700,fontSize:".78rem"}}>← Voltar</button>
-        </div>
-      </div>
-
-      {error && <p style={{color:"#fb7185",fontSize:".8rem"}}>{error}</p>}
-      {items === null ? <Spinner/> : visible.length === 0 ? (
-        <p style={{color:"#475569",fontSize:".9rem",textAlign:"center",padding:"3rem 1rem"}}>Nenhum exercício de listening disponível pro seu nível ainda. Volte em breve! 🎧</p>
-      ) : (
-        <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
-          {visible.map(ex => {
-            const done = progress[ex.id];
-            return (
-              <button key={ex.id} onClick={()=>onOpen(ex)} className="word-card-hover"
-                style={{textAlign:"left",background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.1rem 1.25rem",display:"flex",justifyContent:"space-between",alignItems:"center",gap:"1rem"}}>
-                <div>
-                  <p style={{margin:0,fontWeight:800,color:"#f8fafc",fontSize:".95rem"}}>{ex.title}</p>
-                  <p style={{margin:"4px 0 0",fontSize:".72rem",color:"#94a3b8"}}>{(ex.questions||[]).length} pergunta(s)</p>
-                </div>
-                {done ? (
-                  <span style={{background:"#052e1c",color:"#4ade80",padding:"4px 10px",borderRadius:"999px",fontSize:".7rem",fontWeight:700,whiteSpace:"nowrap"}}>✅ {done.score}/{(ex.questions||[]).length}</span>
-                ) : (
-                  <span style={{color:"#818cf8",fontSize:"1.2rem"}}>▶</span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ListeningExerciseScreen({ exercise, onBack }) {
-  const [answers, setAnswers]     = useState({});
-  const [submitted, setSubmitted] = useState(false);
-  const [showTranscript, setShowTranscript] = useState(false);
-
-  const questions = exercise.questions || [];
-
-  function choose(qIdx, optIdx) {
-    if (submitted) return;
-    setAnswers(a => ({ ...a, [qIdx]: optIdx }));
-  }
-
-  async function handleSubmit() {
-    const score = questions.reduce((acc,q,i) => acc + (answers[i]===q.correct ? 1 : 0), 0);
-    setSubmitted(true);
-    try {
-      await saveListeningProgress(exercise.id, { score, total: questions.length, answers });
-      await logActivity({ type:"listening", exerciseId: exercise.id, exerciseTitle: exercise.title, score, total: questions.length });
-    } catch (e) { console.warn("Não foi possível salvar progresso de listening:", e); }
-  }
-
-  const allAnswered = questions.every((_,i) => answers[i] !== undefined);
-  const score = questions.reduce((acc,q,i) => acc + (answers[i]===q.correct ? 1 : 0), 0);
-
-  return (
-    <div className="fade-in" style={{maxWidth:600,margin:"0 auto",padding:"1.75rem 1.25rem 3rem"}}>
-      <button onClick={onBack} style={{background:"transparent",border:"none",color:"#818cf8",fontSize:".85rem",fontWeight:700,marginBottom:"1rem",padding:0}}>← Voltar pra lista</button>
-
-      <h2 style={{margin:"0 0 .25rem",fontSize:"1.25rem",fontWeight:900,color:"#f8fafc"}}>{exercise.title}</h2>
-      <p style={{margin:"0 0 1.25rem",fontSize:".75rem",color:"#64748b"}}>{exercise.level}</p>
-
-      <div style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.25rem",marginBottom:"1.5rem"}}>
-        <audio controls src={exercise.audioUrl} style={{width:"100%"}} />
-      </div>
-
-      {questions.map((q, qi) => (
-        <div key={qi} style={{background:"#1e293b",border:"1px solid #334155",borderRadius:"1.25rem",padding:"1.1rem 1.25rem",marginBottom:"1rem"}}>
-          <p style={{margin:"0 0 .75rem",fontWeight:800,color:"#f8fafc",fontSize:".9rem"}}>{qi+1}. {q.text}</p>
-          <div style={{display:"flex",flexDirection:"column",gap:8}}>
-            {q.options.map((opt, oi) => {
-              const isChosen = answers[qi] === oi;
-              const isCorrectOpt = oi === q.correct;
-              let bg = "#0f172a", border = "#334155", color = "#f8fafc";
-              if (submitted) {
-                if (isCorrectOpt) { bg="#052e1c"; border="#059669"; color="#4ade80"; }
-                else if (isChosen) { bg="#450a0a"; border="#dc2626"; color="#fca5a5"; }
-              } else if (isChosen) { bg="#312e81"; border="#818cf8"; }
-              return (
-                <button key={oi} disabled={submitted} onClick={()=>choose(qi,oi)}
-                  style={{textAlign:"left",background:bg,border:`1.5px solid ${border}`,color,padding:".7rem .9rem",borderRadius:".75rem",fontSize:".85rem",fontWeight:600}}>
-                  {opt}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-
-      {!submitted ? (
-        <button onClick={handleSubmit} disabled={!allAnswered}
-          style={{width:"100%",background: allAnswered ? "linear-gradient(135deg,#818cf8,#6366f1)" : "#334155",color:"#fff",border:"none",padding:"1rem",borderRadius:"1rem",fontWeight:800,fontSize:".95rem",opacity:allAnswered?1:.6}}>
-          {allAnswered ? "Corrigir respostas" : `Responda todas as perguntas (${Object.keys(answers).length}/${questions.length})`}
-        </button>
-      ) : (
-        <div className="fade-in" style={{textAlign:"center",marginTop:"1rem"}}>
-          <div style={{background:"linear-gradient(135deg,#F59E0B,#D97706)",display:"inline-block",padding:"1rem 2rem",borderRadius:"1.25rem",fontWeight:900,color:"#fff",fontSize:"1.3rem",marginBottom:"1.25rem"}}>
-            {score}/{questions.length} corretas
-          </div>
-          <div>
-            <button onClick={()=>setShowTranscript(s=>!s)} style={{background:"#1e293b",border:"1px solid #334155",color:"#f8fafc",padding:".65rem 1.25rem",borderRadius:".85rem",fontWeight:700,fontSize:".82rem"}}>
-              {showTranscript ? "Esconder transcrição" : "📄 Ver transcrição"}
-            </button>
-          </div>
-          {showTranscript && (
-            <p className="fade-in" style={{textAlign:"left",background:"#1e293b",border:"1px solid #334155",borderRadius:"1rem",padding:"1.1rem 1.25rem",marginTop:"1rem",color:"#cbd5e1",fontSize:".85rem",lineHeight:1.7,whiteSpace:"pre-wrap"}}>
-              {exercise.transcript}
-            </p>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
 function App() {
   const [user,      setUser]      = useState(undefined);
   const [score,     setScore]     = useState(0);
@@ -3003,8 +2536,6 @@ function App() {
   const [view,      setView]      = useState("exercises");
   const [track,     setTrack]     = useState(undefined); // "en" | "no" | undefined (ainda não escolhida)
   const [sequenceMode, setSequenceMode] = useState(null); // { phonemeLabel, totalSteps } | null
-  const [listeningLevel, setListeningLevel] = useState(undefined); // undefined = ainda não carregou, null = precisa escolher
-  const [activeListeningExercise, setActiveListeningExercise] = useState(null);
   const { canInstall, promptInstall } = usePwaInstall();
 
   function getPairsForTrack(t) { return t === "no" ? PAIRS_NO : PAIRS_EN; }
@@ -3034,7 +2565,6 @@ function App() {
         if (u) {
           const savedTrack = loadTrack();
           setTrack(savedTrack || null); // null = precisa escolher
-          setListeningLevel(loadListeningLevel() || null);
           if (!savedTrack) { setPairs([]); setIdx(0); setScore(0); return; }
           const activePairs = getPairsForTrack(savedTrack);
           const saved = loadSession();
@@ -3115,17 +2645,6 @@ function App() {
     setView("hub");
   }
 
-  function handleChooseListeningLevel(l) {
-    saveListeningLevel(l);
-    setListeningLevel(l);
-  }
-
-  function handleChangeListeningLevel() {
-    localStorage.removeItem("mph_listening_level");
-    setListeningLevel(null);
-    setActiveListeningExercise(null);
-  }
-
   if (user === undefined) return <Spinner/>;
   if (user === null)      return <LoginScreen/>;
   if (user.email === ADMIN_EMAIL) return <AdminDashboard user={user}/>;
@@ -3134,34 +2653,7 @@ function App() {
 
   let mainContent;
 
-  if (view === "listening") {
-    if (listeningLevel === null) {
-      mainContent = <ListeningLevelScreen onChoose={handleChooseListeningLevel} />;
-    } else if (activeListeningExercise) {
-      mainContent = (
-        <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-          <Header user={user} score={score} animScore={animScore} onOpenListening={()=>setActiveListeningExercise(null)} onChangeTrack={handleChangeTrack}/>
-          <main style={{flex:1}}>
-            <ListeningExerciseScreen exercise={activeListeningExercise} onBack={()=>setActiveListeningExercise(null)} />
-          </main>
-        </div>
-      );
-    } else {
-      mainContent = (
-        <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-          <Header user={user} score={score} animScore={animScore} onOpenListening={()=>setView("exercises")} onChangeTrack={handleChangeTrack}/>
-          <main style={{flex:1}}>
-            <ListeningListScreen
-              level={listeningLevel}
-              onOpen={setActiveListeningExercise}
-              onBack={()=>setView("exercises")}
-              onChangeLevel={handleChangeListeningLevel}
-            />
-          </main>
-        </div>
-      );
-    }
-  } else if (view === "hub") {
+  if (view === "hub") {
     mainContent = (
       <PhonemeHubScreen
         onPractice={handlePracticeFromHub}
@@ -3175,7 +2667,7 @@ function App() {
     if (sequenceMode) {
       mainContent = (
         <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-          <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")} onOpenListening={()=>setView("listening")} onChangeTrack={handleChangeTrack}/>
+          <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")} onChangeTrack={handleChangeTrack}/>
           <main style={{maxWidth:600,width:"100%",margin:"0 auto",padding:"1.75rem 1.25rem 3rem",flex:1,display:"flex",alignItems:"center",justifyContent:"center"}}>
             <div className="fade-in" style={{textAlign:"center",background:"#1e293b",border:"1px solid #334155",borderRadius:"1.5rem",padding:"2.5rem 1.75rem",maxWidth:420}}>
               <span style={{fontSize:"3rem",display:"block",marginBottom:".75rem"}}>🏅</span>
@@ -3192,7 +2684,7 @@ function App() {
     } else {
       mainContent = (
         <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-          <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")} onOpenListening={()=>setView("listening")} onChangeTrack={handleChangeTrack}/>
+          <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")} onChangeTrack={handleChangeTrack}/>
           <SummaryScreen score={score} total={pairs.length} onRestart={handleRestart}/>
         </div>
       );
@@ -3200,7 +2692,7 @@ function App() {
   } else {
     mainContent = (
       <div style={{minHeight:"100vh",display:"flex",flexDirection:"column"}}>
-        <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")} onOpenListening={()=>setView("listening")} onChangeTrack={handleChangeTrack}/>
+        <Header user={user} score={score} animScore={animScore} onOpenHub={()=>setView("hub")} onChangeTrack={handleChangeTrack}/>
         <main style={{maxWidth:600,width:"100%",margin:"0 auto",padding:"1.75rem 1.25rem 3rem",flex:1}}>
           <ExerciseView
             pair={pairs[idx]}
