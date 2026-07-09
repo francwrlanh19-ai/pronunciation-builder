@@ -120,9 +120,9 @@
   };
   firebase.initializeApp(firebaseConfig);
   const db   = firebase.firestore();
-  db.settings({ experimentalAutoDetectLongPolling: true, merge: true });
+  db.settings({ experimentalForceLongPolling: true, useFetchStreams: false, merge: true });
   const auth = firebase.auth();
-  console.log("🟣 [DEBUG] Versão do app carregada: LONGPOLLING-FIX-v1");
+  console.log("🟣 [DEBUG] Versão do app carregada: LONGPOLLING-FIX-v2-FORCE");
 
   async function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
