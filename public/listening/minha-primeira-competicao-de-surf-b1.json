@@ -1,0 +1,150 @@
+{
+  "id": "minha-primeira-competicao-de-surf-b1",
+  "titulo": "Minha primeira competição de surf",
+  "titulo_en": "My First Surf Competition",
+  "topico": "Minha primeira competição de surf",
+  "nivel": "B1",
+  "idioma": "en",
+  "audio": "minha-primeira-competicao-de-surf-b1.mp3",
+  "palavras": 188,
+  "duracao_estimada": 81,
+  "voz": "en-US-AriaNeural",
+  "transcript": "So, I went to my first surf competition last year, and honestly? It was nothing like I expected. I always thought these events would be really serious — you know, athletes with headphones on, nobody talking, that kind of tension you see in the Olympics. But it wasn't like that at all. There were families everywhere. Kids running around with boards way bigger than they were. Someone's grandmother selling homemade sandwiches out of a cooler. The competitors themselves were just sitting on the sand, chatting with each other between heats. What really got me was watching the waiting. Because that's most of what surfing is, actually — sitting out there, reading the water, waiting for the right wave. There was this one guy, he sat out there for almost fifteen minutes without catching anything. The crowd went completely quiet. And then he took off on this wave that didn't even look that special at first, and he made it look effortless. Everyone lost it. I remember thinking, that patience is the whole sport. Anyone can paddle. Knowing which wave is worth your energy — that's the hard part.",
+  "resumo_pt": "Uma surfista conta como foi assistir sua primeira competição e o que a surpreendeu no ambiente.",
+  "glossario": [
+    {
+      "termo": "nothing like I expected",
+      "significado_pt": "nada parecido com o que eu esperava",
+      "exemplo": "It was nothing like I expected."
+    },
+    {
+      "termo": "heats",
+      "significado_pt": "baterias, as rodadas eliminatórias de uma competição",
+      "exemplo": "chatting with each other between heats"
+    },
+    {
+      "termo": "what really got me",
+      "significado_pt": "o que mais me impressionou / me marcou",
+      "exemplo": "What really got me was watching the waiting."
+    },
+    {
+      "termo": "took off on",
+      "significado_pt": "dropou, começou a surfar a onda",
+      "exemplo": "he took off on this wave"
+    },
+    {
+      "termo": "effortless",
+      "significado_pt": "sem esforço aparente, fácil",
+      "exemplo": "he made it look effortless"
+    },
+    {
+      "termo": "everyone lost it",
+      "significado_pt": "todo mundo foi à loucura, vibrou muito",
+      "exemplo": "Everyone lost it."
+    },
+    {
+      "termo": "paddle",
+      "significado_pt": "remar (com os braços, sobre a prancha)",
+      "exemplo": "Anyone can paddle."
+    },
+    {
+      "termo": "worth your energy",
+      "significado_pt": "que vale o seu esforço",
+      "exemplo": "Knowing which wave is worth your energy"
+    }
+  ],
+  "perguntas": [
+    {
+      "id": 1,
+      "tipo": "gist",
+      "pergunta": "What was the speaker's main reaction to the competition?",
+      "opcoes": [
+        "It was more competitive than she imagined",
+        "It was far more relaxed and social than she imagined",
+        "It was disappointing and poorly organised",
+        "It was too crowded to enjoy properly"
+      ],
+      "correta": 1,
+      "explicacao_pt": "Ela esperava tensão de Olimpíadas, mas encontrou famílias, crianças correndo e competidores conversando na areia."
+    },
+    {
+      "id": 2,
+      "tipo": "gist",
+      "pergunta": "What does the speaker suggest is the most important skill in surfing?",
+      "opcoes": [
+        "Physical strength",
+        "Paddling technique",
+        "Knowing which wave to choose",
+        "Staying calm in front of a crowd"
+      ],
+      "correta": 2,
+      "explicacao_pt": "No final ela diz que qualquer um consegue remar — o difícil é saber qual onda vale o seu esforço."
+    },
+    {
+      "id": 3,
+      "tipo": "gist",
+      "pergunta": "How would you describe the speaker's tone?",
+      "opcoes": [
+        "Critical and disappointed",
+        "Neutral and factual",
+        "Warm and a little surprised",
+        "Nostalgic and sad"
+      ],
+      "correta": 2,
+      "explicacao_pt": "Ela usa 'honestly?', 'what really got me' e 'Everyone lost it' — linguagem calorosa de quem gostou e se surpreendeu."
+    },
+    {
+      "id": 4,
+      "tipo": "detail",
+      "pergunta": "What was someone's grandmother doing?",
+      "opcoes": [
+        "Watching from a beach chair",
+        "Selling homemade sandwiches",
+        "Taking photos of the competitors",
+        "Teaching children to surf"
+      ],
+      "correta": 1,
+      "explicacao_pt": "O áudio diz: 'Someone's grandmother selling homemade sandwiches out of a cooler.'"
+    },
+    {
+      "id": 5,
+      "tipo": "detail",
+      "pergunta": "How long did the surfer wait before catching a wave?",
+      "opcoes": [
+        "About five minutes",
+        "Almost fifteen minutes",
+        "Nearly thirty minutes",
+        "The whole heat"
+      ],
+      "correta": 1,
+      "explicacao_pt": "'he sat out there for almost fifteen minutes without catching anything.'"
+    },
+    {
+      "id": 6,
+      "tipo": "detail",
+      "pergunta": "What did the crowd do while the surfer was waiting?",
+      "opcoes": [
+        "Started cheering loudly",
+        "Began to leave the beach",
+        "Went completely quiet",
+        "Booed the surfer"
+      ],
+      "correta": 2,
+      "explicacao_pt": "'The crowd went completely quiet.'"
+    },
+    {
+      "id": 7,
+      "tipo": "inference",
+      "pergunta": "Why did the crowd react so strongly to that particular wave?",
+      "opcoes": [
+        "It was the largest wave of the day",
+        "The surfer won the competition with it",
+        "The long wait made the payoff feel earned",
+        "The surfer had fallen on every previous attempt"
+      ],
+      "correta": 2,
+      "explicacao_pt": "Ela nota que a onda não parecia especial no início — o que criou o momento foi a espera longa e o silêncio antes. Isso está implícito, não dito diretamente."
+    }
+  ],
+  "criado_em": "2026-07-21T00:44:50"
+}
