@@ -3,7 +3,10 @@
 # Dispara quando voce adiciona ou edita um arquivo em
 # public/listening/fontes/ — ou manualmente, pela aba Actions.
 #
-# O commit que este workflow faz dispara o deploy do Firebase em seguida.
+# Importante: o commit final NAO leva [skip ci], porque e justamente ele
+# que precisa disparar o deploy do Firebase. O deploy que roda junto com
+# o seu commit original termina antes dos audios existirem, entao e o
+# commit do robo que leva os arquivos novos para o ar.
 
 name: Gerar audios de listening
 
@@ -67,7 +70,10 @@ jobs:
           fi
 
           novos=$(git diff --staged --name-only --diff-filter=A -- 'public/listening/*.mp3' | wc -l)
-          git commit -m "Adiciona ${novos} audio(s) de listening [skip ci]"
+          # Sem [skip ci]: este commit precisa disparar o deploy do Firebase,
+          # senao os audios ficam no GitHub mas nao chegam ao site.
+          # O proprio workflow nao roda de novo porque so observa fontes/.
+          git commit -m "Adiciona ${novos} audio(s) de listening"
 
           # Se alguem deu push enquanto o job rodava, rebaseia antes de enviar.
           git pull --rebase --autostash origin main
