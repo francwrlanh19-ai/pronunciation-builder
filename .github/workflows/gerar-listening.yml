@@ -1,0 +1,74 @@
+# Gera os audios dos exercicios de listening.
+#
+# Dispara quando voce adiciona ou edita um arquivo em
+# public/listening/fontes/ — ou manualmente, pela aba Actions.
+#
+# O commit que este workflow faz dispara o deploy do Firebase em seguida.
+
+name: Gerar audios de listening
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'public/listening/fontes/**'
+      - 'build_listening.py'
+  workflow_dispatch:
+    inputs:
+      forcar:
+        description: 'Regerar todos os audios, inclusive os que ja existem'
+        type: boolean
+        default: false
+
+# Evita duas execucoes ao mesmo tempo, que causariam conflito no commit.
+concurrency:
+  group: listening-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Baixar o repositorio
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar o gerador de voz
+        run: pip install --quiet edge-tts
+
+      - name: Gerar os audios
+        run: |
+          if [ "${{ inputs.forcar }}" = "true" ]; then
+            python build_listening.py --forcar
+          else
+            python build_listening.py
+          fi
+
+      - name: Publicar os arquivos gerados
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add public/listening/
+
+          if git diff --staged --quiet; then
+            echo "Nada mudou — nenhum audio novo para publicar."
+            exit 0
+          fi
+
+          novos=$(git diff --staged --name-only --diff-filter=A -- 'public/listening/*.mp3' | wc -l)
+          git commit -m "Adiciona ${novos} audio(s) de listening [skip ci]"
+
+          # Se alguem deu push enquanto o job rodava, rebaseia antes de enviar.
+          git pull --rebase --autostash origin main
+          git push
