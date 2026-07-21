@@ -1,0 +1,152 @@
+{
+  "id": "a-primeira-semana-trabalhando-em-berlim-b1",
+  "titulo": "A primeira semana trabalhando em Berlim",
+  "titulo_en": "My First Week Working in Berlin",
+  "topico": "programacao e morar fora do Brasil",
+  "nivel": "B1",
+  "idioma": "en",
+  "aluno": "araujosofia2007@gmail.com",
+  "privado": false,
+  "audio": "a-primeira-semana-trabalhando-em-berlim-b1.mp3",
+  "palavras": 285,
+  "duracao_estimada": 122,
+  "voz": "en-GB-SoniaNeural",
+  "transcript": "So, I moved to Berlin in March for a developer job, and I had spent months getting ready for it. I mean, I watched conference talks, I practised explaining my code out loud, I even wrote little scripts about system design. Technical English, right? That was the thing I was worried about. And it turns out that was the easy part. Nobody cares if you say the wrong word for a database. They understand you anyway. The hard part was lunch. On my second day, six of us went to a place near the office, and everyone started talking at the same time. I understood every single word, and I still had no idea what was funny. Someone would say something about a train, and the whole table would laugh, and I would sit there smiling like a photograph. I could not keep up with it at all. And then there was Jonas, one of the engineers on my team. He looked at my first pull request and he said, this is not good, you should do it again. Just like that. Straight to the point. In Brazil, someone would say, oh, it is really interesting, maybe we could think about another approach. So I went home and I felt terrible. I thought I was going to be fired in my first week. But two days later I noticed he talked to everyone that way, even his manager, and when my second version worked he told me it was excellent, in exactly the same flat voice. Nothing personal. That was just how he spoke. I am still getting the hang of the lunch conversations, honestly. But I stopped taking things personally, and that changed everything.",
+  "resumo_pt": "Uma desenvolvedora brasileira conta a primeira semana no novo emprego em Berlim e descobre que o inglês técnico era a parte fácil. O difícil foram as conversas no almoço e o jeito direto de um colega dar feedback.",
+  "glossario": [
+    {
+      "termo": "it turns out",
+      "significado_pt": "acontece que, no fim das contas",
+      "exemplo": "And it turns out that was the easy part."
+    },
+    {
+      "termo": "the hard part",
+      "significado_pt": "a parte difícil",
+      "exemplo": "The hard part was lunch."
+    },
+    {
+      "termo": "keep up with",
+      "significado_pt": "acompanhar (o ritmo de algo)",
+      "exemplo": "I could not keep up with it at all."
+    },
+    {
+      "termo": "pull request",
+      "significado_pt": "pedido de revisão de código enviado ao time",
+      "exemplo": "He looked at my first pull request and he said, this is not good, you should do it again."
+    },
+    {
+      "termo": "straight to the point",
+      "significado_pt": "direto ao ponto, sem rodeios",
+      "exemplo": "Straight to the point."
+    },
+    {
+      "termo": "flat voice",
+      "significado_pt": "voz sem emoção, sem variação de tom",
+      "exemplo": "when my second version worked he told me it was excellent, in exactly the same flat voice"
+    },
+    {
+      "termo": "get the hang of",
+      "significado_pt": "pegar o jeito de algo",
+      "exemplo": "I am still getting the hang of the lunch conversations, honestly."
+    },
+    {
+      "termo": "take things personally",
+      "significado_pt": "levar as coisas para o lado pessoal",
+      "exemplo": "But I stopped taking things personally, and that changed everything."
+    }
+  ],
+  "perguntas": [
+    {
+      "id": 1,
+      "tipo": "gist",
+      "pergunta": "What surprised the speaker most about her first week?",
+      "opcoes": [
+        "The technical work was much harder than expected",
+        "Her English was too weak for the job",
+        "The social side was harder than the technical English",
+        "The city was more expensive than she had imagined"
+      ],
+      "correta": 2,
+      "explicacao_pt": "Ela diz que passou meses se preparando para o inglês técnico, mas que essa acabou sendo a parte fácil. O difícil foi o almoço e as conversas com os colegas."
+    },
+    {
+      "id": 2,
+      "tipo": "gist",
+      "pergunta": "How does the speaker feel about her experience by the end?",
+      "opcoes": [
+        "She regrets moving to Berlin",
+        "She has adapted completely and has no difficulties",
+        "She is angry with her colleague Jonas",
+        "She still struggles with some things but has made progress"
+      ],
+      "correta": 3,
+      "explicacao_pt": "No fim ela admite que ainda está pegando o jeito das conversas no almoço, mas que parou de levar as coisas para o lado pessoal, e isso mudou tudo."
+    },
+    {
+      "id": 3,
+      "tipo": "gist",
+      "pergunta": "Why does the speaker mention how people give feedback in Brazil?",
+      "opcoes": [
+        "To show how different Jonas's style felt to her",
+        "To say that Brazilian feedback is more useful",
+        "To explain why she decided to leave Brazil",
+        "To complain that her Brazilian colleagues were dishonest"
+      ],
+      "correta": 0,
+      "explicacao_pt": "Ela compara o comentário seco de Jonas com o jeito brasileiro de suavizar a crítica, para mostrar o contraste que a chocou."
+    },
+    {
+      "id": 4,
+      "tipo": "detail",
+      "pergunta": "How many people went to lunch with the speaker?",
+      "opcoes": [
+        "Two",
+        "Six in total, including her",
+        "Six other colleagues plus her",
+        "The whole company"
+      ],
+      "correta": 1,
+      "explicacao_pt": "Ela diz que seis pessoas foram a um lugar perto do escritório, incluindo ela mesma."
+    },
+    {
+      "id": 5,
+      "tipo": "detail",
+      "pergunta": "What did Jonas say about her first pull request?",
+      "opcoes": [
+        "That it was interesting but needed another approach",
+        "That he would fix it himself",
+        "That it was not good and she should do it again",
+        "That it was excellent"
+      ],
+      "correta": 2,
+      "explicacao_pt": "Jonas disse exatamente que não estava bom e que ela deveria fazer de novo. A palavra excelente veio depois, sobre a segunda versão."
+    },
+    {
+      "id": 6,
+      "tipo": "detail",
+      "pergunta": "How did the speaker prepare before moving?",
+      "opcoes": [
+        "She took a course in German",
+        "She watched conference talks and practised explaining her code",
+        "She worked remotely for the company for a year",
+        "She read books about German culture"
+      ],
+      "correta": 1,
+      "explicacao_pt": "Ela conta que assistiu a palestras de conferências, praticou explicar o próprio código em voz alta e escreveu textos curtos sobre design de sistemas."
+    },
+    {
+      "id": 7,
+      "tipo": "inference",
+      "pergunta": "Why did the speaker stop worrying about Jonas's comment?",
+      "opcoes": [
+        "Because her manager told her to ignore him",
+        "Because Jonas apologised for being rude",
+        "Because she realised he spoke that way to everyone, regardless of quality",
+        "Because she decided to avoid working with him"
+      ],
+      "correta": 2,
+      "explicacao_pt": "Ela percebeu dois dias depois que ele falava assim com todo mundo, até com o gerente, e que elogiou a segunda versão com a mesma voz sem emoção. Ela conclui que não era nada pessoal, apenas o jeito dele."
+    }
+  ],
+  "criado_em": "2026-07-21T02:05:29"
+}
