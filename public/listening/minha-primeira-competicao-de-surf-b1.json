@@ -1,16 +1,13 @@
 {
-  "id": "minha-primeira-competicao-de-surf-b1",
   "titulo": "Minha primeira competição de surf",
   "titulo_en": "My First Surf Competition",
-  "topico": "Minha primeira competição de surf",
   "nivel": "B1",
+  "aluno": "",
+  "privado": false,
+  "voz": "us_f",
   "idioma": "en",
-  "audio": "minha-primeira-competicao-de-surf-b1.mp3",
-  "palavras": 188,
-  "duracao_estimada": 81,
-  "voz": "en-US-AriaNeural",
-  "transcript": "So, I went to my first surf competition last year, and honestly? It was nothing like I expected. I always thought these events would be really serious — you know, athletes with headphones on, nobody talking, that kind of tension you see in the Olympics. But it wasn't like that at all. There were families everywhere. Kids running around with boards way bigger than they were. Someone's grandmother selling homemade sandwiches out of a cooler. The competitors themselves were just sitting on the sand, chatting with each other between heats. What really got me was watching the waiting. Because that's most of what surfing is, actually — sitting out there, reading the water, waiting for the right wave. There was this one guy, he sat out there for almost fifteen minutes without catching anything. The crowd went completely quiet. And then he took off on this wave that didn't even look that special at first, and he made it look effortless. Everyone lost it. I remember thinking, that patience is the whole sport. Anyone can paddle. Knowing which wave is worth your energy — that's the hard part.",
   "resumo_pt": "Uma surfista conta como foi assistir sua primeira competição e o que a surpreendeu no ambiente.",
+  "transcript": "So, I went to my first surf competition last year, and honestly? It was nothing like I expected. I always thought these events would be really serious — you know, athletes with headphones on, nobody talking, that kind of tension you see in the Olympics. But it wasn't like that at all. There were families everywhere. Kids running around with boards way bigger than they were. Someone's grandmother selling homemade sandwiches out of a cooler. The competitors themselves were just sitting on the sand, chatting with each other between heats. What really got me was watching the waiting. Because that's most of what surfing is, actually — sitting out there, reading the water, waiting for the right wave. There was this one guy, he sat out there for almost fifteen minutes without catching anything. The crowd went completely quiet. And then he took off on this wave that didn't even look that special at first, and he made it look effortless. Everyone lost it. I remember thinking, that patience is the whole sport. Anyone can paddle. Knowing which wave is worth your energy — that's the hard part.",
   "glossario": [
     {
       "termo": "nothing like I expected",
@@ -145,6 +142,5 @@
       "correta": 2,
       "explicacao_pt": "Ela nota que a onda não parecia especial no início — o que criou o momento foi a espera longa e o silêncio antes. Isso está implícito, não dito diretamente."
     }
-  ],
-  "criado_em": "2026-07-21T00:44:50"
+  ]
 }
