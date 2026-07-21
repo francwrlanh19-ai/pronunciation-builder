@@ -2,6 +2,8 @@
   "titulo": "Minha primeira competição de surf",
   "titulo_en": "My First Surf Competition",
   "nivel": "B1",
+  "aluno": "",
+  "privado": false,
   "voz": "us_f",
   "idioma": "en",
   "resumo_pt": "Uma surfista conta como foi assistir sua primeira competição e o que a surpreendeu no ambiente.",
