@@ -97,6 +97,15 @@ def validar(fonte, caminho):
     if len(set(ids)) != len(ids):
         problemas.append("ha perguntas com 'id' repetido")
 
+    aluno = (fonte.get("aluno") or "").strip()
+    if fonte.get("privado") and not aluno:
+        problemas.append(
+            "'privado' so funciona junto com 'aluno' — sem dono, ninguem veria "
+            "este exercicio. Adicione o email do aluno ou tire o 'privado'."
+        )
+    if aluno and "@" not in aluno:
+        problemas.append(f"'aluno' deve ser um email, e nao {aluno!r}")
+
     return problemas
 
 
@@ -159,6 +168,10 @@ async def processar(forcar):
             "topico": fonte.get("topico", fonte["titulo"]),
             "nivel": nivel,
             "idioma": fonte.get("idioma", "en"),
+            # Dono do exercicio. Vazio = e da biblioteca publica.
+            "aluno": (fonte.get("aluno") or "").strip().lower(),
+            # So faz sentido junto com "aluno": esconde dos demais alunos.
+            "privado": bool(fonte.get("privado", False)),
             "audio": f"{ident}.mp3",
             "palavras": n_palavras,
             "duracao_estimada": round(n_palavras / WPM_POR_NIVEL[nivel] * 60),
@@ -190,6 +203,8 @@ async def processar(forcar):
             "nivel": ex["nivel"],
             "idioma": ex.get("idioma", "en"),
             "topico": ex.get("topico", ""),
+            "aluno": ex.get("aluno", ""),
+            "privado": ex.get("privado", False),
             "duracao_estimada": ex.get("duracao_estimada", 0),
             "total_perguntas": len(ex.get("perguntas", [])),
             "criado_em": ex.get("criado_em", ""),
