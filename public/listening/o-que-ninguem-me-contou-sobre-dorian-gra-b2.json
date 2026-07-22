@@ -1,0 +1,152 @@
+{
+  "id": "o-que-ninguem-me-contou-sobre-dorian-gra-b2",
+  "titulo": "O que ninguém me contou sobre Dorian Gray",
+  "titulo_en": "What Nobody Told Me About Dorian Gray",
+  "topico": "livro O Retrato de Dorian Gray",
+  "nivel": "B2",
+  "idioma": "en",
+  "aluno": "",
+  "privado": false,
+  "audio": "o-que-ninguem-me-contou-sobre-dorian-gra-b2.mp3",
+  "palavras": 320,
+  "duracao_estimada": 120,
+  "voz": "en-US-AriaNeural",
+  "transcript": "So, I just finished The Picture of Dorian Gray, and I have to talk about it, because it completely caught me off guard. I went in expecting some dark, gothic horror story, you know, a creepy painting in an attic, maybe a few ghosts. And that is in there, sort of. But honestly? The book is so much funnier and sharper than I ever imagined. Half of it is just people at dinner parties saying the most outrageous things. And the character who steals the show, for me, is not even Dorian. It is Lord Henry. He never stops talking, he never does anything, and yet every single line out of his mouth got under my skin. He says the kind of things you would never say out loud but might secretly think. I kept underlining his lines. Now, Dorian himself? I actually hated him by the end. He is vain, he is cruel, he throws away every good thing in his life. And still, I could not put the book down. That is the strange magic of it. What really struck me was the portrait. Everyone talks about it like it is this supernatural gimmick, the face that ages while he stays young. But the more I read, the more it felt like something else. The painting is his conscience. Every awful thing he does shows up on that canvas, and he has to hide it away, lock it in a room, because he cannot bear to look at what he is becoming. And I think that is the part that rings true, even now. We all have a version of ourselves we would rather not face. It is a slow burn, this book, it takes its time. But by the last chapter, I understood why people still argue about it more than a hundred years later. Oscar Wilde has a point, and it lands harder than I expected.",
+  "resumo_pt": "Uma leitora conta, em tom de vlog, a surpresa de ler O Retrato de Dorian Gray: esperava terror gótico e achou um livro afiado e cheio de humor. Ela reflete sobre Lord Henry e sobre o retrato como consciência.",
+  "glossario": [
+    {
+      "termo": "caught me off guard",
+      "significado_pt": "me pegou de surpresa, me desprevino",
+      "exemplo": "it completely caught me off guard"
+    },
+    {
+      "termo": "steals the show",
+      "significado_pt": "rouba a cena, se destaca acima de todos",
+      "exemplo": "the character who steals the show, for me, is not even Dorian"
+    },
+    {
+      "termo": "got under my skin",
+      "significado_pt": "me incomodou / me marcou profundamente",
+      "exemplo": "every single line out of his mouth got under my skin"
+    },
+    {
+      "termo": "could not put the book down",
+      "significado_pt": "não conseguia parar de ler",
+      "exemplo": "And still, I could not put the book down"
+    },
+    {
+      "termo": "gimmick",
+      "significado_pt": "truque, artifício para chamar atenção",
+      "exemplo": "like it is this supernatural gimmick"
+    },
+    {
+      "termo": "rings true",
+      "significado_pt": "soa verdadeiro, faz sentido",
+      "exemplo": "that is the part that rings true, even now"
+    },
+    {
+      "termo": "a slow burn",
+      "significado_pt": "algo que se desenvolve devagar, sem pressa",
+      "exemplo": "It is a slow burn, this book, it takes its time"
+    },
+    {
+      "termo": "has a point",
+      "significado_pt": "tem razão, faz um argumento válido",
+      "exemplo": "Oscar Wilde has a point"
+    }
+  ],
+  "perguntas": [
+    {
+      "id": 1,
+      "tipo": "gist",
+      "pergunta": "What is the speaker's main point about the book?",
+      "opcoes": [
+        "It was exactly the gothic horror she expected",
+        "It surprised her by being wittier and sharper than she imagined",
+        "It was too slow and she gave up on it",
+        "It was a disappointing read overall"
+      ],
+      "correta": 1,
+      "explicacao_pt": "Ela diz que esperava um terror gótico, mas o livro é 'so much funnier and sharper than I ever imagined'. A surpresa com o tom afiado é o eixo de toda a fala."
+    },
+    {
+      "id": 2,
+      "tipo": "gist",
+      "pergunta": "How would you describe the speaker's overall attitude toward the book?",
+      "opcoes": [
+        "Indifferent and bored",
+        "Confused and frustrated",
+        "Engaged and admiring, despite disliking the main character",
+        "Purely critical and negative"
+      ],
+      "correta": 2,
+      "explicacao_pt": "Ela odiou Dorian mas não conseguiu parar de ler ('I could not put the book down') e termina dizendo que Wilde 'has a point'. É admiração, mesmo sem gostar do protagonista."
+    },
+    {
+      "id": 3,
+      "tipo": "gist",
+      "pergunta": "What is the speaker mainly doing in this recording?",
+      "opcoes": [
+        "Summarising the plot chapter by chapter",
+        "Sharing her personal reaction and what surprised her",
+        "Explaining the historical background of the author",
+        "Recommending other gothic novels to read"
+      ],
+      "correta": 1,
+      "explicacao_pt": "O áudio é um depoimento pessoal sobre a experiência de leitura, não um resumo do enredo nem uma aula de contexto histórico."
+    },
+    {
+      "id": 4,
+      "tipo": "detail",
+      "pergunta": "Which character does the speaker say steals the show?",
+      "opcoes": [
+        "Dorian Gray",
+        "Oscar Wilde",
+        "Lord Henry",
+        "The painter"
+      ],
+      "correta": 2,
+      "explicacao_pt": "Ela afirma explicitamente que quem rouba a cena não é Dorian, e sim Lord Henry: 'It is Lord Henry.'"
+    },
+    {
+      "id": 5,
+      "tipo": "detail",
+      "pergunta": "What did the speaker expect the book to be before reading it?",
+      "opcoes": [
+        "A romantic comedy",
+        "A dark, gothic horror story",
+        "A historical biography",
+        "A philosophical essay"
+      ],
+      "correta": 1,
+      "explicacao_pt": "No começo ela diz: 'I went in expecting some dark, gothic horror story', com pintura assombrada e fantasmas."
+    },
+    {
+      "id": 6,
+      "tipo": "detail",
+      "pergunta": "How does the speaker say she felt about Dorian himself?",
+      "opcoes": [
+        "She admired him greatly",
+        "She hated him by the end",
+        "She felt sorry for him",
+        "She barely noticed him"
+      ],
+      "correta": 1,
+      "explicacao_pt": "Ela é direta: 'I actually hated him by the end', descrevendo-o como vaidoso e cruel."
+    },
+    {
+      "id": 7,
+      "tipo": "inference",
+      "pergunta": "What does the speaker suggest the portrait really represents?",
+      "opcoes": [
+        "A clever supernatural trick with no deeper meaning",
+        "Dorian's hidden conscience and the truth about who he becomes",
+        "The painter's jealousy of Dorian",
+        "A symbol of eternal youth to be celebrated"
+      ],
+      "correta": 1,
+      "explicacao_pt": "Ela rejeita a ideia de 'gimmick' e diz que o quadro é a consciência dele: cada ato horrível aparece na tela e ele precisa escondê-la porque não suporta ver no que está se tornando."
+    }
+  ],
+  "criado_em": "2026-07-22T23:32:20"
+}
