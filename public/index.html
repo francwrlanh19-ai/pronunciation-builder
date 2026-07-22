@@ -2922,6 +2922,22 @@ function ListeningExerciseView({ exercicioId, onBack, onCorrectAnswer }) {
         )}
       </div>
 
+      {/* transcricao */}
+      <div style={{ marginTop: ".75rem" }}>
+        <button onClick={() => setVerTranscript((v) => !v)}
+          style={{ width: "100%", background: "#1e293b", border: "1px solid #334155", color: "#cbd5e1", padding: ".7rem 1rem", borderRadius: ".9rem", fontSize: ".8rem", fontWeight: 700, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>📝 Transcrição</span>
+          <span style={{ color: "#475569" }}>{verTranscript ? "−" : "+"}</span>
+        </button>
+        {verTranscript && (
+          <div className="fade-in" style={{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: ".9rem", padding: "1.1rem", marginTop: ".5rem" }}>
+            <p style={{ margin: 0, fontSize: ".85rem", color: "#cbd5e1", lineHeight: 1.8, whiteSpace: "pre-wrap" }}>
+              {dados.transcript}
+            </p>
+          </div>
+        )}
+      </div>
+
       {/* perguntas */}
       <div style={{ marginTop: "1.75rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "1rem" }}>
@@ -3025,21 +3041,6 @@ function ListeningExerciseView({ exercicioId, onBack, onCorrectAnswer }) {
         )}
       </div>
 
-      {/* transcricao */}
-      <div style={{ marginTop: "1.25rem" }}>
-        <button onClick={() => setVerTranscript((v) => !v)}
-          style={{ width: "100%", background: "#1e293b", border: "1px solid #334155", color: "#cbd5e1", padding: ".7rem 1rem", borderRadius: ".9rem", fontSize: ".8rem", fontWeight: 700, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span>📝 Transcrição</span>
-          <span style={{ color: "#475569" }}>{verTranscript ? "−" : "+"}</span>
-        </button>
-        {verTranscript && (
-          <div className="fade-in" style={{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: ".9rem", padding: "1.1rem", marginTop: ".5rem" }}>
-            <p style={{ margin: 0, fontSize: ".85rem", color: "#cbd5e1", lineHeight: 1.8, whiteSpace: "pre-wrap" }}>
-              {dados.transcript}
-            </p>
-          </div>
-        )}
-      </div>
     </main>
   );
 }
